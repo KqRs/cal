@@ -1,5 +1,74 @@
 task.wait(10)
+
+
 getgenv().Craft = true
+
+local currentRecipe = "N/A" -- Изначально устанавливаем как N/A
+
+
+-- Функция для создания GUI
+local function CreateGui()
+    local player = game.Players.LocalPlayer
+    local playerGui = player:WaitForChild("PlayerGui")
+    
+    -- Проверяем, существует ли уже GUI
+    local screenGui = playerGui:FindFirstChild("CraftingGui")
+    if not screenGui then
+        screenGui = Instance.new("ScreenGui")
+        screenGui.Name = "CraftingGui"
+        screenGui.Parent = playerGui
+    end
+
+    -- Проверяем, существует ли уже TextLabels
+    local infoLabel = screenGui:FindFirstChild("InfoLabel")
+    if not infoLabel then
+        infoLabel = Instance.new("TextLabel")
+        infoLabel.Name = "InfoLabel"
+        infoLabel.Size = UDim2.new(0, 300, 0, 200)
+        infoLabel.Position = UDim2.new(0, 10, 0, 10)
+        infoLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        infoLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        infoLabel.TextScaled = true
+        infoLabel.Text = "Loading..."
+        infoLabel.Parent = screenGui
+    end
+
+    local recipeLabel = screenGui:FindFirstChild("RecipeLabel")
+    if not recipeLabel then
+        recipeLabel = Instance.new("TextLabel")
+        recipeLabel.Name = "RecipeLabel"
+        recipeLabel.Size = UDim2.new(0, 300, 0, 50)
+        recipeLabel.Position = UDim2.new(0, 10, 0, 220)
+        recipeLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        recipeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        recipeLabel.TextScaled = true
+        recipeLabel.Text = "Current Recipe: N/A"
+        recipeLabel.Parent = screenGui
+    end
+
+    return infoLabel, recipeLabel
+end
+
+-- Функция для обновления GUI
+-- Функция для обновления GUI
+local function UpdateGui(Coins, Dice, Dice2, Dice3, MegaDice, newRecipe)
+    local infoLabel, recipeLabel = CreateGui()
+    infoLabel.Text = "Coins: " .. tostring(Coins) .. "\n" ..
+                     "Dice: " .. tostring(Dice) .. "\n" ..
+                     "Dice II: " .. tostring(Dice2) .. "\n" ..
+                     "Dice III: " .. tostring(Dice3) .. "\n" ..
+                     "Mega Dice: " .. tostring(MegaDice)
+    
+    -- Обновляем только если новый рецепт отличается от текущего
+    if newRecipe and newRecipe ~= currentRecipe then
+        currentRecipe = newRecipe
+    end
+
+    recipeLabel.Text = "Current Recipe: " .. currentRecipe
+end
+
+
+
 local function GetCurrencyAndCraft()
     local library = require(game.ReplicatedStorage.Library.Client.Save)
     local save = library.Get()
@@ -24,9 +93,11 @@ local function GetCurrencyAndCraft()
             MegaDice = v._am or 1
         end
     end
-
+    UpdateGui(Coins, Dice, Dice2, Dice3, MegaDice)
     return Coins, Dice, Dice2, Dice3, MegaDice
 end
+
+
 
 -- Функция для крафта предмета
 local function craftItem(itemName, amount, dicePerCraft, coinsPerCraft, Coins, Dice, Dice2, Dice3, MegaDice)
@@ -306,24 +377,31 @@ end
 
 
 
-
 local function make(recipe)
     if recipe == "num1" then
         print("Processing recipe num1")
         while getgenv().Craft do
-            task.wait(5)
+            task.wait(10)
             SmartCraft1()
+            -- Обновляем GUI после крафта
+            local Coins, Dice, Dice2, Dice3, MegaDice = GetCurrencyAndCraft()
+            UpdateGui(Coins, Dice, Dice2, Dice3, MegaDice, currentRecipe) -- Рецепт остаётся прежним
         end
     elseif recipe == "num2" then
         print("Processing recipe num2")
         while getgenv().Craft do
-            task.wait(5)
+            task.wait(10)
             SmartCraft2()
+            -- Обновляем GUI после крафта
+            local Coins, Dice, Dice2, Dice3, MegaDice = GetCurrencyAndCraft()
+            UpdateGui(Coins, Dice, Dice2, Dice3, MegaDice, currentRecipe) -- Рецепт остаётся прежним
         end
     else
         print("Unknown recipe: " .. recipe)
     end
 end
+
+
 
 
 -- Функция GetRecipe для определения текущего рецепта
@@ -357,7 +435,6 @@ local function GetRecipe()
     wait(2)
     local neededItemText = player.PlayerGui._MACHINES.DiceCraftingMachine.Frame.ObjectiveFrame.NeededHolder.ItemPanel.TextLabel.Text
 
-
     wait(1)
     game:GetService("VirtualInputManager"):SendMouseButtonEvent(clickPosition2.X, clickPosition2.Y, 0, true, game, 0)
     task.wait(0.1)
@@ -368,17 +445,16 @@ local function GetRecipe()
 
     if neededItemText == "30x Lucky Dice II" then
         print("Current Recipe: " .. neededItemText)
+        UpdateGui(nil, nil, nil, nil, nil, "30x Lucky Dice II") -- Обновляем GUI с текущим рецептом
         make("num1")
     elseif neededItemText == "2x Lucky Dice III" then
         print("Current Recipe: " .. neededItemText)
+        UpdateGui(nil, nil, nil, nil, nil, "2x Lucky Dice III") -- Обновляем GUI с текущим рецептом
         make("num2")
     else
         print("This recipe is unverified or unknown.")
         wait(5)
         GetRecipe() -- Рекурсивный вызов для новой попытки
     end
-
 end
-
--- Вызов функции для определения рецепта
 GetRecipe()
