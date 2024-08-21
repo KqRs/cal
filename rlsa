@@ -381,7 +381,7 @@ local function make(recipe)
     if recipe == "num1" then
         print("Processing recipe num1")
         while getgenv().Craft do
-            task.wait(10)
+            task.wait(5)
             SmartCraft1()
             -- Обновляем GUI после крафта
             local Coins, Dice, Dice2, Dice3, MegaDice = GetCurrencyAndCraft()
@@ -390,7 +390,7 @@ local function make(recipe)
     elseif recipe == "num2" then
         print("Processing recipe num2")
         while getgenv().Craft do
-            task.wait(10)
+            task.wait(5)
             SmartCraft2()
             -- Обновляем GUI после крафта
             local Coins, Dice, Dice2, Dice3, MegaDice = GetCurrencyAndCraft()
@@ -406,11 +406,11 @@ end
 
 -- Функция GetRecipe для определения текущего рецепта
 local function GetRecipe()
-    wait(4)
+    task.wait(4)
     local Player = game:GetService('Players').LocalPlayer
     Player.Character:SetPrimaryPartCFrame(workspace.__THINGS.__INSTANCE_CONTAINER.Active.RngInstance.INTERACT.Machines.DiceCraftingMachine.Pad.CFrame)
 
-    wait(3)
+    task.wait(3)
     local player = game:GetService("Players").LocalPlayer
     local frame = player.PlayerGui._MACHINES.DiceCraftingMachine.Frame.UsingFrame.ItemsFrame["Mega Lucky Dice"].Select
     local frame2 = player.PlayerGui._MACHINES.DiceCraftingMachine.Frame.Close
@@ -432,15 +432,15 @@ local function GetRecipe()
     task.wait(0.1)
     game:GetService("VirtualInputManager"):SendMouseButtonEvent(clickPosition.X, clickPosition.Y, 0, false, game, 0)
 
-    wait(2)
+    task.wait(2)
     local neededItemText = player.PlayerGui._MACHINES.DiceCraftingMachine.Frame.ObjectiveFrame.NeededHolder.ItemPanel.TextLabel.Text
 
-    wait(1)
+    task.wait(1)
     game:GetService("VirtualInputManager"):SendMouseButtonEvent(clickPosition2.X, clickPosition2.Y, 0, true, game, 0)
     task.wait(0.1)
     game:GetService("VirtualInputManager"):SendMouseButtonEvent(clickPosition2.X, clickPosition2.Y, 0, false, game, 0)
 
-    wait(1)
+    task.wait(1)
     Player.Character:SetPrimaryPartCFrame(CFrame.new(4083.72168, 2569.94653, -5409.42871, 0.833449841, -6.94920033e-08, -0.552595079, 2.25798988e-08, 1, -9.16996754e-08, 0.552595079, 6.39495426e-08, 0.833449841))
 
     if neededItemText == "30x Lucky Dice II" then
@@ -453,7 +453,7 @@ local function GetRecipe()
         make("num2")
     else
         print("This recipe is unverified or unknown.")
-        wait(5)
+        task.wait(3)
         GetRecipe() -- Рекурсивный вызов для новой попытки
     end
 end
