@@ -1,0 +1,384 @@
+task.wait(10)
+getgenv().Craft = true
+local function GetCurrencyAndCraft()
+    local library = require(game.ReplicatedStorage.Library.Client.Save)
+    local save = library.Get()
+
+    local Coins, Dice, Dice2, Dice3, MegaDice = 0, 0, 0, 0, 0
+
+    -- Получение количества монет и предметов
+    for i, v in pairs(save.Inventory.Currency) do
+        if v.id == "RngCoins" then
+            Coins = v._am or 0
+        end
+    end
+
+    for i, v in pairs(save.Inventory.Misc) do
+        if v.id == "Lucky Dice" then
+            Dice = v._am or 1
+        elseif v.id == "Lucky Dice II" then
+            Dice2 = v._am or 1
+        elseif v.id == "Lucky Dice III" then
+            Dice3 = v._am or 1
+        elseif v.id == "Mega Lucky Dice" then
+            MegaDice = v._am or 1
+        end
+    end
+
+    return Coins, Dice, Dice2, Dice3, MegaDice
+end
+
+-- Функция для крафта предмета
+local function craftItem(itemName, amount, dicePerCraft, coinsPerCraft, Coins, Dice, Dice2, Dice3, MegaDice)
+    local itemCraftFunction = game:GetService("ReplicatedStorage"):WaitForChild("Network"):FindFirstChild("LuckyDice_Craft")
+    if not itemCraftFunction then
+        return false
+    end
+
+    -- Проверка на нулевые значения перед вычислениями
+    amount = amount or 0
+    dicePerCraft = dicePerCraft or 0
+    coinsPerCraft = coinsPerCraft or 0
+
+    local possibleCraftsByDice = math.floor(amount / dicePerCraft)
+    local possibleCraftsByCoins = math.floor(Coins / coinsPerCraft)
+    local possibleCrafts = math.min(possibleCraftsByDice, possibleCraftsByCoins)
+
+    if possibleCrafts > 0 then
+        local totalDiceNeeded = possibleCrafts * dicePerCraft
+        local totalCoinsNeeded = possibleCrafts * coinsPerCraft
+        
+        task.wait(0.5)
+
+        local craftArgs = {
+            [1] = itemName,
+            [2] = possibleCrafts
+        }
+
+        local success, result = pcall(function()
+            return itemCraftFunction:InvokeServer(unpack(craftArgs))
+        end)
+
+        if success then
+
+
+            -- Обновление ресурсов после успешного крафта
+            Coins = Coins - totalCoinsNeeded
+            if itemName == "Lucky Dice II" then
+                Dice = Dice - totalDiceNeeded
+                Dice2 = Dice2 + possibleCrafts
+            elseif itemName == "Lucky Dice III" then
+                Dice2 = Dice2 - totalDiceNeeded
+                Dice3 = Dice3 + possibleCrafts
+            elseif itemName == "Mega Lucky Dice" then
+                Dice3 = Dice3 - totalDiceNeeded
+                MegaDice = MegaDice + possibleCrafts
+            elseif itemName == "Mega Lucky Dice II" then
+                MegaDice = MegaDice - totalDiceNeeded
+            end
+
+            return true, Coins, Dice, Dice2, Dice3, MegaDice
+        else
+
+            return false, Coins, Dice, Dice2, Dice3, MegaDice
+        end
+    else
+
+        return false, Coins, Dice, Dice2, Dice3, MegaDice
+    end
+end
+
+-- Функция SmartCraft1 для рецепта "num1"
+local function SmartCraft1()
+    local Coins, Dice, Dice2, Dice3, MegaDice = GetCurrencyAndCraft()
+
+    -- Инициализация переменных, если они равны nil
+    Coins = Coins or 0
+    Dice = Dice or 0
+    Dice2 = Dice2 or 0
+    Dice3 = Dice3 or 0
+    MegaDice = MegaDice or 0
+
+
+
+    -- Крафт Lucky Dice II из Lucky Dice
+    if Dice > 0 then
+        local success
+        success, Coins, Dice, Dice2, Dice3, MegaDice = craftItem("Lucky Dice II", Dice, 5, 100, Coins, Dice, Dice2, Dice3, MegaDice)
+    end
+
+    -- Крафт Mega Lucky Dice из Lucky Dice II
+    if Dice2 > 0 then
+        if MegaDice < 3 then
+            local requiredDicePerCraft3 = 30
+            local requiredCoinsPerCraft3 = 100000
+            local maxMegaDice = 3 - MegaDice -- Оставшееся количество для достижения 3
+
+            local possibleCraftsByDice = math.floor(Dice2 / requiredDicePerCraft3)
+            local possibleCraftsByCoins = math.floor(Coins / requiredCoinsPerCraft3)
+            local possibleCrafts = math.min(possibleCraftsByDice, possibleCraftsByCoins, maxMegaDice)
+
+            if possibleCrafts > 0 then
+                local totalDiceNeeded = possibleCrafts * requiredDicePerCraft3
+                local totalCoinsNeeded = possibleCrafts * requiredCoinsPerCraft3
+
+                task.wait(0.5)
+
+                local craftArgs = {
+                    [1] = "Mega Lucky Dice",
+                    [2] = possibleCrafts
+                }
+
+                local success, result = pcall(function()
+                    local megaCraftFunction = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("LuckyDice_Craft")
+                    return megaCraftFunction:InvokeServer(unpack(craftArgs))
+                end)
+
+                if success then
+
+                    -- Обновление ресурсов после успешного крафта
+                    Coins = Coins - totalCoinsNeeded
+                    Dice2 = Dice2 - totalDiceNeeded
+                    MegaDice = MegaDice + possibleCrafts
+                else
+                    wait()
+                end
+            else
+                wait()
+            end
+        else
+            wait()
+        end
+    end
+
+    -- Крафт Mega Lucky Dice II из Mega Lucky Dice
+    if MegaDice >= 3 then
+        local requiredMegaDicePerCraftII = 3
+        local requiredCoinsPerCraftII = 300000
+        local possibleCraftsByMegaDice = math.floor(MegaDice / requiredMegaDicePerCraftII)
+        local possibleCraftsByCoins = math.floor(Coins / requiredCoinsPerCraftII)
+        local possibleCraftsII = math.min(possibleCraftsByMegaDice, possibleCraftsByCoins)
+
+        if possibleCraftsII > 0 then
+            local totalMegaDiceNeeded = possibleCraftsII * requiredMegaDicePerCraftII
+            local totalCoinsNeeded = possibleCraftsII * requiredCoinsPerCraftII
+            
+
+            task.wait(0.5)
+
+            local craftArgs = {
+                [1] = "Mega Lucky Dice II",
+                [2] = possibleCraftsII
+            }
+
+            local success, result = pcall(function()
+                local megaCraftFunction = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("LuckyDice_Craft")
+                return megaCraftFunction:InvokeServer(unpack(craftArgs))
+            end)
+
+            if success then
+
+                -- Обновление ресурсов после успешного крафта
+                Coins = Coins - totalCoinsNeeded
+                MegaDice = MegaDice - totalMegaDiceNeeded
+            else
+
+            end
+        else
+
+        end
+    end
+end
+
+-- Функция SmartCraft2 для рецепта "num2"
+local function SmartCraft2()
+    local Coins, Dice, Dice2, Dice3, MegaDice = GetCurrencyAndCraft()
+
+    -- Инициализация переменных, если они равны nil
+    Coins = Coins or 0
+    Dice = Dice or 0
+    Dice2 = Dice2 or 0
+    Dice3 = Dice3 or 0
+    MegaDice = MegaDice or 0
+
+
+
+    -- Крафт Lucky Dice II из Lucky Dice
+    if Dice > 0 then
+        local success
+        success, Coins, Dice, Dice2, Dice3, MegaDice = craftItem("Lucky Dice II", Dice, 5, 100, Coins, Dice, Dice2, Dice3, MegaDice)
+    end
+
+    -- Крафт Lucky Dice III из Lucky Dice II
+    if Dice2 > 0 then
+        local success
+        success, Coins, Dice, Dice2, Dice3, MegaDice = craftItem("Lucky Dice III", Dice2, 15, 400, Coins, Dice, Dice2, Dice3, MegaDice)
+    end
+
+    -- Крафт Mega Lucky Dice из Lucky Dice III
+    if Dice3 > 0 then
+        if MegaDice < 3 then
+            local requiredDicePerCraft3 = 2
+            local requiredCoinsPerCraft3 = 100000
+            local maxMegaDice = 3 - MegaDice -- Оставшееся количество для достижения 3
+
+            local possibleCraftsByDice = math.floor(Dice3 / requiredDicePerCraft3)
+            local possibleCraftsByCoins = math.floor(Coins / requiredCoinsPerCraft3)
+            local possibleCrafts = math.min(possibleCraftsByDice, possibleCraftsByCoins, maxMegaDice)
+
+            if possibleCrafts > 0 then
+                local totalDiceNeeded = possibleCrafts * requiredDicePerCraft3
+                local totalCoinsNeeded = possibleCrafts * requiredCoinsPerCraft3
+
+
+                task.wait(0.5)
+
+                local craftArgs = {
+                    [1] = "Mega Lucky Dice",
+                    [2] = possibleCrafts
+                }
+
+                local success, result = pcall(function()
+                    local megaCraftFunction = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("LuckyDice_Craft")
+                    return megaCraftFunction:InvokeServer(unpack(craftArgs))
+                end)
+
+                if success then
+
+                    -- Обновление ресурсов после успешного крафта
+                    Coins = Coins - totalCoinsNeeded
+                    Dice3 = Dice3 - totalDiceNeeded
+                    MegaDice = MegaDice + possibleCrafts
+                else
+                    wait()
+                end
+            else
+                wait()
+            end
+        else
+            wait()
+        end
+    end
+
+    -- Крафт Mega Lucky Dice II из Mega Lucky Dice
+    if MegaDice >= 3 then
+        local requiredMegaDicePerCraftII = 3
+        local requiredCoinsPerCraftII = 300000
+        local possibleCraftsByMegaDice = math.floor(MegaDice / requiredMegaDicePerCraftII)
+        local possibleCraftsByCoins = math.floor(Coins / requiredCoinsPerCraftII)
+        local possibleCraftsII = math.min(possibleCraftsByMegaDice, possibleCraftsByCoins)
+
+        if possibleCraftsII > 0 then
+            local totalMegaDiceNeeded = possibleCraftsII * requiredMegaDicePerCraftII
+            local totalCoinsNeeded = possibleCraftsII * requiredCoinsPerCraftII
+            
+
+            task.wait(0.5)
+
+            local craftArgs = {
+                [1] = "Mega Lucky Dice II",
+                [2] = possibleCraftsII
+            }
+
+            local success, result = pcall(function()
+                local megaCraftFunction = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("LuckyDice_Craft")
+                return megaCraftFunction:InvokeServer(unpack(craftArgs))
+            end)
+
+            if success then
+
+                -- Обновление ресурсов после успешного крафта
+                Coins = Coins - totalCoinsNeeded
+                MegaDice = MegaDice - totalMegaDiceNeeded
+            else
+                wait()
+            end
+        else
+            wait()
+        end
+    end
+end
+
+
+
+
+
+
+
+
+
+local function make(recipe)
+    if recipe == "num1" then
+        print("Processing recipe num1")
+        while getgenv().Craft do
+            task.wait(5)
+            SmartCraft1()
+        end
+    elseif recipe == "num2" then
+        print("Processing recipe num2")
+        while getgenv().Craft do
+            task.wait(5)
+            SmartCraft2()
+        end
+    else
+        print("Unknown recipe: " .. recipe)
+    end
+end
+
+
+-- Функция GetRecipe для определения текущего рецепта
+local function GetRecipe()
+    wait(4)
+    local Player = game:GetService('Players').LocalPlayer
+    Player.Character:SetPrimaryPartCFrame(workspace.__THINGS.__INSTANCE_CONTAINER.Active.RngInstance.INTERACT.Machines.DiceCraftingMachine.Pad.CFrame)
+
+    wait(3)
+    local player = game:GetService("Players").LocalPlayer
+    local frame = player.PlayerGui._MACHINES.DiceCraftingMachine.Frame.UsingFrame.ItemsFrame["Mega Lucky Dice"].Select
+    local frame2 = player.PlayerGui._MACHINES.DiceCraftingMachine.Frame.Close
+
+    local framePosition = frame.AbsolutePosition
+    local frameSize = frame.AbsoluteSize
+
+    local frame2Position = frame2.AbsolutePosition
+    local frame2Size = frame2.AbsoluteSize
+
+    local clickPosition = framePosition + (frameSize / 2)
+    clickPosition = Vector2.new(clickPosition.X, clickPosition.Y + 20)
+
+    local clickPosition2 = frame2Position + (frame2Size / 2)
+    clickPosition2 = Vector2.new(clickPosition2.X, clickPosition2.Y + 20)
+
+    -- Симуляция клика в смещенную точку
+    game:GetService("VirtualInputManager"):SendMouseButtonEvent(clickPosition.X, clickPosition.Y, 0, true, game, 0)
+    task.wait(0.1)
+    game:GetService("VirtualInputManager"):SendMouseButtonEvent(clickPosition.X, clickPosition.Y, 0, false, game, 0)
+
+    wait(2)
+    local neededItemText = player.PlayerGui._MACHINES.DiceCraftingMachine.Frame.ObjectiveFrame.NeededHolder.ItemPanel.TextLabel.Text
+
+
+    wait(1)
+    game:GetService("VirtualInputManager"):SendMouseButtonEvent(clickPosition2.X, clickPosition2.Y, 0, true, game, 0)
+    task.wait(0.1)
+    game:GetService("VirtualInputManager"):SendMouseButtonEvent(clickPosition2.X, clickPosition2.Y, 0, false, game, 0)
+
+    wait(1)
+    Player.Character:SetPrimaryPartCFrame(CFrame.new(4083.72168, 2569.94653, -5409.42871, 0.833449841, -6.94920033e-08, -0.552595079, 2.25798988e-08, 1, -9.16996754e-08, 0.552595079, 6.39495426e-08, 0.833449841))
+
+    if neededItemText == "30x Lucky Dice II" then
+        print("Current Recipe: " .. neededItemText)
+        make("num1")
+    elseif neededItemText == "2x Lucky Dice III" then
+        print("Current Recipe: " .. neededItemText)
+        make("num2")
+    else
+        print("This recipe is unverified or unknown.")
+        wait(5)
+        GetRecipe() -- Рекурсивный вызов для новой попытки
+    end
+
+end
+
+-- Вызов функции для определения рецепта
+GetRecipe()
