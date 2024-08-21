@@ -47,20 +47,31 @@ if keyIsValid then
         }
         MailboxClaim:InvokeServer(unpack(args))
     end
-
-    if getgenv().Config.ClaimMail then
-        for _, itemFrame in pairs(itemsFrame:GetChildren()) do
-            if itemFrame:IsA("Frame") then
-                frameFound = true
-                local mailId = itemFrame.Name
-                claimMail(mailId)
-                task.wait(1)
+    
+    -- Функция, которая будет выполнена с задержкой
+    local function delayedFunction()
+        task.wait(60) -- Задержка в 60 секунд
+        if getgenv().Config.ClaimMail then
+            for _, itemFrame in pairs(itemsFrame:GetChildren()) do
+                if itemFrame:IsA("Frame") then
+                    frameFound = true
+                    local mailId = itemFrame.Name
+                    claimMail(mailId)
+                    task.wait(1)
+                end
+            end
+            if not frameFound then
+                game.StarterGui:SetCore("SendNotification", {
+                    Title = "Status",
+                    Text = "MAIL EMPTY",
+                    Duration = 5,
+                })
             end
         end
-        if not frameFound then
-            print("MAIL EMPTY")
-        end
     end
+    
+    -- Запускаем delayedFunction в фоновом потоке
+    task.spawn(delayedFunction)
 
     task.wait(1)
     if getgenv().Config.ForeverPack then
