@@ -406,55 +406,36 @@ end
 
 -- Функция GetRecipe для определения текущего рецепта
 local function GetRecipe()
-    task.wait(4)
-    local Player = game:GetService('Players').LocalPlayer
-    Player.Character:SetPrimaryPartCFrame(workspace.__THINGS.__INSTANCE_CONTAINER.Active.RngInstance.INTERACT.Machines.DiceCraftingMachine.Pad.CFrame)
+    local library = require(game:GetService("ReplicatedStorage").Library.Types.LuckyDice)
+    local save = library
 
-    task.wait(3)
-    local player = game:GetService("Players").LocalPlayer
-    local frame = player.PlayerGui._MACHINES.DiceCraftingMachine.Frame.UsingFrame.ItemsFrame["Mega Lucky Dice"].Select
-    local frame2 = player.PlayerGui._MACHINES.DiceCraftingMachine.Frame.Close
-
-    local framePosition = frame.AbsolutePosition
-    local frameSize = frame.AbsoluteSize
-
-    local frame2Position = frame2.AbsolutePosition
-    local frame2Size = frame2.AbsoluteSize
-
-    local clickPosition = framePosition + (frameSize / 2)
-    clickPosition = Vector2.new(clickPosition.X, clickPosition.Y + 20)
-
-    local clickPosition2 = frame2Position + (frame2Size / 2)
-    clickPosition2 = Vector2.new(clickPosition2.X, clickPosition2.Y + 20)
-
-    -- Симуляция клика в смещенную точку
-    game:GetService("VirtualInputManager"):SendMouseButtonEvent(clickPosition.X, clickPosition.Y, 0, true, game, 0)
-    task.wait(0.1)
-    game:GetService("VirtualInputManager"):SendMouseButtonEvent(clickPosition.X, clickPosition.Y, 0, false, game, 0)
-
-    task.wait(2)
-    local neededItemText = player.PlayerGui._MACHINES.DiceCraftingMachine.Frame.ObjectiveFrame.NeededHolder.ItemPanel.TextLabel.Text
-
-    task.wait(1)
-    game:GetService("VirtualInputManager"):SendMouseButtonEvent(clickPosition2.X, clickPosition2.Y, 0, true, game, 0)
-    task.wait(0.1)
-    game:GetService("VirtualInputManager"):SendMouseButtonEvent(clickPosition2.X, clickPosition2.Y, 0, false, game, 0)
-
-    task.wait(1)
-    Player.Character:SetPrimaryPartCFrame(CFrame.new(4083.72168, 2569.94653, -5409.42871, 0.833449841, -6.94920033e-08, -0.552595079, 2.25798988e-08, 1, -9.16996754e-08, 0.552595079, 6.39495426e-08, 0.833449841))
-
-    if neededItemText == "30x Lucky Dice II" then
-        print("Current Recipe: " .. neededItemText)
-        UpdateGui(nil, nil, nil, nil, nil, "30x Lucky Dice II") -- Обновляем GUI с текущим рецептом
-        make("num1")
-    elseif neededItemText == "2x Lucky Dice III" then
-        print("Current Recipe: " .. neededItemText)
-        UpdateGui(nil, nil, nil, nil, nil, "2x Lucky Dice III") -- Обновляем GUI с текущим рецептом
-        make("num2")
-    else
-        print("This recipe is unverified or unknown.")
-        task.wait(3)
-        GetRecipe() -- Рекурсивный вызов для новой попытки
+    for i, v in pairs(save.Recipes["Mega Lucky Dice"]) do
+        print("Item index:", i)
+        
+        if typeof(v) == "table" then
+            local data = v["_data"]
+            
+            if data then
+                local id = data["id"]
+                if id then
+                    if id == "Lucky Dice II" then
+                        print("Current Recipe: " .. "30x Lucky Dice II")
+                        UpdateGui(nil, nil, nil, nil, nil, "30x Lucky Dice II") -- Обновляем GUI с текущим рецептом
+                        make("num1")
+                    elseif id == "Lucky Dice III" then
+                        print("Current Recipe: " .. "2x Lucky Dice III")
+                        UpdateGui(nil, nil, nil, nil, nil, "2x Lucky Dice III") -- Обновляем GUI с текущим рецептом
+                        make("num2")
+                    end
+                else
+                    print("Field 'id' not found in data:", data)
+                end
+            else
+                print("Field '_data' not found in item:", v)
+            end
+        else
+            print("Item is not a table:", v)
+        end
     end
 end
 GetRecipe()
