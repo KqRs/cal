@@ -1,0 +1,626 @@
+local DrRayLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/AZYsGithub/DrRay-UI-Library/main/DrRay.lua"))()
+local window = DrRayLibrary:Load("PetGo", "Default")
+local Maintab = DrRayLibrary.newTab("Main", "ImageIdHere")
+
+
+Maintab.newToggle("autoroll", "ls", true, function(toggleState)
+    getgenv().autoroll = toggleState
+
+    if toggleState then
+        autoroll()
+    else 
+        task.wait(1)
+    end
+end)
+
+Maintab.newToggle("autofarm", "ls", false, function(toggleState)
+    getgenv().autofarm = toggleState
+
+    if toggleState then
+        farm()
+    else 
+        task.wait(1)
+    end
+end)
+
+Maintab.newToggle("autocoins", "ls", false, function(toggleState)
+    getgenv().autocoins = toggleState
+
+    if toggleState then
+        local orbCollector
+        setupOrbCollector()
+    else 
+        disableOrbCollector()
+    end
+end)
+
+Maintab.newToggle("autovending", "ls", false, function(toggleState)
+    getgenv().autovending = toggleState
+
+    if toggleState then
+        buyVendingMachines()
+    else 
+        task.wait(1)
+    end
+end)
+
+Maintab.newToggle("autobuyUpgrades", "ls", false, function(toggleState)
+    getgenv().autobuyupgrades = toggleState
+
+    if toggleState then
+        purchaseBranchUpgrades()
+    else 
+        task.wait(1)
+    end
+end)
+
+Maintab.newToggle("DeleteOrbs", "ls", false, function(toggleState)
+    getgenv().DeleteOrbs = toggleState
+
+    if toggleState then
+        replaceTexturesInOrbs()
+        enableTextureReplacement()
+    else 
+        disableTextureReplacement()
+    end
+end)
+
+
+Maintab.newToggle("DeleteBreak", "ls", false, function(toggleState)
+    getgenv().DeleteBreak = toggleState
+
+    if toggleState then
+        replaceMeshesInBreakables()
+        enableMeshReplacement()
+    else 
+        disableMeshReplacement()
+    end
+end)
+
+Maintab.newButton("Collect Relic", "ls", function()
+    for i = 1,50 do
+        task.wait(1)
+        local args = {
+            [1] = i
+        }
+        
+        game.ReplicatedStorage.Network["Relic_Found"]:InvokeServer(unpack(args))
+    end
+end)
+
+Maintab.newButton("Optimization", "Off hoverboard or you stack!", function()
+    Optimization()
+end)
+
+
+
+
+local library = require(game.ReplicatedStorage.Library.Client.Save)
+local save = library.Get()
+
+-- Получаем все названия из ветви
+local Branch = {
+    --start
+    "Faster Egg Open",
+    "Faster Egg Open 2",
+    "Instant Egg Open",
+    "Golden Dice",
+    "Inventory",
+    "Fruit",
+    "More Fruit",
+    --break
+    "Small Coin Piles",
+    "Large Coin Piles",
+    "Break Faster",
+    "Break Even Faster",
+    "Lucky Potion",
+    "Coins Potion",
+    "Potion Vending",
+    "Faster Potion Vending Restocks",
+    "Potion Vending More Stock",
+    "Chest Crusher",
+    "Lightning",
+    "More Lightning",
+    "Coin Crates",
+    "Coin Presents",
+    "Coin Mini Chests",
+    "Coin Chests",
+    "More Chests",
+    "Loot Bags",
+    "Loot Presents",
+    "More Loot Presents",
+    "Loot Big Presents",
+    "More Coins From Breakables",
+    "Even More Coins From Breakables",
+    "Breaking Bonus",
+    "More Bonuses",
+    "Super Breaking Bonus",
+    "More Breakables",
+    "Even More Breakables",
+    "Rarer Breakables",
+    "Relics",
+    "More Relics",
+    "Breakable Item Drops",
+    "Better Breakable Item Drops",
+    "More Breakable Item Drops",
+    --index
+    "Pet Index",
+    "Index Shop",
+    "Advanced Index Shop",
+    "Random Discounts",
+    "Collections Expert",
+    "Collections Master",
+    --lucky start
+    "Auto Roll",
+    "Faster Auto Roll",
+    "Turbo Auto Roll",
+    "Daily Bonus Roll",
+    "Golden Dice Coin Bonus",
+    "Random Coin Bonuses",
+    "Hide Rolls",
+    "Items From Rolling",
+    "More Items From Rolling",
+    "More Items From Rolling 2",
+    "Better Items From Rolling",
+    "Dice Items From Rolling",
+    --lucky
+    "Luckier",
+    "Even Luckier",
+    "Luck Event",
+    "Events More Often",
+    "Faster Rolls Event",
+    "More Coins Event",
+    "Egg 2",
+    "Egg 3",
+    "Egg 4",
+    "Pet Equip 1",
+    "Pet Dig Coins",
+    "Pet Dig More Often",
+    "Pet Dig More Luck",
+    "Pet Dig Fruit",
+    "Pet Dig Items",
+    "Pets Luck",
+    "Pets Luck 2",
+    "Dupe Pets",
+    "Luckier Dupe Pets",
+    "Huge Pets",
+    --dice
+    "Shiny Golden Dice",
+    "More Often Golden Dice",
+    "24karat Golden Dice",
+    "Rainbow Dice",
+    "Full Rainbow Dice",
+    "Double Rainbow Dice",
+    "Full Spectrum",
+    "Leveling",
+    "More XP",
+    "Even More XP",
+    "XP Jars",
+    "More XP Jars",
+    "Leveling Items",
+    "Leveling Better Items",
+    "Leveling More Items",
+    "Paychecks",
+    "Better Paycheck",
+    "Super Paycheck",
+    "Friends Boost",
+    "Better Friends Boost",
+    "More Friends",
+    "More Friends 2",
+    "More Friends 3",
+    "More Friends 4",
+    "Worldwide Friends",
+    "Valuable Pets",
+    "Very Valuable Pets",
+    "Legendary Pets",
+    "Ultra Pets",
+    --fruit
+    "Bioengineered Fruit",
+    "Amazing Fruit",
+    "Delicious Fruit",
+    "Finding Fruit",
+    "Rainbow Fruit",
+    "Fruit Machine",
+    "More Frequent Fruit",
+    "Fruit Baskets",
+    --potion
+    "Coins Potion Tier 2",
+    "Coins Potion Tier 3",
+    "Coins Potion Tier 4",
+    "Coins Potion Tier 5",
+    "Breakables Potion",
+    "Tier 2 Breakables Potion",
+    "Breakable Potion Buff",
+    "Walkspeed Potion",
+    "Golden Dice Potion",
+    "Rainbow Dice Potion",
+    "Longer Potions",
+    "Even Longer Potions",
+    "Faster Rolls Potion",
+    "Better Potion Vending",
+    "Better Potion Vending 2",
+    "Better Potion Vending 3",
+    "Better Potion Vending 4",
+    "Better Potion Vending Prices",
+    "Potion Vending First Discount",
+    "Potion Vending Flash Sales",
+    "Lucky Potion Tier 2",
+    "Lucky Potion Tier 3",
+    "Lucky Potion Tier 4",
+    "Lucky Potion Tier 5",
+    "Instant Luck Potion",
+    "Tier 2 Instant Luck Potion",
+    "Instant Potion Second Chance",
+    "Increased Second Chance",
+    "Items Drop Potion",
+    "Tier 2 Items Drop Potion",
+    "Tier 3 Items Drop Potion",
+    "Potion Crafting",
+    "Crafting More Potion Recipes",
+    "Potion Wizard",
+    "Faster Potion Crafting",
+    "Even Faster Potion Crafting",
+    "Potion Crafting Double",
+    --expensive
+    "Egg 5",
+    "Egg 6",
+    "Pet Equip 2",
+    "Faster Pets",
+    "Even Faster Pets",
+    "Tier 3 Instant Luck Potion",
+    "The Cocktail"
+
+
+}
+
+
+
+
+-- Функция для покупки одного улучшения в ветви
+function purchaseBranchUpgrades()
+    for _, upgradeName in ipairs(Branch) do
+        local isPurchased = save.UpgradesPurchased[upgradeName]
+
+
+        if not isPurchased then
+            local success, result
+            while getgenv().autobuyupgrades and not isPurchased do
+                success, result = pcall(function()
+                    return game:GetService("ReplicatedStorage").Network.Upgrades_Purchase:InvokeServer(upgradeName)
+                end)
+
+                if success then
+                    if result then
+                        print("Успешная покупка: " .. upgradeName)
+
+                        isPurchased = true  -- Улучшение теперь куплено
+                    else
+                        task.wait(4)
+                    end
+                else
+
+                    task.wait(4)  -- Задержка в 2 секунды
+                end
+            end
+
+            -- Можно добавить небольшую задержку после успешной покупки
+            task.wait(1)  -- Задержка в 1 секунду
+        end
+    end
+
+    print("Все улучшения в ветви обработаны.")
+end
+
+
+
+function buyVendingMachines()
+    while getgenv().autovending do
+        for Machine,Stock in pairs(save.VendingStocks) do
+
+            if Stock > 0 then
+                repeat task.wait(1)
+                    local args = {
+                        [1] = "PotionVendingMachine"
+                    }
+                    
+                    game.ReplicatedStorage.Network["VendingMachines_Purchase"]:InvokeServer(unpack(args))
+                until save.VendingStocks[Machine] == nil or save.VendingStocks[Machine] == 0
+            else 
+                task.wait(10)
+            end
+        end
+    end
+
+end
+
+
+
+
+function autoroll()
+    while getgenv().autoroll do
+        task.wait(0.2)
+        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Eggs_Roll"):InvokeServer()
+    end
+end
+
+function farm()
+
+    local petsFolder = game:GetService("Workspace"):FindFirstChild("__THINGS"):FindFirstChild("Pets")
+    local breakFolder = game:GetService("Workspace"):FindFirstChild("__THINGS"):FindFirstChild("Breakables")
+
+    local currentPets = {}
+
+    local function updatePets()
+        currentPets = {}
+        for _, pet in pairs(petsFolder:GetChildren()) do
+            if pet:IsA("Model") then
+                table.insert(currentPets, pet.Name)
+            end
+        end
+    end
+
+
+    updatePets()
+
+
+    local breakableObjects = {}
+
+
+    for _, breakable in pairs(breakFolder:GetChildren()) do
+        if breakable:IsA("Model") then
+            breakableObjects[breakable] = true
+        end
+    end
+
+    while getgenv().autofarm do
+
+        updatePets()
+
+        for breakable in pairs(breakableObjects) do
+            if breakable.Parent and getgenv().autofarm then
+                for _, petName in pairs(currentPets) do
+
+                    local args = {
+                        [petName] = tonumber(breakable.Name)
+                    }
+
+
+                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
+
+                    task.wait(0.1)
+                end
+                while breakable.Parent do
+                    task.wait(0.1)
+                end
+                breakableObjects[breakable] = nil
+
+            end
+        end
+
+
+        for _, breakable in pairs(breakFolder:GetChildren()) do
+            if breakable:IsA("Model") and not breakableObjects[breakable] then
+                breakableObjects[breakable] = true
+            end
+        end
+
+        task.wait(1.5)
+    end
+end
+
+
+
+function collectOrb(orb)
+
+    local args = {
+        [1] = {
+            [1] = tonumber(orb.Name)
+        }
+    }
+
+
+
+
+    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Orbs: Collect"):FireServer(unpack(args))
+
+
+    orb:Destroy()
+
+end
+
+function setupOrbCollector()
+
+    local orbsFolder = game:GetService("Workspace"):FindFirstChild("__THINGS"):FindFirstChild("Orbs")
+
+
+    if not orbsFolder then
+        warn("Папка Orbs не найдена!")
+        return
+    end
+
+
+    for _, orb in pairs(orbsFolder:GetChildren()) do
+        collectOrb(orb)
+    end
+
+
+    orbCollector = orbsFolder.ChildAdded:Connect(function(newOrb)
+        task.wait(1)
+        collectOrb(newOrb)
+    end)
+end
+
+function disableOrbCollector()
+    if orbCollector then
+        orbCollector:Disconnect()
+        orbCollector = nil
+    end
+end
+
+
+-- Функция для обработки всех объектов в __THINGS.Orbs
+function replaceTexturesInOrbs()
+    local orbs = workspace:FindFirstChild("__THINGS"):FindFirstChild("Orbs")
+    if orbs then
+        -- Обрабатываем все объекты в Orbs
+        for _, orb in pairs(orbs:GetDescendants()) do
+            if orb:FindFirstChild("Center") then
+                local center = orb.Center
+                if center:FindFirstChild("Item") then
+                    center.Item.Texture = 0  -- Меняем Texture на 0
+
+
+                end
+            end
+        end
+    end
+end
+
+-- Включение подписки на новые объекты в Orbs
+function enableTextureReplacement()
+    descendantConnection = workspace.__THINGS.Orbs.DescendantAdded:Connect(function(object)
+        if object:FindFirstChild("Center") then
+            local center = object.Center
+            if center:FindFirstChild("Item") then
+                center.Item.Texture = 0  -- Меняем Texture на 0 для новых объектов
+            end
+        end
+    end)
+end
+
+-- Отключение подписки на новые объекты в Orbs
+function disableTextureReplacement()
+    if descendantConnection then
+        descendantConnection:Disconnect()
+        descendantConnection = nil
+    end
+end
+
+-- Переменная для хранения соединения
+local descendantConnection
+
+-- Функция для замены MeshId
+function replaceMesh(object)
+    if object:IsA("MeshPart") then
+        object.MeshId = ""  -- Новый MeshId
+    elseif object:FindFirstChild("Mesh") then
+        local mesh = object.Mesh
+        if mesh:IsA("SpecialMesh") then
+            mesh.MeshId = "0"  -- Новый MeshId
+        end
+    end
+end
+
+-- Функция для обработки всех объектов в __THINGS.Breakables
+function replaceMeshesInBreakables()
+    local breakables = workspace:FindFirstChild("__THINGS"):FindFirstChild("Breakables")
+    if breakables then
+        -- Обрабатываем все объекты внутри Breakables
+        for _, breakable in pairs(breakables:GetDescendants()) do
+            replaceMesh(breakable)
+        end
+    end
+end
+
+-- Включение подписки на новые объекты
+function enableMeshReplacement()
+    -- Подписываемся на событие добавления новых объектов
+    descendantConnection = workspace.__THINGS.Breakables.DescendantAdded:Connect(function(object)
+        replaceMesh(object)
+    end)
+end
+
+-- Отключение подписки на новые объекты
+function disableMeshReplacement()
+    if descendantConnection then
+        descendantConnection:Disconnect()  -- Отключаем подписку
+        descendantConnection = nil
+    end
+end
+
+
+function Optimization()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.GUIs:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Misc:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts["Parallel Pet Actors"]:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.PlayerScriptsLoader:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.RbxCharacterSounds:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.PlayerModule:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Breakable VFX"]:Destroy()
+    task.wait(.2)
+    --game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Consumables:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Gamepasses:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Hoverboards:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Machine Animations"]:Destroy()
+    task.wait(.2)
+    --game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Machines:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Opening:Destroy()
+    task.wait(.2)
+    --game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Pets:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Trading Plaza"]:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["World Animations"]:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Ambience:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Egg Podium"]:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Gamepass Deal"]:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Item Index"]:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Music:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Notification Prompt"]:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Player Profiles"]:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Tutorial:Destroy()
+    task.wait(.2)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Walkspeed:Destroy()
+    task.wait(.2)
+    workspace.__THINGS.Breakables.Highlight:Destroy()
+    task.wait(.2)
+    --map optimization
+    workspace.OUTER:Destroy()
+    task.wait(.2)
+    workspace.MAP.TradingPlazaPortal:Destroy()
+    task.wait(.2)
+    workspace.MAP.PARTS.Balloons:Destroy()
+    task.wait(.2)
+    workspace.MAP.PARTS.DETAILS:Destroy()
+    task.wait(.2)
+    workspace.MAP.PARTS.Platforms:Destroy()
+    task.wait(.2)
+
+    for _, v in pairs(workspace.MAP.PARTS:GetChildren()) do
+        if v.Name == "Ground" or v.Name == "Part" then
+            wait()  -- Здесь можно выполнить нужные действия для объектов Ground и Part
+        else
+            v:Destroy()  -- Удаляем объект, если его имя не соответствует
+        end
+    end
+end
+
+
+local LocalPlayer = game:GetService("Players").LocalPlayer
+pcall(function()
+
+    LocalPlayer.Idled:Connect(function()
+        game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+        task.wait(1)
+        game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    end)
+
+end)
