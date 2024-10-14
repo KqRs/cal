@@ -64,6 +64,20 @@ Misctab.newToggle("autobuyUpgrades", "ls", false, function(toggleState)
 
     if toggleState then
         purchaseBranchUpgrades()
+        for i = 1, 60 do
+            game.ReplicatedStorage.Network["Upgrades_Purchase"]:InvokeServer("Root")
+            task.wait(1)
+        end
+    else 
+        task.wait(1)
+    end
+end)
+
+Misctab.newToggle("AutoEatFruit", "ls", false, function(toggleState)
+    getgenv().autofruit = toggleState
+
+    if toggleState then
+        AutoFruit()
     else 
         task.wait(1)
     end
@@ -125,6 +139,51 @@ local centerPosition = Vector3.new(-18.8212872, 0.0249950364, 40.5592346)
 local heightOffset = 5
 local teleportDistance = 20
 
+
+
+local ConfigFruit = {
+    "Watermelon",
+    "Apple",
+    "Pineapple",
+    "Orange",
+    "Rainbow",
+    "Banana"
+}
+
+
+local firstRun = true
+
+function AutoFruit()
+    while getgenv().autofruit do
+        if firstRun then
+            -- При первом запуске съедаем 20 фруктов по одному
+            for i = 1, 20 do
+                for id, v in pairs(save.Inventory.Fruit) do
+                    for _, fruit in pairs(ConfigFruit) do
+                        if v.id == fruit and getgenv().autofruit then
+                            game.ReplicatedStorage.Network["Fruits: Consume"]:InvokeServer(id, 1)
+                            task.wait(1)
+                        end
+                    end
+                end
+            end
+            firstRun = false
+        else
+            for id, v in pairs(save.Inventory.Fruit) do
+                for _, fruit in pairs(ConfigFruit) do
+                    if v.id == fruit and getgenv().autofruit then
+                        game.ReplicatedStorage.Network["Fruits: Consume"]:InvokeServer(id, 1)
+                        task.wait(1)
+                    end
+                end
+            end
+        end
+        task.wait(60)
+    end
+end
+
+
+
 function walkToObject(destination)
     local humanoid = character:WaitForChild("Humanoid")
     humanoid:MoveTo(destination)
@@ -183,11 +242,11 @@ local Branch = {
     "Instant Egg Open",
     "Golden Dice",
     "Inventory",
-    "Fruit",
-    "More Fruit",
     --break
     "Small Coin Piles",
     "Large Coin Piles",
+    "Fruit",
+    "More Fruit",
     "Break Faster",
     "Break Even Faster",
     "Lucky Potion",
@@ -221,6 +280,7 @@ local Branch = {
     "Better Breakable Item Drops",
     "More Breakable Item Drops",
     --index
+    "Trading",
     "Pet Index",
     "Index Shop",
     "Advanced Index Shop",
@@ -662,7 +722,7 @@ function Optimization()
     task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Machine Animations"]:Destroy()
     task.wait(.1)
-    --game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Machines:Destroy()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Machines:Destroy()
     task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Opening:Destroy()
     task.wait(.1)
@@ -723,6 +783,16 @@ function OptimizationMap()
     for _, v in pairs(game:GetService("Lighting"):GetChildren()) do
         v:Destroy()
     end
+
+    local player2 = game.Players.LocalPlayer
+    local myCharacter = player2.Character
+
+    for _, model in ipairs(workspace:GetChildren()) do
+        if model:IsA("Model") and model ~= myCharacter and game.Players:GetPlayerFromCharacter(model) then
+            model:Destroy()
+        end
+end
+
 end
 
 
@@ -784,5 +854,7 @@ pcall(function()
     end)
 
 end)
+
+
 
 
