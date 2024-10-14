@@ -69,6 +69,17 @@ Misctab.newToggle("autobuyUpgrades", "ls", false, function(toggleState)
     end
 end)
 
+Misctab.newButton("Collect Relic", "ls", function()
+    for i = 1,50 do
+        task.wait(1)
+        local args = {
+            [1] = i
+        }
+        
+        game.ReplicatedStorage.Network["Relic_Found"]:InvokeServer(unpack(args))
+    end
+end)
+
 Optimizationtab.newToggle("DeleteOrbs", "ls", false, function(toggleState)
     getgenv().DeleteOrbs = toggleState
 
@@ -81,34 +92,24 @@ Optimizationtab.newToggle("DeleteOrbs", "ls", false, function(toggleState)
 end)
 
 
-Optimizationtab.newToggle("DeleteBreak", "ls", false, function(toggleState)
-    getgenv().DeleteBreak = toggleState
+Optimizationtab.newButton("Delete Breakables", "Cant off!", function()
+    replaceMeshesInBreakables()
 
-    if toggleState then
-        replaceMeshesInBreakables()
-        enableMeshReplacement()
-    else 
-        disableMeshReplacement()
-    end
 end)
 
-Misctab.newButton("Collect Relic", "ls", function()
-    for i = 1,50 do
-        task.wait(1)
-        local args = {
-            [1] = i
-        }
-        
-        game.ReplicatedStorage.Network["Relic_Found"]:InvokeServer(unpack(args))
-    end
-end)
 
 Optimizationtab.newButton("Delete Scripts", "Off hoverboard or you stack!", function()
     Optimization()
 end)
 
+Optimizationtab.newButton("Delete Map", "", function()
+    OptimizationMap()
+end)
 
-task.wait(2)
+Optimizationtab.newButton("Delete something for Breakables", "", function()
+    OptimizationBreak()
+end)
+
 
 
 local library = require(game.ReplicatedStorage.Library.Client.Save)
@@ -344,7 +345,9 @@ local Branch = {
     "Faster Pets",
     "Even Faster Pets",
     "Tier 3 Instant Luck Potion",
-    "The Cocktail"
+    "The Cocktail",
+    "Shiny Pets",
+    "Easier Shiny Pets"
 
 
 }
@@ -521,7 +524,7 @@ function setupOrbCollector()
 
 
     orbCollector = orbsFolder.ChildAdded:Connect(function(newOrb)
-        task.wait()
+        task.wait(0.1)
         collectOrb(newOrb)
     end)
 end
@@ -555,10 +558,9 @@ function replaceTexturesInOrbs()
 
 
     if orbs then
-        -- Обрабатываем все объекты в Orbs
         for _, orb in pairs(orbs:GetDescendants()) do
             if orb:IsA("MeshPart") and orb.MeshId == "rbxassetid://7205419138" then
-                orb.MeshId = "0"  -- Очищаем MeshId
+                orb.MeshId = "0"
                 if orb:FindFirstChild("ParticleEmitter") then
                     orb.ParticleEmitter.Texture = "0"
                 
@@ -599,8 +601,6 @@ function disableTextureReplacement()
     end
 end
 
--- Переменная для хранения соединения
-local descendantConnection
 
 -- Функция для замены MeshId
 function replaceMesh(object)
@@ -609,7 +609,7 @@ function replaceMesh(object)
     elseif object:FindFirstChild("Mesh") then
         local mesh = object.Mesh
         if mesh:IsA("SpecialMesh") then
-            mesh.MeshId = "0"  -- Новый MeshId
+            mesh.MeshId = ""  -- Новый MeshId
         end
     end
 end
@@ -623,87 +623,87 @@ function replaceMeshesInBreakables()
             replaceMesh(breakable)
         end
     end
-end
+    for i,v in pairs(game:GetService("ReplicatedStorage").__DIRECTORY.Breakables:GetDescendants()) do
+        if v:IsA("MeshPart") then
+            v.MeshId = ""
+            v.TextureID = ""
 
--- Включение подписки на новые объекты
-function enableMeshReplacement()
-    -- Подписываемся на событие добавления новых объектов
-    descendantConnection = workspace.__THINGS.Breakables.DescendantAdded:Connect(function(object)
-        replaceMesh(object)
-    end)
-end
-
--- Отключение подписки на новые объекты
-function disableMeshReplacement()
-    if descendantConnection then
-        descendantConnection:Disconnect()  -- Отключаем подписку
-        descendantConnection = nil
+        end
     end
+
+
 end
+
+
+
+
 
 
 function Optimization()
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.GUIs:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Misc:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts["Parallel Pet Actors"]:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.PlayerScriptsLoader:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.RbxCharacterSounds:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.PlayerModule:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Breakable VFX"]:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     --game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Consumables:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Gamepasses:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Hoverboards:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Machine Animations"]:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Machines:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Opening:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     --game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Pets:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Trading Plaza"]:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["World Animations"]:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Ambience:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Egg Podium"]:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Gamepass Deal"]:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Item Index"]:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Music:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Notification Prompt"]:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Player Profiles"]:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Tutorial:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     --game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Walkspeed:Destroy()
-    task.wait(.2)
-    workspace.__THINGS.Breakables.Highlight:Destroy()
-    task.wait(.2)
+    task.wait(.1)
+    --workspace.__THINGS.Breakables.Highlight:Destroy()
+    task.wait(.1)
+end
+
+function OptimizationMap()
     --map optimization
     workspace.OUTER:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     workspace.MAP.TradingPlazaPortal:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     workspace.__THINGS.Relics:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     workspace.__THINGS.RenderedEggs:Destroy()
-    task.wait(.2)
+    task.wait(.1)
     for i,v in pairs(workspace.MAP.INTERACT:GetChildren()) do
         if v.Name == "Items" or v.Name == "Machines" or v.Name == "GlobalLeaderboard" or v.Name == "ServerLeaderboard" then
             task.wait()
@@ -719,11 +719,63 @@ function Optimization()
             v:Destroy()  -- Удаляем объект, если его имя не соответствует
         end
     end
+
+    for _, v in pairs(game:GetService("Lighting"):GetChildren()) do
+        v:Destroy()
+    end
+end
+
+
+
+function OptimizationBreak()
+    game:GetService("ReplicatedStorage").Library.Client.XPBallCmds.Ball.Center.Item.Texture = ""
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Assets.Particles.Orbs.OrbCollect.Texture = ""
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Assets.Particles.Trails["Path Dust"].Texture = ""
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Assets.Particles.Lightning.LightningBeam.Lightning.Texture = ""
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Assets.Particles["Coin Explode"].Boom.Texture = ""
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Assets.Particles["Coin Explode"]["New Coin Particle"].Texture = ""
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Assets.Particles["Coin Explode"].Shine2.Texture = ""
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Assets.Particles["Coin Explode"].Shock.Texture = ""
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Assets.Particles["Coin Explode"]["Sparkle Yellow"].Texture = ""
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Assets.Particles["Coin Explode"].Sparkles.Texture = ""
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Assets.Particles["Coin Explode"].Sparks.Texture = ""
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Assets.Billboards.BreakableProgress.Progress.Visible = false
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Assets.Billboards.BonusReward.ImageLabel.Image = ""
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Assets.Billboards.SuperBonusReward.ImageLabel.Image = ""
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Assets.Billboards.XPReward.ImageLabel.Image = ""
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Assets.Particles["Chest Explode"].Boom.Texture = "0"
+    game:GetService("ReplicatedStorage").Assets.Particles["Chest Explode"]["New Coin Particle"].Texture = "0"
+    game:GetService("ReplicatedStorage").Assets.Particles["Chest Explode"].Shine2.Texture = "0"
+    game:GetService("ReplicatedStorage").Assets.Particles["Chest Explode"].Shock.Texture = "0"
+    game:GetService("ReplicatedStorage").Assets.Particles["Chest Explode"]["Sparkle Yellow"].Texture = "0"
+    game:GetService("ReplicatedStorage").Assets.Particles["Chest Explode"].Sparkles.Texture = "0"
+    game:GetService("ReplicatedStorage").Assets.Particles["Chest Explode"].Sparks.Texture = "0"
+    game:GetService("ReplicatedStorage").Assets.Particles["Coin Damage"].Boom.Texture = "0"
+    game:GetService("ReplicatedStorage").Assets.Particles["Coin Damage"].Sparkles.Texture = "0"
+    game:GetService("ReplicatedStorage").Assets.Particles["Coin Damage"].rings.Texture = "0"
+
 end
 
 
 local LocalPlayer = game:GetService("Players").LocalPlayer
 pcall(function()
+    LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Enabled = false
+
 
     LocalPlayer.Idled:Connect(function()
         game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
