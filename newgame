@@ -789,25 +789,30 @@ function OptimizationMap()
         v:Destroy()
     end
 
-    local Players = game:GetService("Players")
-    local LocalPlayer = Players.LocalPlayer
+    local Players2 = game:GetService("Players")
+    local localPlayer2 = Players2.LocalPlayer
     
-    Players.PlayerAdded:Connect(function(player)
+    -- Функция для удаления всех моделей игроков, кроме вашей
+    local function removeOtherPlayerModels()
+        for _, player in pairs(Players2:GetPlayers()) do
+            if player ~= localPlayer2 and player.Character and player.Character.Parent == workspace then
+                player.Character:Destroy()
+            end
+        end
+    end
+    
+    -- Удаляем модели игроков при присоединении нового игрока
+    Players2.PlayerAdded:Connect(function(player)
         player.CharacterAdded:Connect(function(character)
-            if player ~= LocalPlayer then
+            wait(1)  -- Ждем немного, чтобы убедиться, что модель игрока загружена
+            if player ~= localPlayer2 and player.Character and player.Character.Parent == workspace then
                 character:Destroy()
             end
         end)
     end)
     
-    -- Удалить уже существующих игроков (кроме себя)
-    for _, player in pairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer then
-            if player.Character then
-                player.Character:Destroy()
-            end
-        end
-    end
+    -- Вызываем функцию при запуске скрипта, чтобы сразу удалить лишние модели
+    removeOtherPlayerModels()
     
 end
 
@@ -871,3 +876,7 @@ pcall(function()
     end)
 
 end)
+
+
+
+
