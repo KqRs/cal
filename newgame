@@ -34,7 +34,7 @@ local function Optimization()
     task.wait(.1)
     game:GetService("ReplicatedStorage").Library.Client.LeaderboardCmds:Destroy()
     task.wait(.1)
-    game:GetService("ReplicatedStorage").Library.Client.MachineCmds:Destroy()
+    --game:GetService("ReplicatedStorage").Library.Client.MachineCmds:Destroy()
     task.wait(.1)
     for _, ui in pairs(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.GUIs:GetChildren())  do
         if ui.name == "Spawn Leaderboards" then
@@ -120,9 +120,22 @@ local function OptimizationMap()
                 if part:IsA("MeshPart") then
                     part.MeshId = "0"
                     part.Transparency = "1"
-                elseif part:IsA("BillboadrGui") then
+
+                elseif part:IsA("BillboardGui") then
                     part.Enabled = false
+                elseif part.Name == "Screen" then
+                    part.Transparency = 1
+
+                elseif part:IsA("SurfaceGui") then
+                    part.Enabled = false
+
+                elseif part.Name == "Part" then
+                    part:Destroy()
+                elseif part:IsA("SurfaceLight") then
+                    part.Enabled = false
+
                 end
+
             end
         else 
             v:Destroy()
@@ -835,6 +848,9 @@ print("AutoFruit()")
 task.wait(1)
 replaceTexturesInOrbs()
 print("replaceTexturesInOrbs()")
+task.wait(1)
+replaceMeshesInBreakables()
+print("enableTextureReplacement()")
 task.wait(1)
 enableTextureReplacement()
 print("enableTextureReplacement()")
