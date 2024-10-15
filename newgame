@@ -455,19 +455,23 @@ end
 
 function buyVendingMachines()
     while getgenv().autovending do
-        for Machine,Stock in pairs(save.VendingStocks) do
+        if save.VendingStocks then
+            for Machine,Stock in pairs(save.VendingStocks) do
 
-            if Stock > 0 then
-                repeat task.wait(1)
-                    local args = {
-                        [1] = "PotionVendingMachine"
-                    }
-                    
-                    game.ReplicatedStorage.Network["VendingMachines_Purchase"]:InvokeServer(unpack(args))
-                until save.VendingStocks[Machine] == nil or save.VendingStocks[Machine] == 0
-            else 
-                task.wait(10)
+                if Stock > 0 then
+                    repeat task.wait(1)
+                        local args = {
+                            [1] = "PotionVendingMachine"
+                        }
+                        
+                        game.ReplicatedStorage.Network["VendingMachines_Purchase"]:InvokeServer(unpack(args))
+                    until save.VendingStocks[Machine] == nil or save.VendingStocks[Machine] == 0
+                else 
+                    task.wait(10)
+                end
             end
+        else 
+            task.wait(10)
         end
     end
 
