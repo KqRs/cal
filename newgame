@@ -64,10 +64,6 @@ Misctab.newToggle("autobuyUpgrades", "ls", false, function(toggleState)
 
     if toggleState then
         purchaseBranchUpgrades()
-        for i = 1, 60 do
-            game.ReplicatedStorage.Network["Upgrades_Purchase"]:InvokeServer("Root")
-            task.wait(1)
-        end
     else 
         task.wait(1)
     end
@@ -155,9 +151,21 @@ local firstRun = true
 
 function AutoFruit()
     while getgenv().autofruit do
-        if firstRun then
-            -- При первом запуске съедаем 20 фруктов по одному
-            for i = 1, 20 do
+        if save.Inventory.Fruit then
+            if firstRun then
+                -- При первом запуске съедаем 20 фруктов по одному
+                for i = 1, 20 do
+                    for id, v in pairs(save.Inventory.Fruit) do
+                        for _, fruit in pairs(ConfigFruit) do
+                            if v.id == fruit and getgenv().autofruit then
+                                game.ReplicatedStorage.Network["Fruits: Consume"]:InvokeServer(id, 1)
+                                task.wait(1)
+                            end
+                        end
+                    end
+                end
+                firstRun = false
+            else
                 for id, v in pairs(save.Inventory.Fruit) do
                     for _, fruit in pairs(ConfigFruit) do
                         if v.id == fruit and getgenv().autofruit then
@@ -167,18 +175,10 @@ function AutoFruit()
                     end
                 end
             end
-            firstRun = false
+            task.wait(60)
         else
-            for id, v in pairs(save.Inventory.Fruit) do
-                for _, fruit in pairs(ConfigFruit) do
-                    if v.id == fruit and getgenv().autofruit then
-                        game.ReplicatedStorage.Network["Fruits: Consume"]:InvokeServer(id, 1)
-                        task.wait(1)
-                    end
-                end
-            end
+            task.wait(10)
         end
-        task.wait(60)
     end
 end
 
@@ -237,6 +237,7 @@ end
 -- Получаем все названия из ветви
 local Branch = {
     --start
+    "Root",
     "Faster Egg Open",
     "Faster Egg Open 2",
     "Instant Egg Open",
