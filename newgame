@@ -696,15 +696,12 @@ local function buyVendingMachines()
             if save.VendingStocks then
                 for Machine, Stock in pairs(save.VendingStocks) do
                     while Stock > 0 do
-                        task.wait(1)
-                        local args = {
-                            [1] = "PotionVendingMachine"
-                        }
-                        
-                        game.ReplicatedStorage.Network["VendingMachines_Purchase"]:InvokeServer(unpack(args))
+
+                        game.ReplicatedStorage.Network["VendingMachines_Purchase"]:InvokeServer("PotionVendingMachine")
                         
                         -- Обновляем значение Stock после каждой покупки
                         Stock = save.VendingStocks[Machine]
+                        task.wait(1)
                     end
                     task.wait(10)
                 end
