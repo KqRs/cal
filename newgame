@@ -672,8 +672,8 @@ local function AutoFruit()
 end
 
 
-Optimization()
---print("Optimization()")
+--Optimization()
+print("Optimization()")
 task.wait(0.5)
 OptimizationMap()
 print("OptimizationMap()")
