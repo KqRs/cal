@@ -24,6 +24,17 @@ local heightOffset = 5
 local teleportDistance = 20
 local orbCollector
 
+local asd = game:GetService("ReplicatedStorage").__DIRECTORY.Upgrades:GetDescendants()
+local upgradesTable = {}
+
+-- Добавляем бесплатное улучшение "Root" с ценой 1
+table.insert(upgradesTable, {name = "Root", price = 1})
+
+local isPurchasedTable = save.UpgradesPurchased 
+
+
+local allPurchased = true
+
 --optimization
 local function Optimization()
     game:GetService("ReplicatedStorage").Network["Leaderboards: Request"]:Destroy()
@@ -472,11 +483,6 @@ end
 --ubgrade
 local function purchaseBranchUpgrades()
     spawn(function()
-        local asd = game:GetService("ReplicatedStorage").__DIRECTORY.Upgrades:GetDescendants()
-        local upgradesTable = {} -- Таблица для хранения улучшений и их цен
-
-        -- Добавляем бесплатное улучшение "Root" с ценой 1
-        table.insert(upgradesTable, {name = "Root", price = 1})
 
         for i, v in pairs(asd) do
             local success, result = pcall(require, v) -- Обрабатываем ошибку, если объект нельзя загрузить через require
@@ -501,13 +507,9 @@ local function purchaseBranchUpgrades()
             return a.price < b.price
         end)
 
-        -- Подключение к другому скрипту
-        local isPurchasedTable = save.UpgradesPurchased -- Таблица с купленными улучшениями
 
-        -- Флаг для проверки, все ли улучшения куплены
-        local allPurchased = true 
 
-        -- Логика для автоматической покупки непрокачанных улучшений
+
         for _, upgrade in pairs(upgradesTable) do
             local upgradeName = upgrade.name
             local isPurchased = isPurchasedTable[upgradeName] or false -- Проверяем, куплено ли улучшение
@@ -691,7 +693,7 @@ task.wait(1)
 setupOrbCollector()
 print("setupOrbCollector()")
 task.wait(1)
-collectItems()
+--collectItems()
 --print("collectItems()")
 task.wait(1)
 purchaseBranchUpgrades()
