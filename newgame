@@ -471,80 +471,81 @@ end
 
 --ubgrade
 local function purchaseBranchUpgrades()
-    
-    local asd = game:GetService("ReplicatedStorage").__DIRECTORY.Upgrades:GetDescendants()
-    local upgradesTable = {} -- Таблица для хранения улучшений и их цен
+    spawn(function()
+        local asd = game:GetService("ReplicatedStorage").__DIRECTORY.Upgrades:GetDescendants()
+        local upgradesTable = {} -- Таблица для хранения улучшений и их цен
 
-    -- Добавляем бесплатное улучшение "Root" с ценой 1
-    table.insert(upgradesTable, {name = "Root", price = 1})
+        -- Добавляем бесплатное улучшение "Root" с ценой 1
+        table.insert(upgradesTable, {name = "Root", price = 1})
 
-    for i, v in pairs(asd) do
-        local success, result = pcall(require, v) -- Обрабатываем ошибку, если объект нельзя загрузить через require
-        if success then
-            for z, y in pairs(result) do
-                if z == "Price" then
-                    for _, item in pairs(y) do
-                        if item._data and item._data._am then
-                            -- Добавляем улучшение в таблицу как пару {name, price}
-                            table.insert(upgradesTable, {name = v.Name, price = item._data._am})
+        for i, v in pairs(asd) do
+            local success, result = pcall(require, v) -- Обрабатываем ошибку, если объект нельзя загрузить через require
+            if success then
+                for z, y in pairs(result) do
+                    if z == "Price" then
+                        for _, item in pairs(y) do
+                            if item._data and item._data._am then
+                                -- Добавляем улучшение в таблицу как пару {name, price}
+                                table.insert(upgradesTable, {name = v.Name, price = item._data._am})
+                            end
                         end
                     end
                 end
+            else
+                print("Ошибка при попытке require для объекта: " .. tostring(v))
             end
-        else
-            print("Ошибка при попытке require для объекта: " .. tostring(v))
         end
-    end
 
-    -- Сортировка таблицы по возрастанию цены (price)
-    table.sort(upgradesTable, function(a, b)
-        return a.price < b.price
-    end)
+        -- Сортировка таблицы по возрастанию цены (price)
+        table.sort(upgradesTable, function(a, b)
+            return a.price < b.price
+        end)
 
-    -- Подключение к другому скрипту
-    local isPurchasedTable = save.UpgradesPurchased -- Таблица с купленными улучшениями
+        -- Подключение к другому скрипту
+        local isPurchasedTable = save.UpgradesPurchased -- Таблица с купленными улучшениями
 
-    -- Флаг для проверки, все ли улучшения куплены
-    local allPurchased = true 
+        -- Флаг для проверки, все ли улучшения куплены
+        local allPurchased = true 
 
-    -- Логика для автоматической покупки непрокачанных улучшений
-    for _, upgrade in pairs(upgradesTable) do
-        local upgradeName = upgrade.name
-        local isPurchased = isPurchasedTable[upgradeName] or false -- Проверяем, куплено ли улучшение
+        -- Логика для автоматической покупки непрокачанных улучшений
+        for _, upgrade in pairs(upgradesTable) do
+            local upgradeName = upgrade.name
+            local isPurchased = isPurchasedTable[upgradeName] or false -- Проверяем, куплено ли улучшение
 
-        if not isPurchased then
-            allPurchased = false -- Установить флаг в false, если хоть одно улучшение не куплено
+            if not isPurchased then
+                allPurchased = false -- Установить флаг в false, если хоть одно улучшение не куплено
 
-            local success, result
-            while getgenv().autobuyupgrades and not isPurchased do
-                success, result = pcall(function()
-                    return game:GetService("ReplicatedStorage").Network.Upgrades_Purchase:InvokeServer(upgradeName)
-                end)
+                local success, result
+                while getgenv().autobuyupgrades and not isPurchased do
+                    success, result = pcall(function()
+                        return game:GetService("ReplicatedStorage").Network.Upgrades_Purchase:InvokeServer(upgradeName)
+                    end)
 
-                if success then
-                    if result then
-                        print("Успешная покупка: " .. upgradeName)
-                        isPurchased = true  -- Улучшение теперь куплено
-                        isPurchasedTable[upgradeName] = true -- Обновляем состояние в локальной таблице
+                    if success then
+                        if result then
+                            print("Успешная покупка: " .. upgradeName)
+                            isPurchased = true  -- Улучшение теперь куплено
+                            isPurchasedTable[upgradeName] = true -- Обновляем состояние в локальной таблице
+                        else
+                            task.wait(4) -- Задержка, если не удалось купить
+                        end
                     else
-                        task.wait(4) -- Задержка, если не удалось купить
+                        task.wait(4)  -- Задержка в 4 секунды, если вызов не удался
                     end
-                else
-                    task.wait(4)  -- Задержка в 4 секунды, если вызов не удался
                 end
+
+                -- Небольшая задержка после успешной покупки
+                task.wait(1)  -- Задержка в 1 секунду
+            else
+                task.wait(1)
             end
-
-            -- Небольшая задержка после успешной покупки
-            task.wait(1)  -- Задержка в 1 секунду
-        else
-            task.wait(1)
         end
-    end
 
-    -- Проверяем, все ли улучшения куплены
-    if allPurchased then
-        print("Все улучшения куплены!")
-    end
+        -- Проверяем, все ли улучшения куплены
+        if allPurchased then
+            print("Все улучшения куплены!")
+        end
+    end)
 end
 
 
