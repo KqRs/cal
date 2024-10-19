@@ -482,34 +482,33 @@ end
 
 --ubgrade
 local function purchaseBranchUpgrades()
-    spawn(function()
 
-        for i, v in pairs(asd) do
-            local success, result = pcall(require, v) -- Обрабатываем ошибку, если объект нельзя загрузить через require
-            if success then
-                for z, y in pairs(result) do
-                    if z == "Price" then
-                        for _, item in pairs(y) do
-                            if item._data and item._data._am then
-                                -- Добавляем улучшение в таблицу как пару {name, price}
-                                table.insert(upgradesTable, {name = v.Name, price = item._data._am})
-                            end
+    for i, v in pairs(asd) do
+        local success, result = pcall(require, v) -- Обрабатываем ошибку, если объект нельзя загрузить через require
+        if success then
+            for z, y in pairs(result) do
+                if z == "Price" then
+                    for _, item in pairs(y) do
+                        if item._data and item._data._am then
+                            -- Добавляем улучшение в таблицу как пару {name, price}
+                            table.insert(upgradesTable, {name = v.Name, price = item._data._am})
                         end
                     end
                 end
-            else
-                print("Ошибка при попытке require для объекта: " .. tostring(v))
             end
+        else
+            print("Ошибка при попытке require для объекта: " .. tostring(v))
         end
+    end
 
-        -- Сортировка таблицы по возрастанию цены (price)
-        table.sort(upgradesTable, function(a, b)
-            return a.price < b.price
-        end)
+    -- Сортировка таблицы по возрастанию цены (price)
+    table.sort(upgradesTable, function(a, b)
+        return a.price < b.price
+    end)
 
 
 
-
+    spawn(function()
         for _, upgrade in pairs(upgradesTable) do
             local upgradeName = upgrade.name
             local isPurchased = isPurchasedTable[upgradeName] or false -- Проверяем, куплено ли улучшение
@@ -520,6 +519,7 @@ local function purchaseBranchUpgrades()
                 local success, result
                 while getgenv().autobuyupgrades and not isPurchased do
                     success, result = pcall(function()
+                        print("ПОПЫТКА УЛУЧШИТЬ:", upgradeName)
                         return game:GetService("ReplicatedStorage").Network.Upgrades_Purchase:InvokeServer(upgradeName)
                     end)
 
