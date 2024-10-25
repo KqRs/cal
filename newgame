@@ -43,7 +43,7 @@ local function purchaseBranchUpgrades()
                     if z == "Price" then
                         for _, item in pairs(y) do
                             if item._data and item._data._am then
-                                local parentPrice = getParentPrice(v.Parent)
+                                local parentPrice = getParentPrice(v.Parent.Name)
 
                                 -- Если родитель дороже, чем текущая цена, увеличиваем цену на 1
                                 if parentPrice and parentPrice > item._data._am then
