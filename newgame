@@ -1,6 +1,20 @@
+repeat
+    task.wait(1)
+until game:IsLoaded()
+
+repeat
+    task.wait(1)
+until game.PlaceId ~= nil
+
+repeat
+    task.wait(1)
+until game:GetService("Players").LocalPlayer and game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
+
+task.wait(20)
 getgenv().autobuyupgrades = true
 local library = require(game.ReplicatedStorage.Library.Client.Save)
 local save = library.Get()
+
 
 local function purchaseBranchUpgrades()
     spawn(function()
@@ -14,30 +28,20 @@ local function purchaseBranchUpgrades()
         task.wait(1)
         table.insert(upgradesTable, {name = "Candy Currency", price = 3})
 
-        local function getParentPrice(upgradeName)
-            for _, upgrade in pairs(upgradesTable) do
-                if upgrade.name == upgradeName then
-                    return upgrade.price
-                end
-            end
-            return nil -- Если родитель не найден
-        end
-
         for i, v in pairs(asd) do
-            local success, result = pcall(require, v)
+            local success, result = pcall(require, v) -- Обрабатываем ошибку, если объект нельзя загрузить через require
             if success then
                 for z, y in pairs(result) do
                     if z == "Price" then
                         for _, item in pairs(y) do
                             if item._data and item._data._am then
-                                local parentPrice = getParentPrice(v.Parent)
-
-                                -- Если родитель дороже, чем текущая цена, увеличиваем цену на 1
-                                if parentPrice and parentPrice > item._data._am then
-                                    table.insert(upgradesTable, {name = v.Name, price = parentPrice + 1})
+                                if v.Parent  then
+                                    table.insert(upgradesTable, {name = v.Name, price = 5000})
                                 else
                                     table.insert(upgradesTable, {name = v.Name, price = item._data._am})
                                 end
+
+
                             end
                         end
                     end
@@ -52,9 +56,13 @@ local function purchaseBranchUpgrades()
             return a.price < b.price
         end)
 
+        -- Подключение к другому скрипту
         local isPurchasedTable = save.UpgradesPurchased -- Таблица с купленными улучшениями
-        local allPurchased = true -- Флаг для проверки, все ли улучшения куплены
 
+        -- Флаг для проверки, все ли улучшения куплены
+        local allPurchased = true 
+
+        -- Логика для автоматической покупки непрокачанных улучшений
         for _, upgrade in pairs(upgradesTable) do
             local upgradeName = upgrade.name
             local isPurchased = isPurchasedTable[upgradeName] or false -- Проверяем, куплено ли улучшение
@@ -74,21 +82,22 @@ local function purchaseBranchUpgrades()
                             isPurchased = true  -- Улучшение теперь куплено
                             isPurchasedTable[upgradeName] = true -- Обновляем состояние в локальной таблице
                         else
-                            print("Не удалось купить: " .. upgradeName)
                             task.wait(4) -- Задержка, если не удалось купить
+                            
                         end
                     else
-                        print("Ошибка при покупке: " .. tostring(result))
-                        task.wait(4) -- Задержка в 4 секунды, если вызов не удался
+                        task.wait(4)  -- Задержка в 4 секунды, если вызов не удался
                     end
                 end
 
-                task.wait(1) -- Небольшая задержка после успешной покупки
+                -- Небольшая задержка после успешной покупки
+                task.wait(1)  -- Задержка в 1 секунду
             else
-                task.wait(0.2)
+                task.wait(.2)
             end
         end
 
+        -- Проверяем, все ли улучшения куплены
         if allPurchased then
             print("Все улучшения куплены!")
         end
