@@ -75,6 +75,7 @@ local function purchaseBranchUpgrades()
                         end
                     else
                         task.wait(4)  -- Задержка в 4 секунды, если вызов не удался
+                        print(upgradeName)
 
                     end
                 end
