@@ -1,487 +1,20 @@
-getgenv().autoroll = true
-getgenv().autofarm = true
-getgenv().autocoins = true
-getgenv().autostaff = true
-getgenv().autovending = true
 getgenv().autobuyupgrades = true
-getgenv().autofruit = true
-getgenv().DeleteOrbs = true
-
-
-
-
 local library = require(game.ReplicatedStorage.Library.Client.Save)
 local save = library.Get()
 
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
-local diggingParts = workspace:FindFirstChild("__THINGS"):FindFirstChild("Digging")
-local hiddenGifts = workspace:FindFirstChild("__THINGS"):FindFirstChild("HiddenGifts")
-local centerPosition = Vector3.new(-18.8212872, 0.0249950364, 40.5592346)
-local heightOffset = 5
-local teleportDistance = 20
-local orbCollector
 
-local asd = game:GetService("ReplicatedStorage").__DIRECTORY.Upgrades:GetDescendants()
-local upgradesTable = {}
 
--- Добавляем бесплатное улучшение "Root" с ценой 1
-table.insert(upgradesTable, {name = "Root", price = 1})
-
-local isPurchasedTable = save.UpgradesPurchased 
-
-
-local allPurchased = true
-
---optimization
-local function Optimization()
-    game:GetService("ReplicatedStorage").Network["Leaderboards: Request"]:Destroy()
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Network["Leaderboards: Broadcast Global"]:Destroy()
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Network["Leaderboards: Broadcast Local"]:Destroy()
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Library.Client.LeaderboardCmds:Destroy()
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Library.Client.MachineCmds:Destroy()
-    task.wait(.1)
-    for _, ui in pairs(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.GUIs:GetChildren())  do
-        if ui.name == "Spawn Leaderboards" then
-            task.wait()
-        else 
-            ui:Destroy()
-        end
-    end
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerGui.DailyRoll.Enabled = false
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Misc:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts["Parallel Pet Actors"]:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.PlayerScriptsLoader:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.RbxCharacterSounds:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.PlayerModule:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Breakable VFX"]:Destroy()
-    task.wait(.1)
-    --game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Consumables:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Gamepasses:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Hoverboards:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Machine Animations"]:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Machines:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Opening:Destroy()
-    task.wait(.1)
-    --game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Pets:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Trading Plaza"]:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["World Animations"]:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Ambience:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Egg Podium"]:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Gamepass Deal"]:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Item Index"]:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Music:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Notification Prompt"]:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Player Profiles"]:Destroy()
-    task.wait(.1)
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Tutorial:Destroy()
-    task.wait(.1)
-    --game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Walkspeed:Destroy()
-    --task.wait(.1)
-    --workspace.__THINGS.Breakables.Highlight:Destroy()
-    --task.wait(.1)
-    for _, Gui in pairs(game:GetService("Players").LocalPlayer.PlayerGui:GetChildren()) do
-        if Gui:IsA("ScreenGui") then
-            Gui.Enabled = false
-        end
-    end
-end
-
-local function OptimizationMap()
-    --map optimization
-    workspace.OUTER:Destroy()
-    task.wait(.1)
-    workspace.MAP.TradingPlazaPortal:Destroy()
-    task.wait(.1)
-    workspace.__THINGS.Relics:Destroy()
-    task.wait(.1)
-    workspace.__THINGS.RenderedEggs:Destroy()
-    task.wait(.1)
-    --workspace.MAP.INTERACT:Destroy()
-    for i,v in pairs(workspace.MAP.INTERACT:GetChildren()) do
-        if v.Name == "Machines" then
-            for _, part in pairs(v:GetDescendants()) do
-                if part:IsA("MeshPart") then
-                    part.MeshId = "0"
-                    part.Transparency = "1"
-
-                elseif part:IsA("BillboardGui") then
-                    part.Enabled = false
-                elseif part.Name == "Screen" then
-                    part.Transparency = 1
-
-                elseif part:IsA("SurfaceGui") then
-                    part.Enabled = false
-
-                elseif part.Name == "Part" then
-                    part:Destroy()
-                elseif part:IsA("SurfaceLight") then
-                    part.Enabled = false
-
-                end
-
-            end
-        else 
-            v:Destroy()
-        end
-    end
-
-    for _, v in pairs(workspace.MAP.PARTS:GetChildren()) do
-        if v.Name == "Ground" then
-            wait()  -- Здесь можно выполнить нужные действия для объектов Ground и Part
-        else
-            v:Destroy()  -- Удаляем объект, если его имя не соответствует
-        end
-    end
-
-    for _, v in pairs(game:GetService("Lighting"):GetChildren()) do
-        v:Destroy()
-    end
-
-    local Players2 = game:GetService("Players")
-    local localPlayer2 = Players2.LocalPlayer
-    
-    -- Функция для удаления всех моделей игроков, кроме вашей
-    local function removeOtherPlayerModels()
-        for _, player in pairs(Players2:GetPlayers()) do
-            if player ~= localPlayer2 and player.Character and player.Character.Parent == workspace then
-                player.Character:Destroy()
-            end
-        end
-    end
-    
-    -- Удаляем модели игроков при присоединении нового игрока
-    Players2.PlayerAdded:Connect(function(player)
-        player.CharacterAdded:Connect(function(character)
-            wait(1)  -- Ждем немного, чтобы убедиться, что модель игрока загружена
-            if player ~= localPlayer2 and player.Character and player.Character.Parent == workspace then
-                character:Destroy()
-            end
-        end)
-    end)
-    
-    -- Вызываем функцию при запуске скрипта, чтобы сразу удалить лишние модели
-    removeOtherPlayerModels()
-    
-end
-
-
-
-
-local function OptimizationBreak()
-    game:GetService("ReplicatedStorage").Library.Client.XPBallCmds.Ball.Center.Item.Texture = ""
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Assets.Particles.Orbs.OrbCollect.Texture = ""
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Assets.Particles.Trails["Path Dust"].Texture = ""
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Assets.Particles.Lightning.LightningBeam.Lightning.Texture = ""
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Assets.Particles["Coin Explode"].Boom.Texture = ""
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Assets.Particles["Coin Explode"]["New Coin Particle"].Texture = ""
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Assets.Particles["Coin Explode"].Shine2.Texture = ""
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Assets.Particles["Coin Explode"].Shock.Texture = ""
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Assets.Particles["Coin Explode"]["Sparkle Yellow"].Texture = ""
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Assets.Particles["Coin Explode"].Sparkles.Texture = ""
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Assets.Particles["Coin Explode"].Sparks.Texture = ""
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Assets.Billboards.BreakableProgress.Progress.Visible = false
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Assets.Billboards.BonusReward.ImageLabel.Image = ""
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Assets.Billboards.SuperBonusReward.ImageLabel.Image = ""
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Assets.Billboards.XPReward.ImageLabel.Image = ""
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Assets.Particles["Chest Explode"].Boom.Texture = "0"
-    game:GetService("ReplicatedStorage").Assets.Particles["Chest Explode"]["New Coin Particle"].Texture = "0"
-    game:GetService("ReplicatedStorage").Assets.Particles["Chest Explode"].Shine2.Texture = "0"
-    game:GetService("ReplicatedStorage").Assets.Particles["Chest Explode"].Shock.Texture = "0"
-    game:GetService("ReplicatedStorage").Assets.Particles["Chest Explode"]["Sparkle Yellow"].Texture = "0"
-    game:GetService("ReplicatedStorage").Assets.Particles["Chest Explode"].Sparkles.Texture = "0"
-    game:GetService("ReplicatedStorage").Assets.Particles["Chest Explode"].Sparks.Texture = "0"
-    game:GetService("ReplicatedStorage").Assets.Particles["Coin Damage"].Boom.Texture = "0"
-    game:GetService("ReplicatedStorage").Assets.Particles["Coin Damage"].Sparkles.Texture = "0"
-    game:GetService("ReplicatedStorage").Assets.Particles["Coin Damage"].rings.Texture = "0"
-
-end
-
-
-local LocalPlayer = game:GetService("Players").LocalPlayer
-pcall(function()
-    LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Enabled = false
-
-
-    LocalPlayer.Idled:Connect(function()
-        game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-        task.wait(1)
-        game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-    end)
-
-end)
---optimization
-
---farm
-local function autoroll()
-    spawn(function()
-        
-        while getgenv().autoroll do
-            task.wait(0.2)
-            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Eggs_Roll"):InvokeServer()
-        end
-    end)
-end
-
-local function farm()
-    spawn(function()
-
-        local petsFolder = game:GetService("Workspace"):FindFirstChild("__THINGS"):FindFirstChild("Pets")
-        local breakFolder = game:GetService("Workspace"):FindFirstChild("__THINGS"):FindFirstChild("Breakables")
-
-        local currentPets = {}
-
-        local function updatePets()
-            currentPets = {}
-            for _, pet in pairs(petsFolder:GetChildren()) do
-                if pet:IsA("Model") then
-                    table.insert(currentPets, pet.Name)
-                end
-            end
-        end
-
-
-        updatePets()
-
-
-        local breakableObjects = {}
-
-
-        for _, breakable in pairs(breakFolder:GetChildren()) do
-            if breakable:IsA("Model") then
-                breakableObjects[breakable] = true
-            end
-        end
-
-        while getgenv().autofarm do
-
-            updatePets()
-
-            for breakable in pairs(breakableObjects) do
-                if breakable.Parent and getgenv().autofarm then
-                    for _, petName in pairs(currentPets) do
-
-                        local args = {
-                            [petName] = tonumber(breakable.Name)
-                        }
-
-
-                        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
-
-                        task.wait(0.1)
-                    end
-                    while breakable.Parent do
-                        task.wait(0.1)
-                    end
-                    breakableObjects[breakable] = nil
-
-                end
-            end
-
-
-            for _, breakable in pairs(breakFolder:GetChildren()) do
-                if breakable:IsA("Model") and not breakableObjects[breakable] then
-                    breakableObjects[breakable] = true
-                end
-            end
-
-            task.wait(1.5)
-        end
-    end)
-end
-
-
-
-local function collectOrb(orb)
-    
-    local args = {
-        [1] = {
-            [1] = tonumber(orb.Name)
-        }
-    }
-
-
-
-
-    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Orbs: Collect"):FireServer(unpack(args))
-
-
-    orb:Destroy()
-
-end
-
-local function setupOrbCollector()
-
-    local orbsFolder = game:GetService("Workspace"):FindFirstChild("__THINGS"):FindFirstChild("Orbs")
-
-
-    if not orbsFolder then
-        warn("Папка Orbs не найдена!")
-        return
-    end
-
-
-    for _, orb in pairs(orbsFolder:GetChildren()) do
-        collectOrb(orb)
-    end
-
-
-    orbCollector = orbsFolder.ChildAdded:Connect(function(newOrb)
-        task.wait(0.1)
-        collectOrb(newOrb)
-    end)
-end
-
-local function disableOrbCollector()
-    if orbCollector then
-        orbCollector:Disconnect()
-        orbCollector = nil
-    end
-end
-
-
--- Функция для обработки всех объектов в __THINGS.Orbs
-local function replaceTexturesInOrbs()
-    local orbs = workspace:FindFirstChild("__THINGS"):FindFirstChild("Orbs")
-    if orbs then
-        -- Обрабатываем все объекты в Orbs
-        for _, orb in pairs(orbs:GetDescendants()) do
-            if orb:FindFirstChild("Center") then
-                local center = orb.Center
-                if center:FindFirstChild("Item") then
-                    -- Проверяем, что Item это Decal или другой объект с Texture
-                    center.Item.Texture = "0"  -- Очищаем Texture
-                end
-                if center:FindFirstChild("Extra") then
-                    center.Extra.Texture = "0"
-                end
-            end
-        end
-    end
-
-
-    if orbs then
-        for _, orb in pairs(orbs:GetDescendants()) do
-            if orb:IsA("MeshPart") and orb.MeshId == "rbxassetid://7205419138" then
-                orb.MeshId = "0"
-                if orb:FindFirstChild("ParticleEmitter") then
-                    orb.ParticleEmitter.Texture = "0"
-                
-                end
-            end
-        end
-    end
-end
-
--- Включение подписки на новые объекты в Orbs
-local function enableTextureReplacement()
-    descendantConnection = workspace.__THINGS.Orbs.DescendantAdded:Connect(function(object)
-        if object:FindFirstChild("Center") then
-            local center = object.Center
-            if center:FindFirstChild("Item") then
-                center.Item.Texture = "0"
-            end
-            if center:FindFirstChild("Extra") then
-                center.Extra.Texture = "0"
-
-            end
-        end
-        if object:IsA("MeshPart") and object.MeshId == "rbxassetid://7205419138" then
-            object.MeshId = "0"  -- Очищаем MeshId
-            if object:FindFirstChild("ParticleEmitter") then
-                object.ParticleEmitter.Texture = "0"
-            end
-        end
-
-    end)
-end
-
--- Отключение подписки на новые объекты в Orbs
-local function disableTextureReplacement()
-    if descendantConnection then
-        descendantConnection:Disconnect()
-        descendantConnection = nil
-    end
-end
-
-
--- Функция для замены MeshId
-local function replaceMesh(object)
-    if object:IsA("MeshPart") then
-        object.MeshId = ""  -- Новый MeshId
-    elseif object:FindFirstChild("Mesh") then
-        local mesh = object.Mesh
-        if mesh:IsA("SpecialMesh") then
-            mesh.MeshId = ""  -- Новый MeshId
-        end
-    end
-end
-
--- Функция для обработки всех объектов в __THINGS.Breakables
-local function replaceMeshesInBreakables()
-    local breakables = workspace:FindFirstChild("__THINGS"):FindFirstChild("Breakables")
-    if breakables then
-        -- Обрабатываем все объекты внутри Breakables
-        for _, breakable in pairs(breakables:GetDescendants()) do
-            replaceMesh(breakable)
-        end
-    end
-    for i,v in pairs(game:GetService("ReplicatedStorage").__DIRECTORY.Breakables:GetDescendants()) do
-        if v:IsA("MeshPart") then
-            v.MeshId = ""
-            v.TextureID = ""
-
-        end
-    end
-
-
-end
---farm
-
---ubgrade
 local function purchaseBranchUpgrades()
+    local asd = game:GetService("ReplicatedStorage").__DIRECTORY.Upgrades.Root["Halloween Event"]:GetDescendants()
+    local upgradesTable = {} -- Таблица для хранения улучшений и их цен
+
+    -- Добавляем бесплатное улучшение "Root" с ценой 1
+    table.insert(upgradesTable, {name = "Halloween Event", price = 1})
+    task.wait(1)
+    table.insert(upgradesTable, {name = "Pumpkin Egg", price = 2})
+    task.wait(1)
+    table.insert(upgradesTable, {name = "Candy Currency", price = 3})
 
     for i, v in pairs(asd) do
         local success, result = pcall(require, v) -- Обрабатываем ошибку, если объект нельзя загрузить через require
@@ -490,8 +23,14 @@ local function purchaseBranchUpgrades()
                 if z == "Price" then
                     for _, item in pairs(y) do
                         if item._data and item._data._am then
-                            -- Добавляем улучшение в таблицу как пару {name, price}
+                            --[[if v.Name == "Paychecks" then
+                                table.insert(upgradesTable, {name = v.Name, price = 39000})
+                            elseif  v.Name == "Faster Rolls Potion" then
+                                table.insert(upgradesTable, {name = v.Name, price = 3700000})
+                            else]]
                             table.insert(upgradesTable, {name = v.Name, price = item._data._am})
+
+
                         end
                     end
                 end
@@ -506,207 +45,54 @@ local function purchaseBranchUpgrades()
         return a.price < b.price
     end)
 
+    -- Подключение к другому скрипту
+    local isPurchasedTable = save.UpgradesPurchased -- Таблица с купленными улучшениями
 
+    -- Флаг для проверки, все ли улучшения куплены
+    local allPurchased = true 
 
-    spawn(function()
-        for _, upgrade in pairs(upgradesTable) do
-            local upgradeName = upgrade.name
-            local isPurchased = isPurchasedTable[upgradeName] or false -- Проверяем, куплено ли улучшение
+    -- Логика для автоматической покупки непрокачанных улучшений
+    for _, upgrade in pairs(upgradesTable) do
+        local upgradeName = upgrade.name
+        local isPurchased = isPurchasedTable[upgradeName] or false -- Проверяем, куплено ли улучшение
 
-            if not isPurchased then
-                allPurchased = false -- Установить флаг в false, если хоть одно улучшение не куплено
+        if not isPurchased then
+            allPurchased = false -- Установить флаг в false, если хоть одно улучшение не куплено
 
-                local success, result
-                while getgenv().autobuyupgrades and not isPurchased do
-                    success, result = pcall(function()
-                        print("ПОПЫТКА УЛУЧШИТЬ:", upgradeName)
-                        return game:GetService("ReplicatedStorage").Network.Upgrades_Purchase:InvokeServer(upgradeName)
-                    end)
+            local success, result
+            while getgenv().autobuyupgrades and not isPurchased do
+                success, result = pcall(function()
+                    return game:GetService("ReplicatedStorage").Network.Upgrades_Purchase:InvokeServer(upgradeName)
+                end)
 
-                    if success then
-                        if result then
-                            print("Успешная покупка: " .. upgradeName)
-                            isPurchased = true  -- Улучшение теперь куплено
-                            isPurchasedTable[upgradeName] = true -- Обновляем состояние в локальной таблице
-                        else
-                            task.wait(4) -- Задержка, если не удалось купить
-                        end
+                if success then
+                    if result then
+                        print("Успешная покупка: " .. upgradeName)
+                        isPurchased = true  -- Улучшение теперь куплено
+                        isPurchasedTable[upgradeName] = true -- Обновляем состояние в локальной таблице
                     else
-                        task.wait(4)  -- Задержка в 4 секунды, если вызов не удался
-                    end
-                end
-
-                -- Небольшая задержка после успешной покупки
-                task.wait(1)  -- Задержка в 1 секунду
-            else
-                task.wait(1)
-            end
-        end
-
-        -- Проверяем, все ли улучшения куплены
-        if allPurchased then
-            print("Все улучшения куплены!")
-        end
-    end)
-end
-
-
-
---[[local function buyVendingMachines()
-    spawn(function()
-        while getgenv().autovending do
-            if save.VendingStocks then
-                for Machine, Stock in pairs(save.VendingStocks) do
-                    while Stock > 0 do
-
-                        game.ReplicatedStorage.Network["VendingMachines_Purchase"]:InvokeServer("PotionVendingMachine")
+                        print(upgradeName)
+                        task.wait(4) -- Задержка, если не удалось купить
                         
-                        -- Обновляем значение Stock после каждой покупки
-                        Stock = save.VendingStocks[Machine]
-                        task.wait(1)
                     end
-                    task.wait(10)
-                end
-            else 
-                task.wait(10)
-            end
-        end
-    end)
-end]]
-
---upgrade
-
---gift
-local function walkToObject(destination)
-    local humanoid = character:WaitForChild("Humanoid")
-    humanoid:MoveTo(destination)
-    humanoid.MoveToFinished:Wait()
-end
-
-local function getTeleportPosition(objectPosition)
-    local direction = (objectPosition - centerPosition).unit
-    return objectPosition - (direction * teleportDistance)
-end
-
-local function collectItems()
-    spawn(function()
-        while getgenv().autostaff do
-            -- Поиск частиц для копания
-            local foundPart = false
-            for _, part in pairs(diggingParts:GetChildren()) do
-                if part:IsA("BasePart") and getgenv().autostaff then
-                    local teleportPosition = part.Position + Vector3.new(0, heightOffset, 0)
-                    humanoidRootPart.CFrame = CFrame.new(teleportPosition)
-                    task.wait(2.5)  -- Задержка между телепортациями
-
-                    foundPart = true  -- Часть найдена, переходим к следующему
-                    break  -- Выходим из цикла после обработки одной части
-                end
-            end
-
-            -- Если части не найдены, ищем подарки
-            if not foundPart then
-                for _, gift in pairs(hiddenGifts:GetChildren()) do
-                    if gift:IsA("Model") and getgenv().autostaff then
-                        local giftPivot = gift:GetPivot().Position
-                        local teleportPosition = getTeleportPosition(giftPivot)
-                        humanoidRootPart.CFrame = CFrame.new(teleportPosition)
-                        task.wait(1)
-                        walkToObject(giftPivot)
-                        task.wait(2)
-                        break  -- Переходим к следующей итерации основного цикла
-                    end
-                end
-            end
-
-            -- Добавляем задержку между проходами по частям и подаркам
-            task.wait(2.5)
-        end
-    end)
-end
---gift
-
-
-local ConfigFruit = {
-    "Watermelon",
-    "Apple",
-    "Pineapple",
-    "Orange",
-    "Rainbow",
-    "Banana"
-}
-
-
-local firstRun = true
-
-local function AutoFruit()
-    spawn(function()
-        while getgenv().autofruit do
-            if save.Inventory.Fruit then
-                if firstRun then
-                    -- При первом запуске съедаем 20 фруктов по одному
-                    for i = 1, 20 do
-                        for id, v in pairs(save.Inventory.Fruit) do
-                            for _, fruit in pairs(ConfigFruit) do
-                                if v.id == fruit and getgenv().autofruit then
-                                    game.ReplicatedStorage.Network["Fruits: Consume"]:InvokeServer(id, 1)
-                                    task.wait(1)
-                                end
-                            end
-                        end
-                    end
-                    firstRun = false
                 else
-                    for id, v in pairs(save.Inventory.Fruit) do
-                        for _, fruit in pairs(ConfigFruit) do
-                            if v.id == fruit and getgenv().autofruit then
-                                game.ReplicatedStorage.Network["Fruits: Consume"]:InvokeServer(id, 1)
-                                task.wait(1)
-                            end
-                        end
-                    end
+                    task.wait(4)  -- Задержка в 4 секунды, если вызов не удался
+                    print("не удалось: " .. upgradeName)
                 end
-                task.wait(60)
-            else
-                task.wait(10)
             end
+
+            -- Небольшая задержка после успешной покупки
+            task.wait(1)  -- Задержка в 1 секунду
+        else
+            task.wait(.2)
         end
-    end)
+    end
+
+    -- Проверяем, все ли улучшения куплены
+    if allPurchased then
+        print("Все улучшения куплены!")
+    end
+
 end
 
-
---Optimization()
-print("Optimization()")
-task.wait(0.5)
-OptimizationMap()
-print("OptimizationMap()")
-task.wait(0.5)
-OptimizationBreak()
-print("OptimizationBreak()")
-task.wait(1)
-autoroll()
-print("autoroll()")
-task.wait(1)
-farm()
-print("farm()")
-task.wait(1)
-setupOrbCollector()
-print("setupOrbCollector()")
-task.wait(1)
---collectItems()
---print("collectItems()")
-task.wait(1)
 purchaseBranchUpgrades()
-print("purchaseBranchUpgrades()")
-task.wait(1)
-AutoFruit()
-print("AutoFruit()")
-task.wait(1)
-replaceTexturesInOrbs()
-print("replaceTexturesInOrbs()")
-task.wait(1)
-replaceMeshesInBreakables()
-print("enableTextureReplacement()")
-task.wait(1)
-enableTextureReplacement()
-print("enableTextureReplacement()")
