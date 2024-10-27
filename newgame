@@ -1,16 +1,4 @@
-repeat
-    task.wait(1)
-until game:IsLoaded()
 
-repeat
-    task.wait(1)
-until game.PlaceId ~= nil
-
-repeat
-    task.wait(1)
-until game:GetService("Players").LocalPlayer and game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
-
-task.wait(20)
 getgenv().autobuyupgrades = true
 local library = require(game.ReplicatedStorage.Library.Client.Save)
 local save = library.Get()
