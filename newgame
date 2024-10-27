@@ -1,4 +1,4 @@
-
+task.wait(60)
 getgenv().autobuyupgrades = true
 local library = require(game.ReplicatedStorage.Library.Client.Save)
 local save = library.Get()
