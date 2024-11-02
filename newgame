@@ -10,11 +10,13 @@ local function toRoman(num)
     return romanNumerals[num] or tostring(num)  -- Возвращает римскую цифру или число как строку
 end
 
+-- Создание GUI
 local player = game.Players.LocalPlayer
 local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
 local textLabelLucky = Instance.new("TextLabel", screenGui)
 local textLabelInsta = Instance.new("TextLabel", screenGui)
 
+-- Настройки для Lucky
 textLabelLucky.Size = UDim2.new(0, 400, 0, 200)
 textLabelLucky.Position = UDim2.new(0.5, -200, 0.3, -100)
 textLabelLucky.BackgroundColor3 = Color3.fromRGB(173, 255, 47)
@@ -23,6 +25,7 @@ textLabelLucky.TextScaled = true
 textLabelLucky.TextWrapped = true
 textLabelLucky.Text = "Lucky:\n"
 
+-- Настройки для Insta
 textLabelInsta.Size = UDim2.new(0, 400, 0, 200)
 textLabelInsta.Position = UDim2.new(0.5, -200, 0.7, -100)
 textLabelInsta.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
@@ -43,22 +46,26 @@ local function updateInfo()
         end
     end
 
+    -- Сортировка по tn
     table.sort(luckyItems, function(a, b) return a.tn < b.tn end)
     table.sort(instaItems, function(a, b) return a.tn < b.tn end)
 
+    -- Обновление текста для Lucky
     local luckyText = "Lucky:\n"
     for _, item in ipairs(luckyItems) do
-        luckyText = luckyText .. string.format("%s: %s (Количество: %d)\n", item.id, toRoman(item.tn), item.amount)
+        luckyText = luckyText .. string.format("%s %s (Количество: %d)\n", item.id, toRoman(item.tn), item.amount)
     end
     textLabelLucky.Text = luckyText == "Lucky:\n" and "Нет предметов" or luckyText
 
+    -- Обновление текста для Insta
     local instaText = "Insta:\n"
     for _, item in ipairs(instaItems) do
-        instaText = instaText .. string.format("%s: %s (Количество: %d)\n", item.id, toRoman(item.tn), item.amount)
+        instaText = instaText .. string.format("%s %s (Количество: %d)\n", item.id, toRoman(item.tn), item.amount)
     end
     textLabelInsta.Text = instaText == "Insta:\n" and "Нет предметов" or instaText
 end
 
+-- Обновление информации каждые 10 секунд
 updateInfo()
 local running = true
 
@@ -70,8 +77,10 @@ local function startUpdating()
     end
 end
 
+-- Запуск цикла обновления в отдельном потоке
 coroutine.wrap(startUpdating)()
 
+-- Удаление GUI через минуту
 wait(60)
 running = false  -- Останавливаем цикл обновления
 screenGui:Destroy()  -- Удаляем GUI
