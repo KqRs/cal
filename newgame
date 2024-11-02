@@ -1,97 +1,77 @@
-task.wait(60)
-getgenv().autobuyupgrades = true
 local library = require(game.ReplicatedStorage.Library.Client.Save)
 local save = library.Get()
 
-local function purchaseBranchUpgrades()
-    spawn(function()
-        local asd = game:GetService("ReplicatedStorage").__DIRECTORY.Upgrades.Root["Halloween Event"]:GetDescendants()
-        local upgradesTable = {} -- Таблица для хранения улучшений и их цен
-
-        -- Добавляем бесплатное улучшение "Root" с ценой 1
-        table.insert(upgradesTable, {name = "Halloween Event", price = 1})
-        task.wait(1)
-        table.insert(upgradesTable, {name = "Pumpkin Egg", price = 2})
-        task.wait(1)
-        table.insert(upgradesTable, {name = "Candy Currency", price = 3})
-
-        local function getParentPrice(upgradeName)
-            for _, upgrade in pairs(upgradesTable) do
-                if upgrade.name == upgradeName then
-                    return upgrade.price
-                end
-            end
-            return nil -- Если родитель не найден
-        end
-
-        for i, v in pairs(asd) do
-            local success, result = pcall(require, v)
-            if success then
-                for z, y in pairs(result) do
-                    if z == "Price" then
-                        for _, item in pairs(y) do
-                            if item._data and item._data._am then
-                                local parentPrice = getParentPrice(v.Parent.Name)
-
-                                -- Если родитель дороже, чем текущая цена, увеличиваем цену на 1
-                                if parentPrice and parentPrice > item._data._am then
-                                    table.insert(upgradesTable, {name = v.Name, price = parentPrice + 1})
-                                else
-                                    table.insert(upgradesTable, {name = v.Name, price = item._data._am})
-                                end
-                            end
-                        end
-                    end
-                end
-            else
-                print("Ошибка при попытке require для объекта: " .. tostring(v))
-            end
-        end
-
-        -- Сортировка таблицы по возрастанию цены (price)
-        table.sort(upgradesTable, function(a, b)
-            return a.price < b.price
-        end)
-
-        local isPurchasedTable = save.UpgradesPurchased -- Таблица с купленными улучшениями
-        local allPurchased = true -- Флаг для проверки, все ли улучшения куплены
-
-        for _, upgrade in pairs(upgradesTable) do
-            local upgradeName = upgrade.name
-            local isPurchased = isPurchasedTable[upgradeName] or false -- Проверяем, куплено ли улучшение
-
-            if not isPurchased then
-                allPurchased = false -- Установить флаг в false, если хоть одно улучшение не куплено
-
-                local success, result
-                while getgenv().autobuyupgrades and not isPurchased do
-                    success, result = pcall(function()
-                        return game:GetService("ReplicatedStorage").Network.Upgrades_Purchase:InvokeServer(upgradeName)
-                    end)
-
-                    if success then
-                        if result then
-                            print("Успешная покупка: " .. upgradeName)
-                            isPurchased = true  -- Улучшение теперь куплено
-                            isPurchasedTable[upgradeName] = true -- Обновляем состояние в локальной таблице
-                        else
-                            task.wait(4) -- Задержка, если не удалось купить
-                        end
-                    else
-                        task.wait(4) -- Задержка в 4 секунды, если вызов не удался
-                    end
-                end
-
-                task.wait(1) -- Небольшая задержка после успешной покупки
-            else
-                task.wait(0.2)
-            end
-        end
-
-        if allPurchased then
-            print("Все улучшения куплены!")
-        end
-    end)
+-- Функция для преобразования арабских чисел в римские
+local function toRoman(num)
+    local romanNumerals = {
+        [1] = "I", [2] = "II", [3] = "III", [4] = "IV", [5] = "V",
+        [6] = "VI", [7] = "VII"
+    }
+    return romanNumerals[num] or tostring(num)  -- Возвращает римскую цифру или число как строку
 end
 
-purchaseBranchUpgrades()
+local player = game.Players.LocalPlayer
+local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+local textLabelLucky = Instance.new("TextLabel", screenGui)
+local textLabelInsta = Instance.new("TextLabel", screenGui)
+
+textLabelLucky.Size = UDim2.new(0, 400, 0, 200)
+textLabelLucky.Position = UDim2.new(0.5, -200, 0.3, -100)
+textLabelLucky.BackgroundColor3 = Color3.fromRGB(173, 255, 47)
+textLabelLucky.TextColor3 = Color3.fromRGB(0, 0, 0)
+textLabelLucky.TextScaled = true
+textLabelLucky.TextWrapped = true
+textLabelLucky.Text = "Lucky:\n"
+
+textLabelInsta.Size = UDim2.new(0, 400, 0, 200)
+textLabelInsta.Position = UDim2.new(0.5, -200, 0.7, -100)
+textLabelInsta.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
+textLabelInsta.TextColor3 = Color3.fromRGB(0, 0, 0)
+textLabelInsta.TextScaled = true
+textLabelInsta.TextWrapped = true
+textLabelInsta.Text = "Insta:\n"
+
+local function updateInfo()
+    local luckyItems = {}
+    local instaItems = {}
+
+    for _, v in pairs(save.Inventory.Consumable) do
+        if string.find(v.id, "Lucky") then
+            table.insert(luckyItems, {id = v.id, tn = tonumber(v.tn), amount = v._am or 1})
+        elseif string.find(v.id, "Insta") then
+            table.insert(instaItems, {id = v.id, tn = tonumber(v.tn), amount = v._am or 1})
+        end
+    end
+
+    table.sort(luckyItems, function(a, b) return a.tn < b.tn end)
+    table.sort(instaItems, function(a, b) return a.tn < b.tn end)
+
+    local luckyText = "Lucky:\n"
+    for _, item in ipairs(luckyItems) do
+        luckyText = luckyText .. string.format("%s: %s (Количество: %d)\n", item.id, toRoman(item.tn), item.amount)
+    end
+    textLabelLucky.Text = luckyText == "Lucky:\n" and "Нет предметов" or luckyText
+
+    local instaText = "Insta:\n"
+    for _, item in ipairs(instaItems) do
+        instaText = instaText .. string.format("%s: %s (Количество: %d)\n", item.id, toRoman(item.tn), item.amount)
+    end
+    textLabelInsta.Text = instaText == "Insta:\n" and "Нет предметов" or instaText
+end
+
+updateInfo()
+local running = true
+
+local function startUpdating()
+    while running do
+        wait(10)
+        save = library.Get()  -- Обновляем данные
+        updateInfo()
+    end
+end
+
+coroutine.wrap(startUpdating)()
+
+wait(60)
+running = false  -- Останавливаем цикл обновления
+screenGui:Destroy()  -- Удаляем GUI
