@@ -1,0 +1,425 @@
+getgenv().Optimization = true
+local library = require(game.ReplicatedStorage.Library.Client.Save)
+local save = library.Get().EquippedPets
+
+local oldfd = workspace.__THINGS.Breakables
+local newfolder = Instance.new("Folder")
+newfolder.Name = "Nagib"
+newfolder.Parent = workspace.__THINGS
+
+for i, v in pairs(oldfd:GetChildren()) do
+    if v:IsA("Model") then
+
+        local id = v.Name
+        
+
+        if v.PrimaryPart then
+            local cf = v.PrimaryPart.CFrame
+            
+
+            local part = Instance.new("Part")
+            part.Name = tostring(id)
+            part.CFrame = cf + Vector3.new(0, 5, 0)  -- Сдвигаем вверх на 5 единиц
+            part.Size = Vector3.new(2, 1, 2)
+            part.Anchored = true
+            part.Parent = newfolder
+            
+            -- Удаляем модель
+            v:Destroy()
+        end
+    end
+end
+workspace.__THINGS.Breakables:Destroy()
+
+task.wait(1)
+
+local function Opt()
+    task.wait()
+    workspace.__THINGS.Orbs:Destroy()
+    --- scripts
+    task.wait()
+    --game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Test:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Misc:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.PlayerScriptsLoader:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.RbxCharacterSounds:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.PlayerModule:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Consumables:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Breakable VFX"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.ForeverPacks:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Gamepasses:Destroy()
+    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Hoverboard_RequestUnequip"):FireServer()
+    task.wait(1)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Hoverboards:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Machine Animations"]:Destroy()
+    task.wait()
+    for i,v in pairs(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Machines:GetChildren()) do
+        if v.Name == "Vending Machines" then
+            task.wait()
+        else
+            v:Destroy() 
+        end
+    end
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Opening:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Trading Plaza"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["World Animations"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Ambience:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Egg Podium"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Fruit Magnet"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Gamepass Deal"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Item Index"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Music:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Notification Prompt"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Player Profiles"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.TimedItems:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Retention Gifts"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Tutorial:Destroy()
+    task.wait()
+    --- gui
+    for i,v in pairs(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.GUIs:GetChildren()) do
+        v:Destroy()
+        task.wait()
+    end
+    --- bildoards
+    for i,v in pairs(game:GetService("ReplicatedStorage").Assets.Billboards:GetChildren()) do
+        v.Enabled = false
+    end
+    for i,v in pairs(game:GetService("ReplicatedStorage").Assets.Particles:GetDescendants()) do
+        if v:IsA("ParticleEmitter") then
+            v.Texture = ""
+        end
+    
+
+    game:GetService("ReplicatedStorage").Library.Client.XPBallCmds.Ball.Center.Item.Texture = ""
+    end
+
+
+
+end
+if getgenv().Optimization then
+    Opt()
+end
+
+local breakablesFrontend = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
+breakablesFrontend.DefaultPickupDistance = 3000
+task.wait()
+local breakablesFrontend = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
+breakablesFrontend.CollectDistance = 3000
+task.wait()
+local breakablesFrontend = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
+breakablesFrontend.BillboardDistance = 0
+task.wait()
+local breakablesFrontend = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
+breakablesFrontend.DefaultPickupDistance = 3000
+task.wait()
+local breakablesFrontend = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
+breakablesFrontend.CollectDistance = 3000
+task.wait()
+local breakablesFrontend = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
+breakablesFrontend.SoundDistance = 0
+task.wait()
+
+
+
+local Players2 = game:GetService("Players")
+local localPlayer2 = Players2.LocalPlayer
+
+local function removeOtherPlayerModels()
+    for _, player in pairs(Players2:GetPlayers()) do
+        if player ~= localPlayer2 and player.Character and player.Character.Parent == workspace then
+            player.Character:Destroy()
+        end
+    end
+end
+
+Players2.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        wait(3)
+        if player ~= localPlayer2 and player.Character and player.Character.Parent == workspace then
+            character:Destroy()
+        end
+    end)
+end)
+
+removeOtherPlayerModels()
+
+
+pcall(function()
+    localPlayer2.Idled:Connect(function()
+        game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+        task.wait(1)
+        game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    end)
+
+end)
+
+task.wait(.5)
+
+-- breakotpimization boost fps ;)
+
+local player = game.Players.LocalPlayer
+local breakablesFrontend = getsenv(player.PlayerScripts.Scripts.Game["Breakables Frontend"])
+local petmenager = getsenv(player.PlayerScripts.Scripts.Game.Pets["Pet Replication Manager"])
+
+--[[petmenager.shouldRenderOtherPlayerPets = function(...)
+    return false
+end]]
+task.wait(.2)
+petmenager.updateUnspawnedPets = function(...)
+end
+task.wait(.2)
+breakablesFrontend.updateBreakable = function(...)
+end
+task.wait(.2)
+breakablesFrontend.destroyBreakable = function(...)
+end
+task.wait(.2)
+breakablesFrontend.startGlowAnimationTask = function(...)
+end
+task.wait(.2)
+breakablesFrontend.startBillboardTask = function(...)
+end
+task.wait(.2)
+
+
+
+
+game:GetService("ReplicatedStorage").Library.Client.Network["Fireworks Animation"]:Destroy()
+task.wait()
+game:GetService("ReplicatedStorage").Library.Client.Network["Reward Item Animation"]:Destroy()
+task.wait()
+
+
+
+
+task.wait(.5)
+
+local remote = game:GetService("ReplicatedStorage").Network:WaitForChild("Breakables_Created")
+
+local function onenent(p1)
+
+    for _l, table1 in pairs(p1) do
+        for _ll, table2 in pairs(table1) do
+            local id = table2.u
+            local cf = table2.cf
+            
+            local part = Instance.new("Part")
+            part.Name = tostring(id)
+            part.CFrame = cf + Vector3.new(0, 5, 0)
+            part.Size = Vector3.new(2, 1, 2)
+            part.Anchored = true
+            part.Parent = newfolder
+        end
+    end
+end
+
+local con = remote.OnClientEvent:Connect(onenent)
+
+task.wait(.5)
+
+local net = game:GetService("ReplicatedStorage").Network:WaitForChild("Breakables_Destroyed")
+local function onenent2(p1)
+    for i,v in pairs(p1) do
+        for z,y in pairs(v) do
+             if type(y) == "string" or type(y) == "number" then
+                local path = workspace.__THINGS.Nagib:FindFirstChild(tostring(y))
+                if path then
+                    -- Если объект найден, уничтожаем его
+                    path:Destroy()
+                end
+            end
+        end
+
+    end
+end
+local con = net.OnClientEvent:Connect(onenent2)
+
+
+task.wait(.5)
+
+local net = game:GetService("ReplicatedStorage").Network:WaitForChild("Breakables_Cleanup")
+
+local function onenent2(p1)
+    for i, v in pairs(p1) do
+        for z, y in pairs(v) do
+
+            if type(y) == "string" or type(y) == "number" then
+                local path = workspace.__THINGS.Nagib:FindFirstChild(tostring(y))
+                if path then
+
+                    path:Destroy()
+                end
+
+            end
+        end
+    end
+end
+
+local con = net.OnClientEvent:Connect(onenent2)
+
+task.wait(.5)
+
+-- breakotpimization boost fps ;)
+
+
+-- autofarm
+
+
+
+-- autofarm
+task.wait(.5)
+local function autoroll()
+    spawn(function()
+        
+        while true do
+            pcall(function()
+                game.ReplicatedStorage.Network["Eggs_Roll"]:InvokeServer()
+                task.wait(.2)
+            end)
+        end
+    end)
+end
+autoroll()
+
+
+local function dayn()
+local firstKey = next(save)
+	if firstKey then
+		return firstKey
+	end
+end
+local function ClaimDig()
+    spawn(function()
+        
+        while true do
+            local network = getupvalue(require(game:GetService("ReplicatedStorage"):WaitForChild("Library"):WaitForChild("Client"):WaitForChild("DiggingCmds")).Target,1)
+            if network and next(network) then
+                for i,v in pairs(network) do
+
+                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Digging_Target"):InvokeServer(i,dayn())
+                    
+                    task.wait(1)
+                    
+                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Digging_Claim"):InvokeServer(i)
+                    task.wait(1)
+                end
+            else
+                task.wait(10)
+            end
+        end
+    end)
+end
+ClaimDig()
+
+local function Bonus()
+    spawn(function()
+        task.wait(20)
+        game:GetService("ReplicatedStorage").Network:WaitForChild("Breakables_SuperBonus"):Destroy()
+        task.wait(1)
+        game:GetService("ReplicatedStorage").Network:WaitForChild("Breakables_Bonus"):Destroy()
+    end)
+end
+Bonus()
+
+
+local function getpet()
+    local curpet = {}
+
+    -- Собираем имена питомцев в таблицу
+    for i, v in pairs(save) do
+        -- Добавляем имена питомцев в таблицу
+        table.insert(curpet, i)
+    end
+    return curpet
+end
+task.wait(.5)
+local updatedPets = {}
+spawn(function()
+    while true do
+        updatedPets = getpet() -- Обновляем информацию о питомцах
+        task.wait(60) -- Ждем 60 секунд
+    end
+end)
+task.wait(.5)
+local function farm()
+    spawn(function()
+        while true do
+            local breakFolder = workspace.__THINGS.Nagib:GetChildren()
+            if #breakFolder > 0 then
+
+            
+                for i, v in pairs(breakFolder) do
+                    if v:IsA("Part") then
+
+
+
+                        local pets = updatedPets
+
+                        -- Если питомцы есть, создаем аргументы для отправки на сервер
+                        if pets then
+                            local args = {}
+
+                            -- Заполняем таблицу args с данными о питомцах и их ID
+                            for _, petName in pairs(pets) do
+                                local breakableID = tonumber(v.Name)
+                                if breakableID then
+                                    -- Для каждого питомца добавляем пару [petName] = breakableID
+                                    args[petName] = breakableID
+                                end
+                            end
+                            
+
+                            -- Отправляем таблицу на сервер
+                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
+
+
+
+                            while v and v.Parent do
+                                task.wait(.1)
+                            end
+                            --print("Объект " .. v.Name .. " исчез")
+
+
+
+                            task.wait()
+                        end
+                    else
+                        task.wait(1)
+
+                    end
+                end
+            else
+                task.wait(5)
+            end
+        end
+    end)
+end
+farm()
+task.wait(1)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.MAP.INTERACT.FishingPads.FishingBillboard.PadGlow.CFrame + Vector3.new(0,5,0)
+
+
