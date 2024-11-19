@@ -197,8 +197,18 @@ local function Antiafk()
 
     local con2 = game:GetService("ReplicatedStorage").Network["Idle Tracking: Update Timer"].OnClientEvent
     for i,v in pairs(getconnections(con)) do
-        print(i,v)
+        v:Disconnect()
     end
+    spawn(function()
+        local VirtualInputManager = game:GetService("VirtualInputManager")
+        while task.wait() do
+            VirtualInputManager:SendKeyEvent(true, "Space", false, game)
+            task.wait(.2)
+            VirtualInputManager:SendKeyEvent(false, "Space", false, game)
+            task.wait(300)
+        end
+    end)
+
 end
 
 task.wait(.5)
