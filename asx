@@ -542,6 +542,60 @@ end)
 
 task.wait(1)
 
+
+
+
+local ConfigFruit = {
+    "Watermelon",
+    "Apple",
+    "Pineapple",
+    "Orange",
+    "Rainbow",
+    "Banana"
+}
+
+
+local firstRun = true
+
+local function AutoFruit()
+    spawn(function()
+        while true do
+            if save2.Inventory.Fruit then
+                if firstRun then
+                    -- При первом запуске съедаем 20 фруктов по одному
+                    for i = 1, 25 do
+                        for id, v in pairs(save2.Inventory.Fruit) do
+                            for _, fruit in pairs(ConfigFruit) do
+                                if v.id == fruit then
+                                    game.ReplicatedStorage.Network["Fruits: Consume"]:InvokeServer(id, 1)
+                                    task.wait(1)
+                                end
+                            end
+                        end
+                    end
+                    firstRun = false
+                else
+                    for id, v in pairs(save2.Inventory.Fruit) do
+                        for _, fruit in pairs(ConfigFruit) do
+                            if v.id == fruit then
+                                game.ReplicatedStorage.Network["Fruits: Consume"]:InvokeServer(id, 1)
+                                task.wait(1)
+                            end
+                        end
+                    end
+                end
+                task.wait(60)
+            else
+                task.wait(10)
+            end
+        end
+    end)
+end
+
+AutoFruit()
+
+
+task.wait(1)
 local recipes = {
     ["Lucky Potion2"] = { { id = "Lucky Potion", tn = 1, amount = 3 } , maxAmount = 999},
     ["Lucky Potion3"] = { { id = "Lucky Potion", tn = 2, amount = 4 } , maxAmount = 999},
