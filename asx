@@ -1,7 +1,8 @@
 getgenv().Optimization = true
 local library = require(game.ReplicatedStorage.Library.Client.Save)
 local save = library.Get().EquippedPets
-
+local save2 = library.Get()
+local response
 local oldfd = workspace.__THINGS.Breakables
 local newfolder = Instance.new("Folder")
 newfolder.Name = "Nagib"
@@ -420,6 +421,433 @@ local function farm()
 end
 farm()
 task.wait(1)
+
+local function Machines()
+    spawn(function()
+        while true do
+            for i = 1,6 do
+                repeat
+                    pcall(function()
+                        response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Merchant_RequestPurchase"):InvokeServer("AdvancedIndexMerchant", i)
+                    end)
+                    task.wait(1)
+                until response == false
+            end
+            task.wait(120)
+        end
+    end)
+    spawn(function()
+        while true do
+            for i = 1,6 do
+                repeat
+                    task.wait(1)
+                    pcall(function()
+                        response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("CustomMerchants_Purchase"):InvokeServer("StandardMerchant", i)
+                    end)
+
+                until response == false
+            end
+            task.wait(120)
+        end
+    end)
+    spawn(function()
+        while true do
+            for i = 1,6 do
+                repeat
+                    task.wait(1)
+                    pcall(function()
+                        response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("CustomMerchants_Purchase"):InvokeServer("FishingMerchant",i)
+                    end)
+                until response == false
+            end
+            task.wait(120)
+        end
+    end)
+end
+Machines()
+
+
+local function main()
+    local breakablesFrontend = getupvalues(require(game:GetService("ReplicatedStorage").Library.Client.EffectCmds).GetBest)
+
+    -- Все зелья
+    local allPotions = {
+        "Lucky Potion", "Coins Potion", "Breakables Potion", "Faster Rolls Potion",
+        "Items Potion", "Walkspeed Potion", "The Cocktail", "Jelly Coins Potion", "Jelly Luck Potion", "Jelly Breakable Potion"
+    }
+
+    -- Таблица для хранения информации о зельях
+    local potionStatus = {}
+    -- 1. Определяем активные зелья и их редкость из breakablesFrontend[3]
+    for i, v in pairs(breakablesFrontend[3]) do
+        for z, y in pairs(v) do
+            for it, _ in pairs(y) do
+                if it == 1 then
+                    potionStatus[i] = { rarity = z }
+                end
+            end
+        end
+    end
+
+    for _, potionName in ipairs(allPotions) do
+        local currentRarity = potionStatus[potionName] and potionStatus[potionName].rarity
+        local maxRarityInInventory = nil
+        local itemId = nil
+    
+        -- Найти максимальную редкость зелья в инвентаре
+        for _, item in pairs(save2.Inventory.Consumable) do
+            if item.id == potionName then
+                if not maxRarityInInventory or item.tn > maxRarityInInventory then
+                    maxRarityInInventory = item.tn
+                    itemId = _ -- Сохраняем идентификатор
+                end
+            end
+        end
+    
+        -- Если зелье в инвентаре имеет более высокую редкость, применяем его
+        if maxRarityInInventory and (not currentRarity or maxRarityInInventory > currentRarity) then
+            --print("Используем зелье:", potionName, "Редкость:", maxRarityInInventory, itemId)
+            -- Убедиться, что у нас есть идентификатор
+            if itemId then
+                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Consumables_Consume"):InvokeServer(itemId,1)
+                task.wait(1)
+            else
+                task.wait()
+            end
+        else
+            task.wait()
+            --print("Зелье", potionName, "уже активно с максимальной доступной редкостью:", currentRarity or "nil")
+        end
+
+    end
+end
+
+spawn(function()
+    while true do
+        main()
+        task.wait(30)
+    end
+end)
+
+task.wait(1)
+
+local recipes = {
+    ["Lucky Potion2"] = { { id = "Lucky Potion", tn = 1, amount = 3 } , maxAmount = 999},
+    ["Lucky Potion3"] = { { id = "Lucky Potion", tn = 2, amount = 4 } , maxAmount = 999},
+    ["Lucky Potion4"] = { { id = "Lucky Potion", tn = 3, amount = 5 } , maxAmount = 100},
+    ["Lucky Potion5"] = { { id = "Lucky Potion", tn = 4, amount = 5 }, { id = "Orange", amount = 12 } , maxAmount = 50},
+    --["Lucky Potion6"] = { { id = "Lucky Potion", tn = 5, amount = 5 }, { id = "Orange", amount = 30 } , maxAmount = 5},
+    --["Lucky Potion7"] = { { id = "Lucky Potion", tn = 6, amount = 5 }, { id = "Orange", sh = true, amount = 5 } , maxAmount = 5},
+
+    ["Coins Potion2"] = { { id = "Coins Potion", tn = 1, amount = 3 } , maxAmount = 999},
+    ["Coins Potion3"] = { { id = "Coins Potion", tn = 2, amount = 4 } , maxAmount = 999},
+    ["Coins Potion4"] = { { id = "Coins Potion", tn = 3, amount = 5 } , maxAmount = 999},
+    ["Coins Potion5"] = { { id = "Coins Potion", tn = 4, amount = 5 }, { id = "Banana", amount = 12 } , maxAmount = 999},
+    ["Coins Potion6"] = { { id = "Coins Potion", tn = 5, amount = 5 }, { id = "Banana", amount = 30 } , maxAmount = 999},
+    ["Coins Potion7"] = { { id = "Coins Potion", tn = 6, amount = 5 }, { id = "Banana", sh = true, amount = 5 } , maxAmount = 9999},
+
+    --["Breakables Potion1"] = { { id = "Lucky Potion", tn = 2, amount = 3 }, { id = "Watermelon", amount = 4 } , maxAmount = 5},
+    ["Breakables Potion2"] = { { id = "Breakables Potion", tn = 1, amount = 3 } , maxAmount = 999},
+    ["Breakables Potion3"] = { { id = "Breakables Potion", tn = 2, amount = 5 } , maxAmount = 9999},
+
+    --["Faster Rolls Potion1"] = { { id = "Lucky Potion", tn = 3, amount = 3 }, { id = "Watermelon", amount = 12 } , maxAmount = 5},
+    ["Faster Rolls Potion2"] = { { id = "Faster Rolls Potion", tn = 1, amount = 5 }, { id = "Watermelon", amount = 30 } , maxAmount = 9999},
+
+    --["Items Potion1"] = { { id = "Lucky Potion", tn = 3, amount = 1 }, { id = "Coins Potion", tn = 3, amount = 1 } , maxAmount = 5},
+    ["Items Potion2"] = { { id = "Items Potion", tn = 1, amount = 3 } , maxAmount = 999},
+    ["Items Potion3"] = { { id = "Items Potion", tn = 2, amount = 4 } , maxAmount = 999},
+    ["Items Potion4"] = { { id = "Items Potion", tn = 3, amount = 5 }, { id = "Pineapple", amount = 20 } , maxAmount = 9999},
+
+    --["Walkspeed Potion1"] = { { id = "Apple", amount = 4 }, { id = "Banana", amount = 4 } , maxAmount = 5},
+    --["Walkspeed Potion2"] = { { id = "Walkspeed Potion", tn = 1, amount = 3 } , maxAmount = 5},
+    --["Walkspeed Potion3"] = { { id = "Walkspeed Potion", tn = 2, amount = 3 } , maxAmount = 5},
+
+    ["Golden Dice Potion"] = { { id = "Lucky Potion", tn = 3, amount = 2 }, { id = "Orange", amount = 7 } , maxAmount = 8},
+    ["Rainbow Dice Potion"] = { { id = "Lucky Potion", tn = 4, amount = 2 }, { id = "Rainbow", amount = 4 } , maxAmount = 5},
+    ["Blazing Dice Potion"] = { { id = "Lucky Potion", tn = 5, amount = 2 }, { id = "Rainbow", sh = true, amount = 1 } , maxAmount = 5},
+
+    ["Instant Luck Potion1"] = { { id = "Lucky Potion", tn = 5, amount = 2 }, { id = "Rainbow Dice Potion", tn = 1, amount = 2 }, { id = "Golden Dice Potion", tn = 1, amount = 3 } , maxAmount = 3},
+    ["Instant Luck Potion2"] = { { id = "Instant Luck Potion", tn = 1, amount = 3 }, { id = "Rainbow Dice Potion", tn = 1, amount = 2 } , maxAmount = 3},
+    ["Instant Luck Potion3"] = { { id = "Instant Luck Potion", tn = 2, amount = 3 }, { id = "Rainbow Dice Potion", tn = 1, amount = 2 } , maxAmount = 10},
+    ["Instant Luck Potion4"] = { { id = "Instant Luck Potion", tn = 3, amount = 10 }, { id = "Blazing Dice Potion", tn = 1, amount = 5 }, { id = "The Cocktail", amount = 3 } , maxAmount = 100},
+
+    ["The Cocktail"] = { { id = "Instant Luck Potion", tn = 3, amount = 3 }, { id = "Lucky Potion", tn = 5, amount = 5 }, { id = "Golden Dice Potion", tn = 1, amount = 8 }, { id = "Rainbow Dice Potion", tn = 1, amount = 3 } , maxAmount = 5}
+}
+
+
+
+
+local function getRecipeNumber(recipeName)
+    local recipeList = {"Lucky Potion2", "Lucky Potion3", "Lucky Potion4", "Lucky Potion5", "Lucky Potion6", "Lucky Potion7", "Coins Potion2","Coins Potion3","Coins Potion4",
+"Coins Potion5","Coins Potion6","Coins Potion7","Breakables Potion1","Breakables Potion2","Breakables Potion3","Faster Rolls Potion1","Faster Rolls Potion2",
+"Items Potion1","Items Potion2","Items Potion3","Items Potion4","Walkspeed Potion1","Walkspeed Potion2","Walkspeed Potion3","Golden Dice Potion","Rainbow Dice Potion","Blazing Dice Potion",
+"Instant Luck Potion1","Instant Luck Potion2","Instant Luck Potion3","Instant Luck Potion4","The Cocktail"}  -- Имена рецептов в порядке
+    for i, name in ipairs(recipeList) do
+        if name == recipeName then
+            return i  -- Возвращаем порядковый номер рецепта
+        end
+    end
+    return nil  -- Если рецепт не найден
+end
+
+local function getMaxCraftable(recipeName)
+    local recipe = recipes[recipeName]
+    local maxAmount = recipe.maxAmount or math.huge  -- Максимальный предел для рецепта, или очень большое число
+    local availableCraftable = math.huge  -- Начнем с очень большого числа
+
+    -- Извлекаем базовое имя и уровень из названия рецепта
+    local baseName, tn = recipeName:match("^(.-)%s*(%d*)$")
+    tn = tonumber(tn)  -- Преобразуем в число для сравнения, если это уровень
+
+    -- Проверка на количество в инвентаре
+    local currentAmount = 0
+    for _, item in pairs(save2.Inventory.Consumable) do
+        if item.id == baseName and (not tn or item.tn == tn) then
+            currentAmount = item._am or 0
+            break
+        end
+    end
+
+    -- Вычисляем максимальное количество, которое можно создать, учитывая текущее количество
+    local remainingLimit = maxAmount - currentAmount
+    if remainingLimit <= 0 then
+        return 0  -- Если лимит уже достигнут или превышен, не создаем больше
+    end
+
+    -- Теперь проверим, сколько можно создать с учетом ингредиентов
+    for _, ingredient in ipairs(recipe) do
+        local requiredAmount = ingredient.amount  -- Требуемое количество для ингредиента
+        local availableAmount = 0
+    
+        if ingredient.tn then
+            -- Проверка в Consumable для ингредиента с tn
+            for _, item in pairs(save2.Inventory.Consumable) do
+                if item.id == ingredient.id and item.tn == ingredient.tn then
+                    availableAmount = item._am or 0
+                    break
+                end
+            end
+        else
+            -- Проверка для ингредиента без tn
+            for _, item in pairs(save2.Inventory.Consumable) do
+                if item.id == ingredient.id then
+                    availableAmount = item._am or 0
+                    break
+                end
+            end
+        end
+        
+        -- Проверка Fruit
+        if availableAmount == 0 then
+            for _, item in pairs(save2.Inventory.Fruit) do
+                local itemSh = item.sh or false
+                local shMatches = (ingredient.sh == nil and not itemSh) or (ingredient.sh == itemSh)
+                if item.id == ingredient.id and shMatches then
+                    availableAmount = item._am or 0
+                    break
+                end
+            end
+        end
+    
+        -- Вычисление количества, которое можно использовать для этого ингредиента
+        local possibleAmount = math.floor(availableAmount / requiredAmount)
+        availableCraftable = math.min(availableCraftable, possibleAmount)
+    end
+
+    -- Возвращаем количество, которое можно создать, ограниченное оставшимся лимитом
+    return math.min(availableCraftable, remainingLimit)
+end
+
+task.wait(2)
+-- Пример использования
+local function craftAllPotions()
+    spawn(function()
+        while true do
+            for recipeName, recipeData in pairs(recipes) do
+                local maxCraftable = getMaxCraftable(recipeName)
+                
+                if maxCraftable > 0 then
+                    local recipeNumber = getRecipeNumber(recipeName)
+                    if recipeNumber then
+                        local args = {
+                            [1] = "PotionCraftingMachine",  -- статичный аргумент
+                            [2] = recipeNumber,             -- номер рецепта
+                            [3] = maxCraftable              -- количество зелий для крафта
+                        }
+                        
+                        -- Обертывание в pcall для обработки ошибок и проверки ответа от сервера
+                        local success, result = pcall(function()
+                            return game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("CraftingMachine_Craft"):InvokeServer(unpack(args))
+                        end)
+                        
+                        if success then
+                            if result then
+                                task.wait()
+                                --print("Успешно скрафтил: " .. recipeName .. " Кол-во: " .. maxCraftable )
+                            end
+                        end
+                        
+                        task.wait(2)
+                    end
+                else
+                    task.wait(1)
+                end
+            end
+    
+            task.wait(60)
+        end
+    end)
+
+end
+
+craftAllPotions()
+
+task.wait(1)
+
+function OptMap()
+    workspace.MAP.BORDER:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Bounties:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Library.Client.HoverboardCmds:Destroy()
+    workspace.MAP.INTERACT.BuySigns:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Statues:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT["Like Sign"]:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.SharkCenter:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Trampoline:Destroy()
+    task.wait(.1)
+    --scriptdel workspace.MAP.INTERACT["Update Countdown"]
+    workspace.MAP.INTERACT.SecretRoomEnter:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.SecretRoomLeave:Destroy()
+    task.wait(.1)
+    --workspace.__THINGS.Digging:Destroy()
+    task.wait(.1)
+    --workspace.__THINGS.DiggingLocations:Destroy()
+    workspace.__THINGS.Fireworks:Destroy()
+    task.wait(.1)
+    workspace.__THINGS.Hoverboards:Destroy()
+    task.wait(.1)
+    workspace.__THINGS.Relics:Destroy()
+    task.wait(.1)
+    workspace.MAP.TradingPlazaPortal:Destroy()
+    task.wait(.1)
+    workspace.MAP.CrystalChestRoom:Destroy()
+    workspace.__THINGS.FlyingGifts:Destroy()
+    for _, v in pairs(workspace.MAP.PARTS:GetChildren()) do
+        if v.Name == "Ground" then
+            wait()  -- Здесь можно выполнить нужные действия для объектов Ground и Part
+        else
+            v:Destroy()  -- Удаляем объект, если его имя не соответствует
+        end
+    end
+    task.wait(.1)
+    workspace.OUTER:Destroy()
+    task.wait(.1)
+    for i, v in pairs(workspace.MAP.INTERACT.FishingPads:GetDescendants()) do
+        if v.Name == "Bubbles" or v.Name == "Pulse" or v.Name ==  "Shiny" then
+            v:Destroy()
+        end
+        if v.Name == "Pad" then
+            v.CanCollide = true
+            v.Size = Vector3.new(250, 0.1, 100)
+            v.Transparency = 1
+        end
+    end
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Library.Client.LeaderboardCmds:Destroy()
+    task.wait(.1)
+    --game:GetService("ReplicatedStorage").Library.Client.HoverboardCmds:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.Hoverboard_Equipped:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.Hoverboard_RequestEquip:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.Hoverboard_RequestUnequip:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.Hoverboard_Unequipped:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.Hoverboard_ChangeSelection:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network["Leaderboards: Broadcast Global"]:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network["Leaderboards: Broadcast Local"]:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.Leveling_RebirthAnimation:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.LikeGoal_Updated:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.Likes_Update:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.PlaySound:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network["World Fireworks"]:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.EggPodiumMachine.Model:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.EggPodiumMachine.Egg:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.EggPodiumMachine.Column:Destroy()
+    task.wait(.1)
+    --workspace.MAP.INTERACT.Machines.EggPodiumMachine.Highlight:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.FishingMerchant.Model:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.JellyMerchant.Model:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.MailboxMachine.Gifts:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.MailboxMachine.Closed:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.MailboxMachine.Opened:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.PetIndexMachine.Machine:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.PotionCraftingMachine.Machine:Destroy()
+    task.wait(.1)
+    --workspace.MAP.INTERACT.Machines.PotionVendingMachine.VendingMachine:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.StandardMerchant.Model:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.UpgradeFruitsMachine.FruitSmoothie_Machine:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.JuicerMachine.Model:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT["Update Countdown"]:Destroy()
+    task.wait(.1)
+    for i,v in pairs(workspace.MAP.INTERACT.GlobalLeaderboard:GetChildren()) do
+        if v.Name == "Part" then
+            v:Destroy()
+        end
+    end
+    task.wait(.1)
+    for i,v in pairs(workspace.MAP.INTERACT.ServerLeaderboard:GetChildren()) do
+        if v.Name == "Part" then
+            v:Destroy()
+        end
+    end
+    task.wait(.1)
+    for i,v in pairs(workspace.MAP.PARTS:GetDescendants()) do
+        if v.Name == "Ground" then
+            task.wait()
+        else
+            v:Destroy()
+        end
+    end
+    task.wait(.1)
+    for i,v in pairs(workspace:GetDescendants()) do
+        if v:IsA("Part") then
+            v.Transparency = 1
+        end
+    end
+end
+
+
+OptMap()
+
+
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.MAP.INTERACT.FishingPads.FishingBillboard.PadGlow.CFrame + Vector3.new(0,5,0)
-
-
