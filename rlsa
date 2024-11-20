@@ -13,7 +13,6 @@ getgenv().Optimization = true
 local library = require(game.ReplicatedStorage.Library.Client.Save)
 local save = library.Get().EquippedPets
 local save2 = library.Get()
-local scriptEnv1 = getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Breakables Frontend"])
 local response
 local oldfd = workspace.__THINGS.Breakables
 local newfolder = Instance.new("Folder")
@@ -28,6 +27,8 @@ for i, v in pairs(oldfd:GetChildren()) do
 
         if v.PrimaryPart then
             local cf = v.PrimaryPart.CFrame
+            
+
             local part = Instance.new("Part")
             part.Name = tostring(id)
             part.CFrame = cf + Vector3.new(0, 5, 0)  -- Сдвигаем вверх на 5 единиц
@@ -110,7 +111,6 @@ local function Opt()
     task.wait()
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Tutorial:Destroy()
     task.wait()
-    game:GetService("ReplicatedStorage").Library.Client.XPBallCmds.Ball.Center.Item.Texture = ""
     --- gui
     for i,v in pairs(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.GUIs:GetChildren()) do
         v:Destroy()
@@ -124,6 +124,9 @@ local function Opt()
         if v:IsA("ParticleEmitter") then
             v.Texture = ""
         end
+    
+
+    game:GetService("ReplicatedStorage").Library.Client.XPBallCmds.Ball.Center.Item.Texture = ""
     end
 
 
@@ -213,17 +216,12 @@ task.wait(.5)
 -- breakotpimization boost fps ;)
 
 local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait() -- Получаем персонажа игрока
 local breakablesFrontend = getsenv(player.PlayerScripts.Scripts.Game["Breakables Frontend"])
 local petmenager = getsenv(player.PlayerScripts.Scripts.Game.Pets["Pet Replication Manager"])
-breakablesFrontend.createBreakable = function(p40)
-    local part = Instance.new("Part")
-    part.Name = p40.u
-    part.CFrame = p40.cf + Vector3.new(0, 5, 0)
-    part.Size = Vector3.new(2, 1, 2)
-    part.Anchored = true
-    part.Parent = newfolder
-end
+
+--[[petmenager.shouldRenderOtherPlayerPets = function(...)
+    return false
+end]]
 task.wait(.2)
 breakablesFrontend.getClosestBreakable = function()
     breakablesFrontend.getClosestBreakable = function()
@@ -236,23 +234,14 @@ breakablesFrontend.getClosestBreakable = function()
         end
     end    
 end
-task.wait(1)
+task.wait(.2)
 petmenager.updateUnspawnedPets = function(...)
 end
 task.wait(.2)
 breakablesFrontend.updateBreakable = function(...)
 end
 task.wait(.2)
-breakablesFrontend.destroyBreakable = function(arg)
-    if arg then
-        workspace.__THINGS.Nagib:WaitForChild(arg):Destroy()  -- Удаляем объект
-    end
-end
-task.wait(.2)
-breakablesFrontend.cleanupBreakable = function(arg)
-    if arg then
-        workspace.__THINGS.Nagib:WaitForChild(arg):Destroy()  -- Удаляем объект
-    end
+breakablesFrontend.destroyBreakable = function(...)
 end
 task.wait(.2)
 breakablesFrontend.startGlowAnimationTask = function(...)
@@ -273,71 +262,77 @@ task.wait()
 
 
 
+task.wait(.5)
+
+local remote = game:GetService("ReplicatedStorage").Network:WaitForChild("Breakables_Created")
+
+local function onenent(p1)
+
+    for _l, table1 in pairs(p1) do
+        for _ll, table2 in pairs(table1) do
+            local id = table2.u
+            local cf = table2.cf
+            
+            local part = Instance.new("Part")
+            part.Name = tostring(id)
+            part.CFrame = cf + Vector3.new(0, 5, 0)
+            part.Size = Vector3.new(2, 1, 2)
+            part.Anchored = true
+            part.Parent = newfolder
+        end
+    end
+end
+
+local con = remote.OnClientEvent:Connect(onenent)
+
+task.wait(.5)
+
+local net = game:GetService("ReplicatedStorage").Network:WaitForChild("Breakables_Destroyed")
+local function onenent2(p1)
+    for i,v in pairs(p1) do
+        for z,y in pairs(v) do
+             if type(y) == "string" or type(y) == "number" then
+                local path = workspace.__THINGS.Nagib:FindFirstChild(tostring(y))
+                if path then
+                    -- Если объект найден, уничтожаем его
+                    path:Destroy()
+                end
+            end
+        end
+
+    end
+end
+local con = net.OnClientEvent:Connect(onenent2)
+
+
+task.wait(.5)
+
+local net = game:GetService("ReplicatedStorage").Network:WaitForChild("Breakables_Cleanup")
+
+local function onenent2(p1)
+    for i, v in pairs(p1) do
+        for z, y in pairs(v) do
+
+            if type(y) == "string" or type(y) == "number" then
+                local path = workspace.__THINGS.Nagib:FindFirstChild(tostring(y))
+                if path then
+
+                    path:Destroy()
+                end
+
+            end
+        end
+    end
+end
+
+local con = net.OnClientEvent:Connect(onenent2)
 
 task.wait(.5)
 
 -- breakotpimization boost fps ;)
 
 
-local function getpet()
-    -- Кэшируем список питомцев
-    local curpet = {}
-    for i, v in pairs(save) do
-        table.insert(curpet, i)
-    end
-    return curpet
-end
-
--- Обновление списка питомцев
-local updatedPets = getpet()
-spawn(function()
-    while true do
-        updatedPets = getpet()
-        task.wait(60)
-    end
-end)
-
-local lastUid = nil -- Храним последнее значение uid
-
-local player = game.Players.LocalPlayer
-local breakablesFrontend = getsenv(player.PlayerScripts.Scripts.Game["Breakables Frontend"])
-
-local function processClosestBreakable()
-    -- Получаем имя ближайшего объекта через функцию getClosestBreakable
-    local closestBreakable = breakablesFrontend.getClosestBreakable()
-    if closestBreakable ~= lastUid then
-        lastUid = closestBreakable
-
-        -- Если ближайший объект найден, отправляем питомцев
-        if closestBreakable then
-            local args = {}
-            local pets = updatedPets -- Список питомцев, обновляется отдельно
-
-            if pets and #pets > 0 then
-                for _, petName in ipairs(pets) do
-                    args[petName] = tonumber(lastUid)
-                end
-
-                -- Отправляем данные на сервер
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
-                print("пет отправлен")
-            end
-        else
-            task.wait()
-        end
-    end
-end
-
--- Основной цикл
-spawn(function()
-    while true do
-        processClosestBreakable()
-        task.wait(0.1)
-    end
-end)
-
-
-
+-- autofarm
 
 
 
@@ -397,6 +392,62 @@ end
 Bonus()
 
 
+local function getpet()
+    local curpet = {}
+
+    -- Собираем имена питомцев в таблицу
+    for i, v in pairs(save) do
+        -- Добавляем имена питомцев в таблицу
+        table.insert(curpet, i)
+    end
+    return curpet
+end
+task.wait(.5)
+local updatedPets = {}
+spawn(function()
+    while true do
+        updatedPets = getpet() -- Обновляем информацию о питомцах
+        task.wait(60) -- Ждем 60 секунд
+    end
+end)
+task.wait(.5)
+local lastUid = nil -- Храним последнее значение uid
+local player = game.Players.LocalPlayer
+local breakablesFrontend = getsenv(player.PlayerScripts.Scripts.Game["Breakables Frontend"])
+
+local function processClosestBreakable()
+    -- Получаем имя ближайшего объекта через функцию getClosestBreakable
+    local closestBreakable = breakablesFrontend.getClosestBreakable()
+    if closestBreakable ~= lastUid then
+        lastUid = closestBreakable
+
+        -- Если ближайший объект найден, отправляем питомцев
+        if closestBreakable then
+            local args = {}
+            local pets = updatedPets -- Список питомцев, обновляется отдельно
+
+            if pets and #pets > 0 then
+                for _, petName in ipairs(pets) do
+                    args[petName] = tonumber(lastUid)
+                end
+
+                -- Отправляем данные на сервер
+                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
+                print("пет отправлен")
+            end
+        else
+            task.wait()
+        end
+    end
+end
+
+-- Основной цикл
+spawn(function()
+    while true do
+        processClosestBreakable()
+        task.wait(0.1)
+    end
+end)
 task.wait(1)
 
 local function Machines()
