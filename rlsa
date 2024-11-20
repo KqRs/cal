@@ -433,7 +433,6 @@ local function processClosestBreakable()
 
                 -- Отправляем данные на сервер
                 game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
-                print("пет отправлен")
             end
         else
             task.wait()
