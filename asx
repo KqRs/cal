@@ -13,6 +13,8 @@ getgenv().Optimization = true
 local library = require(game.ReplicatedStorage.Library.Client.Save)
 local save = library.Get().EquippedPets
 local save2 = library.Get()
+local scriptEnv = getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Flying Gifts"])
+local breakablesFrontend = getupvalue(getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Flying Gifts"]).create,4)
 local response
 local oldfd = workspace.__THINGS.Breakables
 local newfolder = Instance.new("Folder")
@@ -184,21 +186,6 @@ local function Antiafk()
         v:Disable()
     end
     
-    local vu = game:GetService("VirtualUser")
-    game:GetService("Players").LocalPlayer.Idled:Connect(function()
-       vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-       task.wait(1)
-       vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-    end)
-    local con = game:GetService("ReplicatedStorage").Network["Idle Tracking: Stop Timer"].OnClientEvent
-    for i,v in pairs(getconnections(con)) do
-        v:Disconnect()
-    end
-
-    local con2 = game:GetService("ReplicatedStorage").Network["Idle Tracking: Update Timer"].OnClientEvent
-    for i,v in pairs(getconnections(con)) do
-        v:Disconnect()
-    end
     spawn(function()
         local VirtualInputManager = game:GetService("VirtualInputManager")
         while task.wait() do
@@ -222,6 +209,18 @@ local petmenager = getsenv(player.PlayerScripts.Scripts.Game.Pets["Pet Replicati
 --[[petmenager.shouldRenderOtherPlayerPets = function(...)
     return false
 end]]
+task.wait(.2)
+breakablesFrontend.getClosestBreakable = function()
+    breakablesFrontend.getClosestBreakable = function()
+        -- Получаем первый объект из workspace.__THINGS.Nagib
+        local firstBreakable = workspace.__THINGS.Nagib:GetChildren()[1]
+    
+        -- Если объект найден, возвращаем его имя
+        if firstBreakable then
+            return firstBreakable.Name
+        end
+    end    
+end
 task.wait(.2)
 petmenager.updateUnspawnedPets = function(...)
 end
@@ -369,6 +368,25 @@ local function ClaimDig()
 end
 ClaimDig()
 
+local function CkaimGift()
+    -- Проверяем, существует ли функция claim
+    if scriptEnv and typeof(scriptEnv.claim) == "function" then
+        while true do
+            if next(breakablesFrontend) == nil then
+                task.wait(10)
+            else
+                for i in pairs(breakablesFrontend) do
+                    scriptEnv.claim(i)
+                    task.wait(1)
+                end
+            end
+        end
+    else
+        warn("Функция claim не найдена или недоступна!")
+    end
+end
+CkaimGift()
+
 local function Bonus()
     spawn(function()
         task.wait(20)
@@ -399,60 +417,42 @@ spawn(function()
     end
 end)
 task.wait(.5)
-local function farm()
-    spawn(function()
-        while true do
-            local breakFolder = workspace.__THINGS.Nagib:GetChildren()
-            if #breakFolder > 0 then
+local lastUid = nil -- Храним последнее значение uid
+local player = game.Players.LocalPlayer
+local breakablesFrontend = getsenv(player.PlayerScripts.Scripts.Game["Breakables Frontend"])
 
-            
-                for i, v in pairs(breakFolder) do
-                    if v:IsA("Part") then
+local function processClosestBreakable()
+    -- Получаем имя ближайшего объекта через функцию getClosestBreakable
+    local closestBreakable = breakablesFrontend.getClosestBreakable()
+    if closestBreakable ~= lastUid then
+        lastUid = closestBreakable
 
+        -- Если ближайший объект найден, отправляем питомцев
+        if closestBreakable then
+            local args = {}
+            local pets = updatedPets -- Список питомцев, обновляется отдельно
 
-
-                        local pets = updatedPets
-
-                        -- Если питомцы есть, создаем аргументы для отправки на сервер
-                        if pets then
-                            local args = {}
-
-                            -- Заполняем таблицу args с данными о питомцах и их ID
-                            for _, petName in pairs(pets) do
-                                local breakableID = tonumber(v.Name)
-                                if breakableID then
-                                    -- Для каждого питомца добавляем пару [petName] = breakableID
-                                    args[petName] = breakableID
-                                end
-                            end
-                            
-
-                            -- Отправляем таблицу на сервер
-                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
-
-
-
-                            while v and v.Parent do
-                                task.wait(.1)
-                            end
-                            --print("Объект " .. v.Name .. " исчез")
-
-
-
-                            task.wait()
-                        end
-                    else
-                        task.wait(1)
-
-                    end
+            if pets and #pets > 0 then
+                for _, petName in ipairs(pets) do
+                    args[petName] = tonumber(lastUid)
                 end
-            else
-                task.wait(5)
+
+                -- Отправляем данные на сервер
+                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
             end
+        else
+            task.wait()
         end
-    end)
+    end
 end
-farm()
+
+-- Основной цикл
+spawn(function()
+    while true do
+        processClosestBreakable()
+        task.wait(0.1)
+    end
+end)
 task.wait(1)
 
 local function Machines()
