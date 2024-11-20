@@ -1,441 +1,928 @@
+repeat
+    task.wait(1)
+until game:IsLoaded()
+
+repeat
+    task.wait(1)
+until game.PlaceId ~= nil
+
+repeat
+    task.wait(1)
+until game:GetService("Players").LocalPlayer and game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
+getgenv().Optimization = true
+local library = require(game.ReplicatedStorage.Library.Client.Save)
+local save = library.Get().EquippedPets
+local save2 = library.Get()
+local response
+local oldfd = workspace.__THINGS.Breakables
+local newfolder = Instance.new("Folder")
+newfolder.Name = "Nagib"
+newfolder.Parent = workspace.__THINGS
+
+for i, v in pairs(oldfd:GetChildren()) do
+    if v:IsA("Model") then
+
+        local id = v.Name
+        
+
+        if v.PrimaryPart then
+            local cf = v.PrimaryPart.CFrame
+            local part = Instance.new("Part")
+            part.Name = tostring(id)
+            part.CFrame = cf + Vector3.new(0, 5, 0)  -- Сдвигаем вверх на 5 единиц
+            part.Size = Vector3.new(2, 1, 2)
+            part.Anchored = true
+            part.Parent = newfolder
+            
+            -- Удаляем модель
+            v:Destroy()
+        end
+    end
+end
+workspace.__THINGS.Breakables:Destroy()
+
+task.wait(1)
+
+local function Opt()
+    task.wait()
+    workspace.__THINGS.Orbs:Destroy()
+    --- scripts
+    task.wait()
+    --game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Test:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Misc:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.PlayerScriptsLoader:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.RbxCharacterSounds:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.PlayerModule:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Consumables:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Breakable VFX"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.ForeverPacks:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Gamepasses:Destroy()
+    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Hoverboard_RequestUnequip"):FireServer()
+    task.wait(1)
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Hoverboards:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Machine Animations"]:Destroy()
+    task.wait()
+    for i,v in pairs(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Machines:GetChildren()) do
+        if v.Name == "Vending Machines" then
+            task.wait()
+        else
+            v:Destroy() 
+        end
+    end
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Opening:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Trading Plaza"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["World Animations"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Ambience:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Egg Podium"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Fruit Magnet"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Gamepass Deal"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Item Index"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Music:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Notification Prompt"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Player Profiles"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.TimedItems:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Retention Gifts"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Tutorial:Destroy()
+    task.wait()
+    game:GetService("ReplicatedStorage").Library.Client.XPBallCmds.Ball.Center.Item.Texture = ""
+    --- gui
+    for i,v in pairs(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.GUIs:GetChildren()) do
+        v:Destroy()
+        task.wait()
+    end
+    --- bildoards
+    for i,v in pairs(game:GetService("ReplicatedStorage").Assets.Billboards:GetChildren()) do
+        v.Enabled = false
+    end
+    for i,v in pairs(game:GetService("ReplicatedStorage").Assets.Particles:GetDescendants()) do
+        if v:IsA("ParticleEmitter") then
+            v.Texture = ""
+        end
+    end
+
+
+
+end
+if getgenv().Optimization then
+    Opt()
+end
+
+local breakablesFrontend = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
+breakablesFrontend.DefaultPickupDistance = 3000
+task.wait()
+local breakablesFrontend = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
+breakablesFrontend.CollectDistance = 3000
+task.wait()
+local breakablesFrontend = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
+breakablesFrontend.BillboardDistance = 0
+task.wait()
+local breakablesFrontend = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
+breakablesFrontend.DefaultPickupDistance = 3000
+task.wait()
+local breakablesFrontend = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
+breakablesFrontend.CollectDistance = 3000
+task.wait()
+local breakablesFrontend = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
+breakablesFrontend.SoundDistance = 0
+task.wait()
+
+
+
+local Players2 = game:GetService("Players")
+local localPlayer2 = Players2.LocalPlayer
+
+local function removeOtherPlayerModels()
+    for _, player in pairs(Players2:GetPlayers()) do
+        if player ~= localPlayer2 and player.Character and player.Character.Parent == workspace then
+            player.Character:Destroy()
+        end
+    end
+end
+
+Players2.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        wait(3)
+        if player ~= localPlayer2 and player.Character and player.Character.Parent == workspace then
+            character:Destroy()
+        end
+    end)
+end)
+
+removeOtherPlayerModels()
+
+local function Antiafk()
+    for i, v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
+        v:Disable()
+    end
+    
+    local vu = game:GetService("VirtualUser")
+    game:GetService("Players").LocalPlayer.Idled:Connect(function()
+       vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+       task.wait(1)
+       vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    end)
+    local con = game:GetService("ReplicatedStorage").Network["Idle Tracking: Stop Timer"].OnClientEvent
+    for i,v in pairs(getconnections(con)) do
+        v:Disconnect()
+    end
+
+    local con2 = game:GetService("ReplicatedStorage").Network["Idle Tracking: Update Timer"].OnClientEvent
+    for i,v in pairs(getconnections(con)) do
+        v:Disconnect()
+    end
+    spawn(function()
+        local VirtualInputManager = game:GetService("VirtualInputManager")
+        while task.wait() do
+            VirtualInputManager:SendKeyEvent(true, "Space", false, game)
+            task.wait(.2)
+            VirtualInputManager:SendKeyEvent(false, "Space", false, game)
+            task.wait(300)
+        end
+    end)
+
+end
+
+task.wait(.5)
+
+-- breakotpimization boost fps ;)
+
+local player = game.Players.LocalPlayer
+local breakablesFrontend = getsenv(player.PlayerScripts.Scripts.Game["Breakables Frontend"])
+local petmenager = getsenv(player.PlayerScripts.Scripts.Game.Pets["Pet Replication Manager"])
+
+--[[petmenager.shouldRenderOtherPlayerPets = function(...)
+    return false
+end]]
+task.wait(.2)
+petmenager.updateUnspawnedPets = function(...)
+end
+task.wait(.2)
+breakablesFrontend.updateBreakable = function(...)
+end
+task.wait(.2)
+breakablesFrontend.destroyBreakable = function(...)
+end
+task.wait(.2)
+breakablesFrontend.startGlowAnimationTask = function(...)
+end
+task.wait(.2)
+breakablesFrontend.startBillboardTask = function(...)
+end
+task.wait(.2)
+
+
+
+
+game:GetService("ReplicatedStorage").Library.Client.Network["Fireworks Animation"]:Destroy()
+task.wait()
+game:GetService("ReplicatedStorage").Library.Client.Network["Reward Item Animation"]:Destroy()
+task.wait()
+
+
+
+
+task.wait(.5)
+
+local remote = game:GetService("ReplicatedStorage").Network:WaitForChild("Breakables_Created")
+
+local function onenent(p1)
+
+    for _l, table1 in pairs(p1) do
+        for _ll, table2 in pairs(table1) do
+            local id = table2.u
+            local cf = table2.cf
+            
+            local part = Instance.new("Part")
+            part.Name = tostring(id)
+            part.CFrame = cf + Vector3.new(0, 5, 0)
+            part.Size = Vector3.new(2, 1, 2)
+            part.Anchored = true
+            part.Parent = newfolder
+        end
+    end
+end
+
+local con = remote.OnClientEvent:Connect(onenent)
+
+task.wait(.5)
+
+local net = game:GetService("ReplicatedStorage").Network:WaitForChild("Breakables_Destroyed")
+local function onenent2(p1)
+    for i,v in pairs(p1) do
+        for z,y in pairs(v) do
+             if type(y) == "string" or type(y) == "number" then
+                local path = workspace.__THINGS.Nagib:FindFirstChild(tostring(y))
+                if path then
+                    -- Если объект найден, уничтожаем его
+                    path:Destroy()
+                end
+            end
+        end
+
+    end
+end
+local con = net.OnClientEvent:Connect(onenent2)
+
+
+task.wait(.5)
+
+local net = game:GetService("ReplicatedStorage").Network:WaitForChild("Breakables_Cleanup")
+
+local function onenent2(p1)
+    for i, v in pairs(p1) do
+        for z, y in pairs(v) do
+
+            if type(y) == "string" or type(y) == "number" then
+                local path = workspace.__THINGS.Nagib:FindFirstChild(tostring(y))
+                if path then
+
+                    path:Destroy()
+                end
+
+            end
+        end
+    end
+end
+
+local con = net.OnClientEvent:Connect(onenent2)
+
+task.wait(.5)
+
+-- breakotpimization boost fps ;)
+
+
+-- autofarm
+local function getpet()
+    -- Кэшируем список питомцев для оптимизации
+    local curpet = {}
+    for i, v in pairs(save) do
+        table.insert(curpet, i)
+    end
+    return curpet
+end
+
+-- Обновление списка питомцев раз в 60 секунд
+local updatedPets = getpet()
+spawn(function()
+    while true do
+        updatedPets = getpet()
+        task.wait(60)
+    end
+end)
+
+-- Основная функция фарма
+local function farm()
+    spawn(function()
+        while true do
+            local breakFolder = workspace.__THINGS.Nagib:GetChildren()
+            
+            if #breakFolder > 0 then
+                for _, v in pairs(breakFolder) do
+                    if v:IsA("Part") then
+                        -- Проверяем, есть ли обновленные питомцы
+                        local pets = updatedPets
+                        if pets and #pets > 0 then
+                            local args = {}
+                            local breakableID = tonumber(v.Name)
+                            
+                            -- Проверяем корректность breakableID
+                            if breakableID then
+                                -- Составляем аргументы для серверного вызова
+                                for _, petName in ipairs(pets) do
+                                    args[petName] = breakableID
+                                end
+
+                                -- Отправляем данные на сервер
+                                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
+
+                                -- Ожидаем удаления объекта
+                                while v and v.Parent do
+                                    task.wait()
+                                end
+                            end
+                        end
+                    end
+                end
+            else
+                -- Если объектов нет, делаем паузу
+                task.wait(5)
+            end
+        end
+    end)
+end
+
+-- Запускаем фарм
+farm()
+
+
+
+-- autofarm
+task.wait(.5)
+local function autoroll()
+    spawn(function()
+        
+        while true do
+            pcall(function()
+                game.ReplicatedStorage.Network["Eggs_Roll"]:InvokeServer()
+                task.wait(.2)
+            end)
+        end
+    end)
+end
+autoroll()
+
+
+local function dayn()
+local firstKey = next(save)
+	if firstKey then
+		return firstKey
+	end
+end
+local function ClaimDig()
+    spawn(function()
+        
+        while true do
+            local network = getupvalue(require(game:GetService("ReplicatedStorage"):WaitForChild("Library"):WaitForChild("Client"):WaitForChild("DiggingCmds")).Target,1)
+            if network and next(network) then
+                for i,v in pairs(network) do
+
+                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Digging_Target"):InvokeServer(i,dayn())
+                    
+                    task.wait(1)
+                    
+                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Digging_Claim"):InvokeServer(i)
+                    task.wait(1)
+                end
+            else
+                task.wait(10)
+            end
+        end
+    end)
+end
+ClaimDig()
+
+local function Bonus()
+    spawn(function()
+        task.wait(20)
+        game:GetService("ReplicatedStorage").Network:WaitForChild("Breakables_SuperBonus"):Destroy()
+        task.wait(1)
+        game:GetService("ReplicatedStorage").Network:WaitForChild("Breakables_Bonus"):Destroy()
+    end)
+end
+Bonus()
+
+
+task.wait(1)
+
+local function Machines()
+    spawn(function()
+        while true do
+            for i = 1,6 do
+                repeat
+                    pcall(function()
+                        response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Merchant_RequestPurchase"):InvokeServer("AdvancedIndexMerchant", i)
+                    end)
+                    task.wait(1)
+                until response == false
+            end
+            task.wait(120)
+        end
+    end)
+    spawn(function()
+        while true do
+            for i = 1,6 do
+                repeat
+                    task.wait(1)
+                    pcall(function()
+                        response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("CustomMerchants_Purchase"):InvokeServer("StandardMerchant", i)
+                    end)
+
+                until response == false
+            end
+            task.wait(120)
+        end
+    end)
+    spawn(function()
+        while true do
+            for i = 1,6 do
+                repeat
+                    task.wait(1)
+                    pcall(function()
+                        response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("CustomMerchants_Purchase"):InvokeServer("FishingMerchant",i)
+                    end)
+                until response == false
+            end
+            task.wait(120)
+        end
+    end)
+end
+Machines()
+
+
+local function main()
+    local breakablesFrontend = getupvalues(require(game:GetService("ReplicatedStorage").Library.Client.EffectCmds).GetBest)
+
+    -- Все зелья
+    local allPotions = {
+        "Lucky Potion", "Coins Potion", "Breakables Potion", "Faster Rolls Potion",
+        "Items Potion", "Walkspeed Potion", "The Cocktail", "Jelly Coins Potion", "Jelly Luck Potion", "Jelly Breakable Potion"
+    }
+
+    -- Таблица для хранения информации о зельях
+    local potionStatus = {}
+    -- 1. Определяем активные зелья и их редкость из breakablesFrontend[3]
+    for i, v in pairs(breakablesFrontend[3]) do
+        for z, y in pairs(v) do
+            for it, _ in pairs(y) do
+                if it == 1 then
+                    potionStatus[i] = { rarity = z }
+                end
+            end
+        end
+    end
+
+    for _, potionName in ipairs(allPotions) do
+        local currentRarity = potionStatus[potionName] and potionStatus[potionName].rarity
+        local maxRarityInInventory = nil
+        local itemId = nil
+    
+        -- Найти максимальную редкость зелья в инвентаре
+        for _, item in pairs(save2.Inventory.Consumable) do
+            if item.id == potionName then
+                if not maxRarityInInventory or item.tn > maxRarityInInventory then
+                    maxRarityInInventory = item.tn
+                    itemId = _ -- Сохраняем идентификатор
+                end
+            end
+        end
+    
+        -- Если зелье в инвентаре имеет более высокую редкость, применяем его
+        if maxRarityInInventory and (not currentRarity or maxRarityInInventory > currentRarity) then
+            --print("Используем зелье:", potionName, "Редкость:", maxRarityInInventory, itemId)
+            -- Убедиться, что у нас есть идентификатор
+            if itemId then
+                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Consumables_Consume"):InvokeServer(itemId,1)
+                task.wait(1)
+            else
+                task.wait()
+            end
+        else
+            task.wait()
+            --print("Зелье", potionName, "уже активно с максимальной доступной редкостью:", currentRarity or "nil")
+        end
+
+    end
+end
+
+spawn(function()
+    while true do
+        main()
+        task.wait(30)
+    end
+end)
+
+task.wait(1)
+
+
+
+
+local ConfigFruit = {
+    "Watermelon",
+    "Apple",
+    "Pineapple",
+    "Orange",
+    "Rainbow",
+    "Banana"
+}
+
+
+local firstRun = true
+
+local function AutoFruit()
+    spawn(function()
+        while true do
+            if save2.Inventory.Fruit then
+                if firstRun then
+                    -- При первом запуске съедаем 20 фруктов по одному
+                    for i = 1, 25 do
+                        for id, v in pairs(save2.Inventory.Fruit) do
+                            for _, fruit in pairs(ConfigFruit) do
+                                if v.id == fruit then
+                                    game.ReplicatedStorage.Network["Fruits: Consume"]:InvokeServer(id, 1)
+                                    task.wait(1)
+                                end
+                            end
+                        end
+                    end
+                    firstRun = false
+                else
+                    for id, v in pairs(save2.Inventory.Fruit) do
+                        for _, fruit in pairs(ConfigFruit) do
+                            if v.id == fruit then
+                                game.ReplicatedStorage.Network["Fruits: Consume"]:InvokeServer(id, 1)
+                                task.wait(1)
+                            end
+                        end
+                    end
+                end
+                task.wait(60)
+            else
+                task.wait(10)
+            end
+        end
+    end)
+end
+
+AutoFruit()
+
+
+task.wait(1)
+local recipes = {
+    ["Lucky Potion2"] = { { id = "Lucky Potion", tn = 1, amount = 3 } , maxAmount = 999},
+    ["Lucky Potion3"] = { { id = "Lucky Potion", tn = 2, amount = 4 } , maxAmount = 999},
+    ["Lucky Potion4"] = { { id = "Lucky Potion", tn = 3, amount = 5 } , maxAmount = 100},
+    ["Lucky Potion5"] = { { id = "Lucky Potion", tn = 4, amount = 5 }, { id = "Orange", amount = 12 } , maxAmount = 50},
+    --["Lucky Potion6"] = { { id = "Lucky Potion", tn = 5, amount = 5 }, { id = "Orange", amount = 30 } , maxAmount = 5},
+    --["Lucky Potion7"] = { { id = "Lucky Potion", tn = 6, amount = 5 }, { id = "Orange", sh = true, amount = 5 } , maxAmount = 5},
+
+    ["Coins Potion2"] = { { id = "Coins Potion", tn = 1, amount = 3 } , maxAmount = 999},
+    ["Coins Potion3"] = { { id = "Coins Potion", tn = 2, amount = 4 } , maxAmount = 999},
+    ["Coins Potion4"] = { { id = "Coins Potion", tn = 3, amount = 5 } , maxAmount = 999},
+    ["Coins Potion5"] = { { id = "Coins Potion", tn = 4, amount = 5 }, { id = "Banana", amount = 12 } , maxAmount = 999},
+    ["Coins Potion6"] = { { id = "Coins Potion", tn = 5, amount = 5 }, { id = "Banana", amount = 30 } , maxAmount = 999},
+    ["Coins Potion7"] = { { id = "Coins Potion", tn = 6, amount = 5 }, { id = "Banana", sh = true, amount = 5 } , maxAmount = 9999},
+
+    --["Breakables Potion1"] = { { id = "Lucky Potion", tn = 2, amount = 3 }, { id = "Watermelon", amount = 4 } , maxAmount = 5},
+    ["Breakables Potion2"] = { { id = "Breakables Potion", tn = 1, amount = 3 } , maxAmount = 999},
+    ["Breakables Potion3"] = { { id = "Breakables Potion", tn = 2, amount = 5 } , maxAmount = 9999},
+
+    --["Faster Rolls Potion1"] = { { id = "Lucky Potion", tn = 3, amount = 3 }, { id = "Watermelon", amount = 12 } , maxAmount = 5},
+    ["Faster Rolls Potion2"] = { { id = "Faster Rolls Potion", tn = 1, amount = 5 }, { id = "Watermelon", amount = 30 } , maxAmount = 9999},
+
+    --["Items Potion1"] = { { id = "Lucky Potion", tn = 3, amount = 1 }, { id = "Coins Potion", tn = 3, amount = 1 } , maxAmount = 5},
+    ["Items Potion2"] = { { id = "Items Potion", tn = 1, amount = 3 } , maxAmount = 999},
+    ["Items Potion3"] = { { id = "Items Potion", tn = 2, amount = 4 } , maxAmount = 999},
+    ["Items Potion4"] = { { id = "Items Potion", tn = 3, amount = 5 }, { id = "Pineapple", amount = 20 } , maxAmount = 9999},
+
+    --["Walkspeed Potion1"] = { { id = "Apple", amount = 4 }, { id = "Banana", amount = 4 } , maxAmount = 5},
+    --["Walkspeed Potion2"] = { { id = "Walkspeed Potion", tn = 1, amount = 3 } , maxAmount = 5},
+    --["Walkspeed Potion3"] = { { id = "Walkspeed Potion", tn = 2, amount = 3 } , maxAmount = 5},
+
+    ["Golden Dice Potion"] = { { id = "Lucky Potion", tn = 3, amount = 2 }, { id = "Orange", amount = 7 } , maxAmount = 8},
+    ["Rainbow Dice Potion"] = { { id = "Lucky Potion", tn = 4, amount = 2 }, { id = "Rainbow", amount = 4 } , maxAmount = 5},
+    ["Blazing Dice Potion"] = { { id = "Lucky Potion", tn = 5, amount = 2 }, { id = "Rainbow", sh = true, amount = 1 } , maxAmount = 5},
+
+    ["Instant Luck Potion1"] = { { id = "Lucky Potion", tn = 5, amount = 2 }, { id = "Rainbow Dice Potion", tn = 1, amount = 2 }, { id = "Golden Dice Potion", tn = 1, amount = 3 } , maxAmount = 3},
+    ["Instant Luck Potion2"] = { { id = "Instant Luck Potion", tn = 1, amount = 3 }, { id = "Rainbow Dice Potion", tn = 1, amount = 2 } , maxAmount = 3},
+    ["Instant Luck Potion3"] = { { id = "Instant Luck Potion", tn = 2, amount = 3 }, { id = "Rainbow Dice Potion", tn = 1, amount = 2 } , maxAmount = 10},
+    ["Instant Luck Potion4"] = { { id = "Instant Luck Potion", tn = 3, amount = 10 }, { id = "Blazing Dice Potion", tn = 1, amount = 5 }, { id = "The Cocktail", amount = 3 } , maxAmount = 100},
+
+    ["The Cocktail"] = { { id = "Instant Luck Potion", tn = 3, amount = 3 }, { id = "Lucky Potion", tn = 5, amount = 5 }, { id = "Golden Dice Potion", tn = 1, amount = 8 }, { id = "Rainbow Dice Potion", tn = 1, amount = 3 } , maxAmount = 5}
+}
+
+
+
+
+local function getRecipeNumber(recipeName)
+    local recipeList = {"Lucky Potion2", "Lucky Potion3", "Lucky Potion4", "Lucky Potion5", "Lucky Potion6", "Lucky Potion7", "Coins Potion2","Coins Potion3","Coins Potion4",
+"Coins Potion5","Coins Potion6","Coins Potion7","Breakables Potion1","Breakables Potion2","Breakables Potion3","Faster Rolls Potion1","Faster Rolls Potion2",
+"Items Potion1","Items Potion2","Items Potion3","Items Potion4","Walkspeed Potion1","Walkspeed Potion2","Walkspeed Potion3","Golden Dice Potion","Rainbow Dice Potion","Blazing Dice Potion",
+"Instant Luck Potion1","Instant Luck Potion2","Instant Luck Potion3","Instant Luck Potion4","The Cocktail"}  -- Имена рецептов в порядке
+    for i, name in ipairs(recipeList) do
+        if name == recipeName then
+            return i  -- Возвращаем порядковый номер рецепта
+        end
+    end
+    return nil  -- Если рецепт не найден
+end
+
+local function getMaxCraftable(recipeName)
+    local recipe = recipes[recipeName]
+    local maxAmount = recipe.maxAmount or math.huge  -- Максимальный предел для рецепта, или очень большое число
+    local availableCraftable = math.huge  -- Начнем с очень большого числа
+
+    -- Извлекаем базовое имя и уровень из названия рецепта
+    local baseName, tn = recipeName:match("^(.-)%s*(%d*)$")
+    tn = tonumber(tn)  -- Преобразуем в число для сравнения, если это уровень
+
+    -- Проверка на количество в инвентаре
+    local currentAmount = 0
+    for _, item in pairs(save2.Inventory.Consumable) do
+        if item.id == baseName and (not tn or item.tn == tn) then
+            currentAmount = item._am or 0
+            break
+        end
+    end
+
+    -- Вычисляем максимальное количество, которое можно создать, учитывая текущее количество
+    local remainingLimit = maxAmount - currentAmount
+    if remainingLimit <= 0 then
+        return 0  -- Если лимит уже достигнут или превышен, не создаем больше
+    end
+
+    -- Теперь проверим, сколько можно создать с учетом ингредиентов
+    for _, ingredient in ipairs(recipe) do
+        local requiredAmount = ingredient.amount  -- Требуемое количество для ингредиента
+        local availableAmount = 0
+    
+        if ingredient.tn then
+            -- Проверка в Consumable для ингредиента с tn
+            for _, item in pairs(save2.Inventory.Consumable) do
+                if item.id == ingredient.id and item.tn == ingredient.tn then
+                    availableAmount = item._am or 0
+                    break
+                end
+            end
+        else
+            -- Проверка для ингредиента без tn
+            for _, item in pairs(save2.Inventory.Consumable) do
+                if item.id == ingredient.id then
+                    availableAmount = item._am or 0
+                    break
+                end
+            end
+        end
+        
+        -- Проверка Fruit
+        if availableAmount == 0 then
+            for _, item in pairs(save2.Inventory.Fruit) do
+                local itemSh = item.sh or false
+                local shMatches = (ingredient.sh == nil and not itemSh) or (ingredient.sh == itemSh)
+                if item.id == ingredient.id and shMatches then
+                    availableAmount = item._am or 0
+                    break
+                end
+            end
+        end
+    
+        -- Вычисление количества, которое можно использовать для этого ингредиента
+        local possibleAmount = math.floor(availableAmount / requiredAmount)
+        availableCraftable = math.min(availableCraftable, possibleAmount)
+    end
+
+    -- Возвращаем количество, которое можно создать, ограниченное оставшимся лимитом
+    return math.min(availableCraftable, remainingLimit)
+end
+
 task.wait(2)
-
-
-getgenv().Craft = true
-
-local currentRecipe = "N/A" -- Изначально устанавливаем как N/A
-
-
--- Функция для создания GUI
-local function CreateGui()
-    local player = game.Players.LocalPlayer
-    local playerGui = player:WaitForChild("PlayerGui")
-    
-    -- Проверяем, существует ли уже GUI
-    local screenGui = playerGui:FindFirstChild("CraftingGui")
-    if not screenGui then
-        screenGui = Instance.new("ScreenGui")
-        screenGui.Name = "CraftingGui"
-        screenGui.Parent = playerGui
-    end
-
-    -- Проверяем, существует ли уже TextLabels
-    local infoLabel = screenGui:FindFirstChild("InfoLabel")
-    if not infoLabel then
-        infoLabel = Instance.new("TextLabel")
-        infoLabel.Name = "InfoLabel"
-        infoLabel.Size = UDim2.new(0, 300, 0, 200)
-        infoLabel.Position = UDim2.new(0, 10, 0, 10)
-        infoLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        infoLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-        infoLabel.TextScaled = true
-        infoLabel.Text = "Loading..."
-        infoLabel.Parent = screenGui
-    end
-
-    local recipeLabel = screenGui:FindFirstChild("RecipeLabel")
-    if not recipeLabel then
-        recipeLabel = Instance.new("TextLabel")
-        recipeLabel.Name = "RecipeLabel"
-        recipeLabel.Size = UDim2.new(0, 300, 0, 50)
-        recipeLabel.Position = UDim2.new(0, 10, 0, 220)
-        recipeLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        recipeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-        recipeLabel.TextScaled = true
-        recipeLabel.Text = "Current Recipe: N/A"
-        recipeLabel.Parent = screenGui
-    end
-
-    return infoLabel, recipeLabel
-end
-
--- Функция для обновления GUI
--- Функция для обновления GUI
-local function UpdateGui(Coins, Dice, Dice2, Dice3, MegaDice, newRecipe)
-    local infoLabel, recipeLabel = CreateGui()
-    infoLabel.Text = "Coins: " .. tostring(Coins) .. "\n" ..
-                     "Dice: " .. tostring(Dice) .. "\n" ..
-                     "Dice II: " .. tostring(Dice2) .. "\n" ..
-                     "Dice III: " .. tostring(Dice3) .. "\n" ..
-                     "Mega Dice: " .. tostring(MegaDice)
-    
-    -- Обновляем только если новый рецепт отличается от текущего
-    if newRecipe and newRecipe ~= currentRecipe then
-        currentRecipe = newRecipe
-    end
-
-    recipeLabel.Text = "Current Recipe: " .. currentRecipe
-end
-
-
-
-local function GetCurrencyAndCraft()
-    local library = require(game.ReplicatedStorage.Library.Client.Save)
-    local save = library.Get()
-
-    local Coins, Dice, Dice2, Dice3, MegaDice = 0, 0, 0, 0, 0
-
-    -- Получение количества монет и предметов
-    for i, v in pairs(save.Inventory.Currency) do
-        if v.id == "RngCoins" then
-            Coins = v._am or 0
-        end
-    end
-
-    for i, v in pairs(save.Inventory.Misc) do
-        if v.id == "Lucky Dice" then
-            Dice = v._am or 1
-        elseif v.id == "Lucky Dice II" then
-            Dice2 = v._am or 1
-        elseif v.id == "Lucky Dice III" then
-            Dice3 = v._am or 1
-        elseif v.id == "Mega Lucky Dice" then
-            MegaDice = v._am or 1
-        end
-    end
-    UpdateGui(Coins, Dice, Dice2, Dice3, MegaDice)
-    return Coins, Dice, Dice2, Dice3, MegaDice
-end
-
-
-
--- Функция для крафта предмета
-local function craftItem(itemName, amount, dicePerCraft, coinsPerCraft, Coins, Dice, Dice2, Dice3, MegaDice)
-    local itemCraftFunction = game:GetService("ReplicatedStorage"):WaitForChild("Network"):FindFirstChild("LuckyDice_Craft")
-    if not itemCraftFunction then
-        return false
-    end
-
-    -- Проверка на нулевые значения перед вычислениями
-    amount = amount or 0
-    dicePerCraft = dicePerCraft or 0
-    coinsPerCraft = coinsPerCraft or 0
-
-    local possibleCraftsByDice = math.floor(amount / dicePerCraft)
-    local possibleCraftsByCoins = math.floor(Coins / coinsPerCraft)
-    local possibleCrafts = math.min(possibleCraftsByDice, possibleCraftsByCoins)
-
-    if possibleCrafts > 0 then
-        local totalDiceNeeded = possibleCrafts * dicePerCraft
-        local totalCoinsNeeded = possibleCrafts * coinsPerCraft
-        
-        task.wait(0.5)
-
-        local craftArgs = {
-            [1] = itemName,
-            [2] = possibleCrafts
-        }
-
-        local success, result = pcall(function()
-            return itemCraftFunction:InvokeServer(unpack(craftArgs))
-        end)
-
-        if success then
-
-
-            -- Обновление ресурсов после успешного крафта
-            Coins = Coins - totalCoinsNeeded
-            if itemName == "Lucky Dice II" then
-                Dice = Dice - totalDiceNeeded
-                Dice2 = Dice2 + possibleCrafts
-            elseif itemName == "Lucky Dice III" then
-                Dice2 = Dice2 - totalDiceNeeded
-                Dice3 = Dice3 + possibleCrafts
-            elseif itemName == "Mega Lucky Dice" then
-                Dice3 = Dice3 - totalDiceNeeded
-                MegaDice = MegaDice + possibleCrafts
-            elseif itemName == "Mega Lucky Dice II" then
-                MegaDice = MegaDice - totalDiceNeeded
-            end
-
-            return true, Coins, Dice, Dice2, Dice3, MegaDice
-        else
-
-            return false, Coins, Dice, Dice2, Dice3, MegaDice
-        end
-    else
-
-        return false, Coins, Dice, Dice2, Dice3, MegaDice
-    end
-end
-
--- Функция SmartCraft1 для рецепта "num1"
-local function SmartCraft1()
-    local Coins, Dice, Dice2, Dice3, MegaDice = GetCurrencyAndCraft()
-
-    -- Инициализация переменных, если они равны nil
-    Coins = Coins or 0
-    Dice = Dice or 0
-    Dice2 = Dice2 or 0
-    Dice3 = Dice3 or 0
-    MegaDice = MegaDice or 0
-
-
-
-    -- Крафт Lucky Dice II из Lucky Dice
-    if Dice > 0 then
-        local success
-        success, Coins, Dice, Dice2, Dice3, MegaDice = craftItem("Lucky Dice II", Dice, 5, 100, Coins, Dice, Dice2, Dice3, MegaDice)
-    end
-
-    -- Крафт Mega Lucky Dice из Lucky Dice II
-    if Dice2 > 0 then
-        if MegaDice < 3 then
-            local requiredDicePerCraft3 = 30
-            local requiredCoinsPerCraft3 = 100000
-            local maxMegaDice = 3 - MegaDice -- Оставшееся количество для достижения 3
-
-            local possibleCraftsByDice = math.floor(Dice2 / requiredDicePerCraft3)
-            local possibleCraftsByCoins = math.floor(Coins / requiredCoinsPerCraft3)
-            local possibleCrafts = math.min(possibleCraftsByDice, possibleCraftsByCoins, maxMegaDice)
-
-            if possibleCrafts > 0 then
-                local totalDiceNeeded = possibleCrafts * requiredDicePerCraft3
-                local totalCoinsNeeded = possibleCrafts * requiredCoinsPerCraft3
-
-                task.wait(0.5)
-
-                local craftArgs = {
-                    [1] = "Mega Lucky Dice",
-                    [2] = possibleCrafts
-                }
-
-                local success, result = pcall(function()
-                    local megaCraftFunction = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("LuckyDice_Craft")
-                    return megaCraftFunction:InvokeServer(unpack(craftArgs))
-                end)
-
-                if success then
-
-                    -- Обновление ресурсов после успешного крафта
-                    Coins = Coins - totalCoinsNeeded
-                    Dice2 = Dice2 - totalDiceNeeded
-                    MegaDice = MegaDice + possibleCrafts
-                else
-                    wait()
-                end
-            else
-                wait()
-            end
-        else
-            wait()
-        end
-    end
-
-    -- Крафт Mega Lucky Dice II из Mega Lucky Dice
-    if MegaDice >= 3 then
-        local requiredMegaDicePerCraftII = 3
-        local requiredCoinsPerCraftII = 300000
-        local possibleCraftsByMegaDice = math.floor(MegaDice / requiredMegaDicePerCraftII)
-        local possibleCraftsByCoins = math.floor(Coins / requiredCoinsPerCraftII)
-        local possibleCraftsII = math.min(possibleCraftsByMegaDice, possibleCraftsByCoins)
-
-        if possibleCraftsII > 0 then
-            local totalMegaDiceNeeded = possibleCraftsII * requiredMegaDicePerCraftII
-            local totalCoinsNeeded = possibleCraftsII * requiredCoinsPerCraftII
-            
-
-            task.wait(0.5)
-
-            local craftArgs = {
-                [1] = "Mega Lucky Dice II",
-                [2] = possibleCraftsII
-            }
-
-            local success, result = pcall(function()
-                local megaCraftFunction = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("LuckyDice_Craft")
-                return megaCraftFunction:InvokeServer(unpack(craftArgs))
-            end)
-
-            if success then
-
-                -- Обновление ресурсов после успешного крафта
-                Coins = Coins - totalCoinsNeeded
-                MegaDice = MegaDice - totalMegaDiceNeeded
-            else
-
-            end
-        else
-
-        end
-    end
-end
-
--- Функция SmartCraft2 для рецепта "num2"
-local function SmartCraft2()
-    local Coins, Dice, Dice2, Dice3, MegaDice = GetCurrencyAndCraft()
-
-    -- Инициализация переменных, если они равны nil
-    Coins = Coins or 0
-    Dice = Dice or 0
-    Dice2 = Dice2 or 0
-    Dice3 = Dice3 or 0
-    MegaDice = MegaDice or 0
-
-
-
-    -- Крафт Lucky Dice II из Lucky Dice
-    if Dice > 0 then
-        local success
-        success, Coins, Dice, Dice2, Dice3, MegaDice = craftItem("Lucky Dice II", Dice, 5, 100, Coins, Dice, Dice2, Dice3, MegaDice)
-    end
-
-    -- Крафт Lucky Dice III из Lucky Dice II
-    if Dice2 > 0 then
-        local success
-        success, Coins, Dice, Dice2, Dice3, MegaDice = craftItem("Lucky Dice III", Dice2, 15, 400, Coins, Dice, Dice2, Dice3, MegaDice)
-    end
-
-    -- Крафт Mega Lucky Dice из Lucky Dice III
-    if Dice3 > 0 then
-        if MegaDice < 3 then
-            local requiredDicePerCraft3 = 2
-            local requiredCoinsPerCraft3 = 100000
-            local maxMegaDice = 3 - MegaDice -- Оставшееся количество для достижения 3
-
-            local possibleCraftsByDice = math.floor(Dice3 / requiredDicePerCraft3)
-            local possibleCraftsByCoins = math.floor(Coins / requiredCoinsPerCraft3)
-            local possibleCrafts = math.min(possibleCraftsByDice, possibleCraftsByCoins, maxMegaDice)
-
-            if possibleCrafts > 0 then
-                local totalDiceNeeded = possibleCrafts * requiredDicePerCraft3
-                local totalCoinsNeeded = possibleCrafts * requiredCoinsPerCraft3
-
-
-                task.wait(0.5)
-
-                local craftArgs = {
-                    [1] = "Mega Lucky Dice",
-                    [2] = possibleCrafts
-                }
-
-                local success, result = pcall(function()
-                    local megaCraftFunction = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("LuckyDice_Craft")
-                    return megaCraftFunction:InvokeServer(unpack(craftArgs))
-                end)
-
-                if success then
-
-                    -- Обновление ресурсов после успешного крафта
-                    Coins = Coins - totalCoinsNeeded
-                    Dice3 = Dice3 - totalDiceNeeded
-                    MegaDice = MegaDice + possibleCrafts
-                else
-                    wait()
-                end
-            else
-                wait()
-            end
-        else
-            wait()
-        end
-    end
-
-    -- Крафт Mega Lucky Dice II из Mega Lucky Dice
-    if MegaDice >= 3 then
-        local requiredMegaDicePerCraftII = 3
-        local requiredCoinsPerCraftII = 300000
-        local possibleCraftsByMegaDice = math.floor(MegaDice / requiredMegaDicePerCraftII)
-        local possibleCraftsByCoins = math.floor(Coins / requiredCoinsPerCraftII)
-        local possibleCraftsII = math.min(possibleCraftsByMegaDice, possibleCraftsByCoins)
-
-        if possibleCraftsII > 0 then
-            local totalMegaDiceNeeded = possibleCraftsII * requiredMegaDicePerCraftII
-            local totalCoinsNeeded = possibleCraftsII * requiredCoinsPerCraftII
-            
-
-            task.wait(0.5)
-
-            local craftArgs = {
-                [1] = "Mega Lucky Dice II",
-                [2] = possibleCraftsII
-            }
-
-            local success, result = pcall(function()
-                local megaCraftFunction = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("LuckyDice_Craft")
-                return megaCraftFunction:InvokeServer(unpack(craftArgs))
-            end)
-
-            if success then
-
-                -- Обновление ресурсов после успешного крафта
-                Coins = Coins - totalCoinsNeeded
-                MegaDice = MegaDice - totalMegaDiceNeeded
-            else
-                wait()
-            end
-        else
-            wait()
-        end
-    end
-end
-
-
-
-
-
-
-
-
-local function make(recipe)
-    if recipe == "num1" then
-        print("Processing recipe num1")
-        while getgenv().Craft do
-            task.wait(5)
-            SmartCraft1()
-            -- Обновляем GUI после крафта
-            local Coins, Dice, Dice2, Dice3, MegaDice = GetCurrencyAndCraft()
-            UpdateGui(Coins, Dice, Dice2, Dice3, MegaDice, currentRecipe) -- Рецепт остаётся прежним
-        end
-    elseif recipe == "num2" then
-        print("Processing recipe num2")
-        while getgenv().Craft do
-            task.wait(5)
-            SmartCraft2()
-            -- Обновляем GUI после крафта
-            local Coins, Dice, Dice2, Dice3, MegaDice = GetCurrencyAndCraft()
-            UpdateGui(Coins, Dice, Dice2, Dice3, MegaDice, currentRecipe) -- Рецепт остаётся прежним
-        end
-    else
-        print("Unknown recipe: " .. recipe)
-    end
-end
-
-
-
-
--- Функция GetRecipe для определения текущего рецепта
-local function GetRecipe()
-    local library = require(game:GetService("ReplicatedStorage").Library.Types.LuckyDice)
-    local save = library
-
-    for i, v in pairs(save.Recipes["Mega Lucky Dice"]) do
-        print("Item index:", i)
-        
-        if typeof(v) == "table" then
-            local data = v["_data"]
-            
-            if data then
-                local id = data["id"]
-                if id then
-                    if id == "Lucky Dice II" then
-                        print("Current Recipe: " .. "30x Lucky Dice II")
-                        UpdateGui(nil, nil, nil, nil, nil, "30x Lucky Dice II") -- Обновляем GUI с текущим рецептом
-                        make("num1")
-                    elseif id == "Lucky Dice III" then
-                        print("Current Recipe: " .. "2x Lucky Dice III")
-                        UpdateGui(nil, nil, nil, nil, nil, "2x Lucky Dice III") -- Обновляем GUI с текущим рецептом
-                        make("num2")
+-- Пример использования
+local function craftAllPotions()
+    spawn(function()
+        while true do
+            for recipeName, recipeData in pairs(recipes) do
+                local maxCraftable = getMaxCraftable(recipeName)
+                
+                if maxCraftable > 0 then
+                    local recipeNumber = getRecipeNumber(recipeName)
+                    if recipeNumber then
+                        local args = {
+                            [1] = "PotionCraftingMachine",  -- статичный аргумент
+                            [2] = recipeNumber,             -- номер рецепта
+                            [3] = maxCraftable              -- количество зелий для крафта
+                        }
+                        
+                        -- Обертывание в pcall для обработки ошибок и проверки ответа от сервера
+                        local success, result = pcall(function()
+                            return game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("CraftingMachine_Craft"):InvokeServer(unpack(args))
+                        end)
+                        
+                        if success then
+                            if result then
+                                task.wait()
+                                --print("Успешно скрафтил: " .. recipeName .. " Кол-во: " .. maxCraftable )
+                            end
+                        end
+                        
+                        task.wait(2)
                     end
                 else
-                    print("Field 'id' not found in data:", data)
+                    task.wait(1)
                 end
-            else
-                print("Field '_data' not found in item:", v)
             end
+    
+            task.wait(60)
+        end
+    end)
+
+end
+
+craftAllPotions()
+
+task.wait(1)
+
+function OptMap()
+    workspace.MAP.BORDER:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Bounties:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Library.Client.HoverboardCmds:Destroy()
+    workspace.MAP.INTERACT.BuySigns:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Statues:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT["Like Sign"]:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.SharkCenter:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Trampoline:Destroy()
+    task.wait(.1)
+    --scriptdel workspace.MAP.INTERACT["Update Countdown"]
+    workspace.MAP.INTERACT.SecretRoomEnter:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.SecretRoomLeave:Destroy()
+    task.wait(.1)
+    --workspace.__THINGS.Digging:Destroy()
+    task.wait(.1)
+    --workspace.__THINGS.DiggingLocations:Destroy()
+    workspace.__THINGS.Fireworks:Destroy()
+    task.wait(.1)
+    workspace.__THINGS.Hoverboards:Destroy()
+    task.wait(.1)
+    workspace.__THINGS.Relics:Destroy()
+    task.wait(.1)
+    workspace.MAP.TradingPlazaPortal:Destroy()
+    task.wait(.1)
+    workspace.MAP.CrystalChestRoom:Destroy()
+    workspace.__THINGS.FlyingGifts:Destroy()
+    for _, v in pairs(workspace.MAP.PARTS:GetChildren()) do
+        if v.Name == "Ground" then
+            wait()  -- Здесь можно выполнить нужные действия для объектов Ground и Part
         else
-            print("Item is not a table:", v)
+            v:Destroy()  -- Удаляем объект, если его имя не соответствует
+        end
+    end
+    task.wait(.1)
+    workspace.OUTER:Destroy()
+    task.wait(.1)
+    for i, v in pairs(workspace.MAP.INTERACT.FishingPads:GetDescendants()) do
+        if v.Name == "Bubbles" or v.Name == "Pulse" or v.Name ==  "Shiny" then
+            v:Destroy()
+        end
+        if v.Name == "Pad" then
+            v.CanCollide = true
+            v.Size = Vector3.new(250, 0.1, 100)
+            v.Transparency = 1
+        end
+    end
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Library.Client.LeaderboardCmds:Destroy()
+    task.wait(.1)
+    --game:GetService("ReplicatedStorage").Library.Client.HoverboardCmds:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.Hoverboard_Equipped:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.Hoverboard_RequestEquip:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.Hoverboard_RequestUnequip:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.Hoverboard_Unequipped:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.Hoverboard_ChangeSelection:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network["Leaderboards: Broadcast Global"]:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network["Leaderboards: Broadcast Local"]:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.Leveling_RebirthAnimation:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.LikeGoal_Updated:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.Likes_Update:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network.PlaySound:Destroy()
+    task.wait(.1)
+    game:GetService("ReplicatedStorage").Network["World Fireworks"]:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.EggPodiumMachine.Model:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.EggPodiumMachine.Egg:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.EggPodiumMachine.Column:Destroy()
+    task.wait(.1)
+    --workspace.MAP.INTERACT.Machines.EggPodiumMachine.Highlight:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.FishingMerchant.Model:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.JellyMerchant.Model:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.MailboxMachine.Gifts:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.MailboxMachine.Closed:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.MailboxMachine.Opened:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.PetIndexMachine.Machine:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.PotionCraftingMachine.Machine:Destroy()
+    task.wait(.1)
+    --workspace.MAP.INTERACT.Machines.PotionVendingMachine.VendingMachine:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.StandardMerchant.Model:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.Machines.UpgradeFruitsMachine.FruitSmoothie_Machine:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT.JuicerMachine.Model:Destroy()
+    task.wait(.1)
+    workspace.MAP.INTERACT["Update Countdown"]:Destroy()
+    task.wait(.1)
+    for i,v in pairs(workspace.MAP.INTERACT.GlobalLeaderboard:GetChildren()) do
+        if v.Name == "Part" then
+            v:Destroy()
+        end
+    end
+    task.wait(.1)
+    for i,v in pairs(workspace.MAP.INTERACT.ServerLeaderboard:GetChildren()) do
+        if v.Name == "Part" then
+            v:Destroy()
+        end
+    end
+    task.wait(.1)
+    for i,v in pairs(workspace.MAP.PARTS:GetDescendants()) do
+        if v.Name == "Ground" then
+            task.wait()
+        else
+            v:Destroy()
+        end
+    end
+    task.wait(.1)
+    for i,v in pairs(workspace:GetDescendants()) do
+        if v:IsA("Part") then
+            v.Transparency = 1
         end
     end
 end
-GetRecipe()
+
+
+OptMap()
+
+task.wait(2)
+Antiafk()
+task.wait(1)
+
+
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.MAP.INTERACT.FishingPads.FishingBillboard.PadGlow.CFrame + Vector3.new(0,5,0)
