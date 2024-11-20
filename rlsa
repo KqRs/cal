@@ -13,6 +13,7 @@ getgenv().Optimization = true
 local library = require(game.ReplicatedStorage.Library.Client.Save)
 local save = library.Get().EquippedPets
 local save2 = library.Get()
+local scriptEnv1 = getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Breakables Frontend"])
 local response
 local oldfd = workspace.__THINGS.Breakables
 local newfolder = Instance.new("Folder")
@@ -316,9 +317,8 @@ task.wait(.5)
 -- breakotpimization boost fps ;)
 
 
--- autofarm
 local function getpet()
-    -- Кэшируем список питомцев для оптимизации
+    -- Кэшируем список питомцев
     local curpet = {}
     for i, v in pairs(save) do
         table.insert(curpet, i)
@@ -326,7 +326,7 @@ local function getpet()
     return curpet
 end
 
--- Обновление списка питомцев раз в 60 секунд
+-- Обновление списка питомцев
 local updatedPets = getpet()
 spawn(function()
     while true do
@@ -335,49 +335,45 @@ spawn(function()
     end
 end)
 
--- Основная функция фарма
-local function farm()
-    spawn(function()
-        while true do
-            local breakFolder = workspace.__THINGS.Nagib:GetChildren()
-            
-            if #breakFolder > 0 then
-                for _, v in pairs(breakFolder) do
-                    if v:IsA("Part") then
-                        -- Проверяем, есть ли обновленные питомцы
-                        local pets = updatedPets
-                        if pets and #pets > 0 then
-                            local args = {}
-                            local breakableID = tonumber(v.Name)
-                            
-                            -- Проверяем корректность breakableID
-                            if breakableID then
-                                -- Составляем аргументы для серверного вызова
-                                for _, petName in ipairs(pets) do
-                                    args[petName] = breakableID
-                                end
+-- Храним предыдущее значение uid
+local lastUid = nil
 
-                                -- Отправляем данные на сервер
-                                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
+-- Основная функция для обработки ближайшей постройки
+local function processClosestBreakable()
+    -- Получаем окружение скрипта
+    local scriptEnv = getupvalue(getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Breakables Frontend"]).getClosestBreakable,1)
 
-                                -- Ожидаем удаления объекта
-                                while v and v.Parent do
-                                    task.wait()
-                                end
-                            end
-                        end
-                    end
-                end
-            else
-                -- Если объектов нет, делаем паузу
-                task.wait(5)
+    -- Вызываем getClosestBreakable() для обновления данных
+    scriptEnv1.getClosestBreakable()
+
+    -- Проверяем значение uid в обновленных данных
+    local currentUid = scriptEnv.breakable.uid
+
+    if currentUid and currentUid ~= lastUid then
+        lastUid = currentUid -- Обновляем значение uid
+
+        -- Здесь можно добавить логику для отправки питомцев
+        local args = {}
+        local pets = updatedPets
+
+        if pets and #pets > 0 then
+            for _, petName in ipairs(pets) do
+                args[petName] = tonumber(currentUid)
             end
+
+            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
         end
-    end)
+    end
 end
 
--- Запускаем фарм
-farm()
+-- Основной цикл для вызова функции
+spawn(function()
+    while true do
+        processClosestBreakable()
+        task.wait(0.1) -- Интервал проверки
+    end
+end)
+
 
 
 
