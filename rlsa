@@ -226,29 +226,16 @@ breakablesFrontend.createBreakable = function(p40)
 end
 task.wait(.2)
 breakablesFrontend.getClosestBreakable = function()
-    local closestBreakable = nil
-    local closestDistance = math.huge -- Устанавливаем начальное расстояние как бесконечность
-
-    -- Получаем позицию персонажа игрока
-    local playerPosition = character:FindFirstChild("HumanoidRootPart") and character.HumanoidRootPart.Position
-
-    -- Перебираем все объекты в workspace.__THINGS.Breakables
-    for _, breakable in pairs(workspace.__THINGS.Nagib:GetChildren()) do
-        if breakable:IsA("BasePart") then -- Убедимся, что объект является частью
-            local distance = (breakable.Position - playerPosition).Magnitude -- Вычисляем расстояние
-            if distance < closestDistance then
-                closestDistance = distance
-                closestBreakable = breakable
-            end
+    breakablesFrontend.getClosestBreakable = function()
+        -- Получаем первый объект из workspace.__THINGS.Nagib
+        local firstBreakable = workspace.__THINGS.Nagib:GetChildren()[1]
+    
+        -- Если объект найден, возвращаем его имя
+        if firstBreakable then
+            return firstBreakable.Name
         end
-    end
-
-    -- Если нашли ближайший объект, возвращаем его имя
-    if closestBreakable then
-        return closestBreakable.Name
-    end
+    end    
 end
-
 task.wait(1)
 petmenager.updateUnspawnedPets = function(...)
 end
@@ -258,13 +245,13 @@ end
 task.wait(.2)
 breakablesFrontend.destroyBreakable = function(arg)
     if arg then
-        workspace.__THINGS.Nagib:FindFirstChild(arg):Destroy()  -- Удаляем объект
+        workspace.__THINGS.Nagib:WaitForChild(arg):Destroy()  -- Удаляем объект
     end
 end
 task.wait(.2)
 breakablesFrontend.cleanupBreakable = function(arg)
     if arg then
-        workspace.__THINGS.Nagib:FindFirstChild(arg):Destroy()  -- Удаляем объект
+        workspace.__THINGS.Nagib:WaitForChild(arg):Destroy()  -- Удаляем объект
     end
 end
 task.wait(.2)
@@ -333,9 +320,10 @@ local function processClosestBreakable()
 
                 -- Отправляем данные на сервер
                 game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
+                print("пет отправлен")
             end
         else
-            warn("Ближайший объект не найден, обработка пропущена.")
+            task.wait()
         end
     end
 end
@@ -344,7 +332,7 @@ end
 spawn(function()
     while true do
         processClosestBreakable()
-        task.wait(0.5)
+        task.wait(0.1)
     end
 end)
 
