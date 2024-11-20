@@ -369,22 +369,24 @@ end
 ClaimDig()
 
 local function CkaimGift()
-    -- Проверяем, существует ли функция claim
-    if scriptEnv and typeof(scriptEnv.claim) == "function" then
-        while true do
-            if next(breakablesFrontend) == nil then
-                task.wait(10)
-            else
-                for i in pairs(breakablesFrontend) do
-                    scriptEnv.claim(i)
-                    task.wait(1)
+    spawn(function()
+        if scriptEnv and typeof(scriptEnv.claim) == "function" then
+            while true do
+                if next(breakablesFrontend) == nil then
+                    task.wait(10)
+                else
+                    for i in pairs(breakablesFrontend) do
+                        scriptEnv.claim(i)
+                        task.wait(1)
+                    end
                 end
             end
+        else
+            warn("Функция claim не найдена или недоступна!")
         end
-    else
-        warn("Функция claim не найдена или недоступна!")
-    end
+    end)
 end
+
 CkaimGift()
 
 local function Bonus()
