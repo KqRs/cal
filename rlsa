@@ -335,30 +335,42 @@ spawn(function()
     end
 end)
 
--- Храним предыдущее значение uid
-local lastUid = nil
+local lastUid = nil -- Храним последнее значение uid
 
--- Основная функция для обработки ближайшей постройки
 local function processClosestBreakable()
     -- Получаем окружение скрипта
-    local scriptEnv = getupvalue(getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Breakables Frontend"]).getClosestBreakable,1)
+    local success, scriptEnv = pcall(getsenv, game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Breakables Frontend"])
+    if not success or not scriptEnv then
+        warn("Ошибка: scriptEnv не найден")
+        return
+    end
 
-    -- Вызываем getClosestBreakable() для обновления данных
-    scriptEnv1.getClosestBreakable()
+    -- Проверяем, доступна ли функция getClosestBreakable
+    local getClosestBreakable = scriptEnv.getClosestBreakable
+    if typeof(getClosestBreakable) ~= "function" then
+        warn("Ошибка: getClosestBreakable отсутствует или не является функцией")
+        return
+    end
 
-    -- Проверяем значение uid в обновленных данных
-    local currentUid = scriptEnv.breakable.uid
+    -- Пытаемся получить ближайший объект
+    local success, closestBreakable = pcall(getClosestBreakable)
+    if not success or not closestBreakable then
+        warn("Ошибка: не удалось вызвать getClosestBreakable")
+        return
+    end
 
-    if currentUid and currentUid ~= lastUid then
-        lastUid = currentUid -- Обновляем значение uid
+    -- Проверяем, есть ли новый объект
+    if closestBreakable.uid ~= lastUid then
+        lastUid = closestBreakable.uid
+        print("Обнаружен новый объект с UID:", lastUid)
 
-        -- Здесь можно добавить логику для отправки питомцев
+        -- Отправляем питомцев
         local args = {}
         local pets = updatedPets
 
         if pets and #pets > 0 then
             for _, petName in ipairs(pets) do
-                args[petName] = tonumber(currentUid)
+                args[petName] = lastUid
             end
 
             game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
@@ -366,11 +378,11 @@ local function processClosestBreakable()
     end
 end
 
--- Основной цикл для вызова функции
+-- Основной цикл
 spawn(function()
     while true do
         processClosestBreakable()
-        task.wait(0.1) -- Интервал проверки
+        task.wait(0.5)
     end
 end)
 
