@@ -24,7 +24,8 @@ local response
 
 
 local function Antiafk()
-    game:GetService("ReplicatedStorage").Network["Idle Tracking: Stop Timer"]:InvokeServer()
+    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Idle Tracking: Stop Timer"):FireServer()
+
     task.wait(.2)
     for i, v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
         v:Disable()
