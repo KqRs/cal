@@ -48,11 +48,14 @@ local function Opt()
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.ForeverPacks:Destroy()
     task.wait()
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Gamepasses:Destroy()
+    task.wait()
     game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Hoverboard_RequestUnequip"):FireServer()
     task.wait(1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Hoverboards:Destroy()
     task.wait()
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Machine Animations"]:Destroy()
+    task.wait()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Machines:Destroy()
     task.wait()
     --[[for i,v in pairs(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Machines:GetChildren()) do
         if v.Name == "Vending Machines" then
@@ -438,7 +441,7 @@ local function Machines()
         end
     end)
 end
-Machines()
+
 
 
 local function main()
@@ -857,6 +860,7 @@ function OptMap()
             v:Destroy()
         end
     end
+    game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
     local position = workspace.MAP.INTERACT.Machines.PotionVendingMachine.Pad.CFrame + Vector3.new(0, -30, 0)
     local invisiblePart = Instance.new("Part")
     invisiblePart.Size = Vector3.new(10, 1, 10) -- Задайте размер поверхности
@@ -884,7 +888,9 @@ OptMap()
 task.wait(2)
 Antiafk()
 task.wait(1)
-
+game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+task.wait(.2)
 workspace.MAP.INTERACT.FishingPads.FishingBillboard.Target.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
 task.wait(.2)
 workspace.MAP.INTERACT.FishingPads.FishingBillboard.PadGlow.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+Machines()
