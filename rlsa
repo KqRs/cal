@@ -22,9 +22,7 @@ local scriptEnv2 = getupvalue(getsenv(game:GetService("Players").LocalPlayer.Pla
 local last = nil
 local response
 
-game.Players.LocalPlayer.Character.Animate:Destroy()
-task.wait(1)
-game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+
 
 
 
@@ -176,6 +174,10 @@ local function Antiafk()
 
 end
 
+
+game.Players.LocalPlayer.Character.Animate:Destroy()
+task.wait(1)
+game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
 task.wait(.5)
 
 -- breakotpimization boost fps ;)
@@ -235,21 +237,23 @@ end)
 
 local function getClosestWithPriority()
     -- Обновляем данные в upvalue вызовом функции
-    breakablesFrontend.getClosestBreakable()
-    local val = getupvalue(breakablesFrontend.getClosestBreakable, 3)
+    if breakablesFrontend and breakablesFrontend.getClosestBreakable() then
+        breakablesFrontend.getClosestBreakable()
+        local val = getupvalue(breakablesFrontend.getClosestBreakable, 3)
 
-    -- Фильтруем объекты по ключевому слову "chest"
-    local chest, other = nil, nil
-    for _, obj in pairs(val) do
-        if string.find(string.lower(obj.id), "chest") then
-            chest = {id = obj.id, uid = _}
-        elseif not chest then
-            other = {id = obj.id, uid = _}
+        -- Фильтруем объекты по ключевому слову "chest"
+        local chest, other = nil, nil
+        for _, obj in pairs(val) do
+            if string.find(string.lower(obj.id), "chest") then
+                chest = {id = obj.id, uid = _}
+            elseif not chest then
+                other = {id = obj.id, uid = _}
+            end
         end
-    end
 
-    -- Сначала возвращаем сундук, затем другие объекты
-    return chest or other
+        -- Сначала возвращаем сундук, затем другие объекты
+        return chest or other
+    end
 end
 
 local function farm()
@@ -276,20 +280,22 @@ local function farm()
             -- Ждем, пока объект исчезнет из upvalue
             while true do
                 task.wait(0.1)
-                breakablesFrontend.getClosestBreakable()
-                local val = getupvalue(breakablesFrontend.getClosestBreakable, 3)
+                if breakablesFrontend and breakablesFrontend.getClosestBreakable() then
+                    breakablesFrontend.getClosestBreakable()
+                    local val = getupvalue(breakablesFrontend.getClosestBreakable, 3)
 
-                local stillExists = false
-                for _, obj in pairs(val) do
-                    if obj.uid == uid then
-                        stillExists = true
+                    local stillExists = false
+                    for _, obj in pairs(val) do
+                        if obj.uid == uid then
+                            stillExists = true
+                            break
+                        end
+                    end
+
+                    if not stillExists then
+                        --print("Объект исчез:", uid)
                         break
                     end
-                end
-
-                if not stillExists then
-                    --print("Объект исчез:", uid)
-                    break
                 end
             end
         end
