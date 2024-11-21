@@ -901,9 +901,11 @@ end
 OptMap()
 
 task.wait(2)
-Antiafk()
 task.wait(1)
 workspace.MAP.INTERACT.FishingPads.FishingBillboard.Target.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
 task.wait(1)
 workspace.MAP.INTERACT.FishingPads.FishingBillboard.PadGlow.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
 Machines()
+
+task.wait(2)
+Antiafk()
