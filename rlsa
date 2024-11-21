@@ -20,11 +20,6 @@ local orb = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.
 local scriptEnv = getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Flying Gifts"])
 local last = nil
 local response
-local oldfd = workspace.__THINGS.Breakables
-local newfolder = Instance.new("Folder")
-newfolder.Name = "Nagib"
-newfolder.Parent = workspace.__THINGS
-
 
 
 
@@ -267,7 +262,7 @@ local function farm()
 
                 -- Отправляем данные на сервер
                 game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
-                print("Отправлено на объект:", uid, current.id)
+                --print("Отправлено на объект:", uid, current.id)
                 last = uid
             end
 
@@ -286,7 +281,7 @@ local function farm()
                 end
 
                 if not stillExists then
-                    print("Объект исчез:", uid)
+                    --print("Объект исчез:", uid)
                     break
                 end
             end
@@ -388,6 +383,17 @@ Bonus()
 task.wait(.2)
 
 local function Machines()
+    spawn(function()
+        while true do
+            repeat
+                pcall(function()
+                    response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Merchant_RequestPurchase"):InvokeServer("AdvancedIndexMerchant", i)
+                end)
+                task.wait(1)
+            until response == false
+            task.wait(120)
+        end
+    end)
     spawn(function()
         while true do
             for i = 1,6 do
@@ -756,7 +762,6 @@ function OptMap()
     workspace.MAP.TradingPlazaPortal:Destroy()
     task.wait(.1)
     workspace.MAP.CrystalChestRoom:Destroy()
-    workspace.__THINGS.FlyingGifts:Destroy()
     for _, v in pairs(workspace.MAP.PARTS:GetChildren()) do
         if v.Name == "Ground" then
             wait()  -- Здесь можно выполнить нужные действия для объектов Ground и Part
