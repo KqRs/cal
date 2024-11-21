@@ -22,6 +22,10 @@ local scriptEnv2 = getupvalue(getsenv(game:GetService("Players").LocalPlayer.Pla
 local last = nil
 local response
 
+game.Players.LocalPlayer.Character.Animate:Destroy()
+task.wait(1)
+game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+
 
 
 local function Opt()
@@ -860,7 +864,7 @@ function OptMap()
             v:Destroy()
         end
     end
-    game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+    
     local position = workspace.MAP.INTERACT.Machines.PotionVendingMachine.Pad.CFrame + Vector3.new(0, -30, 0)
     local invisiblePart = Instance.new("Part")
     invisiblePart.Size = Vector3.new(10, 1, 10) -- Задайте размер поверхности
@@ -877,7 +881,7 @@ function OptMap()
     task.wait(.1)
     for i,v in pairs(workspace:GetDescendants()) do
         if v:IsA("Part") then
-            v.Transparency = 1
+            v.Transparency = 0
         end
     end
 end
