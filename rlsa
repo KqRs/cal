@@ -863,20 +863,32 @@ function OptMap()
             v:Destroy()
         end
     end
-    local cframeTarget = CFrame.new(
-    109.341766, 3.22482586, -124.015785, -- Позиция (X, Y, Z)
-    -0.460553765, 3.00356184e-08, 0.887631834, -- Поворотная матрица (первый ряд)
-    -4.68755168e-08, 1, -5.81596034e-08,       -- Поворотная матрица (второй ряд)
-    -0.887631834, -6.83938239e-08, -0.460553765 -- Поворотная матрица (третий ряд)
-)
+    local targetCFrame = CFrame.new(85.9111328, 7.73199463, -140.987991, 0, 1, -0, -1, 0, 0, 0, 0, 1)
 
--- Устанавливаем CFrame для HumanoidRootPart
+    -- Папка, где нужно искать
+    local partsFolder = workspace.MAP.PARTS
+
+    -- Поиск и удаление объекта с соответствующим CFrame
+    for _, obj in pairs(partsFolder:GetChildren()) do
+        if obj:IsA("BasePart") and obj.CFrame == targetCFrame then
+            obj:Destroy()
+            break
+        end
+    end
+
+    local cframeTarget = CFrame.new(
+    109.341766, 3.22482586, -124.015785,
+    -0.460553765, 3.00356184e-08, 0.887631834,
+    -4.68755168e-08, 1, -5.81596034e-08,
+    -0.887631834, -6.83938239e-08, -0.460553765)
+
+
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = cframeTarget
 
     task.wait(1)
     for i,v in pairs(workspace:GetDescendants()) do
         if v:IsA("Part") then
-            v.Transparency = 1
+            v.Transparency = 0
         end
     end
 end
