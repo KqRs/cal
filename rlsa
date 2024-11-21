@@ -18,6 +18,7 @@ local breakablesFrontend = getsenv(player.PlayerScripts.Scripts.Game["Breakables
 local petmenager = getsenv(player.PlayerScripts.Scripts.Game.Pets["Pet Replication Manager"])
 local orb = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
 local scriptEnv = getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Flying Gifts"])
+local scriptEnv2 = getupvalue(getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Flying Gifts"]).create,4)
 local last = nil
 local response
 
@@ -28,7 +29,7 @@ local function Opt()
     workspace.__THINGS.Orbs:Destroy()
     --- scripts
     task.wait()
-    --game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core:Destroy()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core:Destroy()
     task.wait()
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Test:Destroy()
     task.wait()
@@ -38,7 +39,7 @@ local function Opt()
     task.wait()
     game:GetService("Players").LocalPlayer.PlayerScripts.RbxCharacterSounds:Destroy()
     task.wait()
-    game:GetService("Players").LocalPlayer.PlayerScripts.PlayerModule:Destroy()
+    --game:GetService("Players").LocalPlayer.PlayerScripts.PlayerModule:Destroy()
     task.wait()
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Consumables:Destroy()
     task.wait()
@@ -351,10 +352,10 @@ local function CkaimGift()
     spawn(function()
         if scriptEnv and typeof(scriptEnv.claim) == "function" then
             while true do
-                if next(breakablesFrontend) == nil then
+                if next(scriptEnv2) == nil then
                     task.wait(10)
                 else
-                    for i in pairs(breakablesFrontend) do
+                    for i in pairs(scriptEnv2) do
                         scriptEnv.claim(i)
                         task.wait(1)
                     end
