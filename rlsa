@@ -873,4 +873,12 @@ Antiafk()
 task.wait(1)
 
 
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.MAP.INTERACT.FishingPads.FishingBillboard.PadGlow.CFrame + Vector3.new(0,5,0)
+game.Players.LocalPlayer.Character.Animate:Destroy()
+task.wait(1)
+game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+task.wait(1)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.MAP.INTERACT.Machines.PotionVendingMachine.Pad.CFrame + Vector3.new(0,-20,0)
+task.wait(.2)
+workspace.MAP.INTERACT.FishingPads.FishingBillboard.Target.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+task.wait(.2)
+workspace.MAP.INTERACT.FishingPads.FishingBillboard.PadGlow.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
