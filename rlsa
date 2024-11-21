@@ -888,7 +888,7 @@ function OptMap()
     task.wait(1)
     for i,v in pairs(workspace:GetDescendants()) do
         if v:IsA("Part") then
-            v.Transparency = 0
+            v.Transparency = 1
         end
     end
 end
