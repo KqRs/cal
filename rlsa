@@ -52,7 +52,7 @@ local function Opt()
     task.wait(1)
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Hoverboards:Destroy()
     task.wait()
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Machine Animations"]:Destroy()
+    --game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Machine Animations"]:Destroy()
     task.wait()
     for i,v in pairs(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Machines:GetChildren()) do
         if v.Name == "Vending Machines" then
