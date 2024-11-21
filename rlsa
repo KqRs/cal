@@ -175,10 +175,6 @@ local function Antiafk()
 end
 
 
-game.Players.LocalPlayer.Character.Animate:Destroy()
-task.wait(1)
-game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-task.wait(.5)
 
 -- breakotpimization boost fps ;)
 
@@ -870,7 +866,10 @@ function OptMap()
             v:Destroy()
         end
     end
-    
+    game.Players.LocalPlayer.Character.Animate:Destroy()
+    task.wait(1)
+    game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+    task.wait(.5)
     local position = workspace.MAP.INTERACT.Machines.PotionVendingMachine.Pad.CFrame + Vector3.new(0, -30, 0)
     local invisiblePart = Instance.new("Part")
     invisiblePart.Size = Vector3.new(10, 1, 10) -- Задайте размер поверхности
@@ -879,15 +878,15 @@ function OptMap()
     invisiblePart.CanCollide = true -- Поверхность можно использовать для стояния
     invisiblePart.Transparency = 1 -- Делает поверхность невидимой
     invisiblePart.Parent = workspace
-    task.wait(.1)
+    task.wait(.5)
     for i,v in pairs(workspace.MAP.PARTS:GetDescendants()) do
         v:Destroy()
     end
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.Part.CFrame
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.Part.CFrame + Vector3.new(0, 8, 0)
     task.wait(.1)
     for i,v in pairs(workspace:GetDescendants()) do
         if v:IsA("Part") then
-            v.Transparency = 0
+            v.Transparency = 1
         end
     end
 end
@@ -898,9 +897,10 @@ OptMap()
 task.wait(2)
 Antiafk()
 task.wait(1)
+task.wait(.5)
 game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-task.wait(.2)
+task.wait(1)
 workspace.MAP.INTERACT.FishingPads.FishingBillboard.Target.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-task.wait(.2)
+task.wait(1)
 workspace.MAP.INTERACT.FishingPads.FishingBillboard.PadGlow.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
 Machines()
