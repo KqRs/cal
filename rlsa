@@ -388,7 +388,7 @@ local function Machines()
         while true do
             repeat
                 pcall(function()
-                    response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Merchant_RequestPurchase"):InvokeServer("AdvancedIndexMerchant", i)
+                    response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("VendingMachines_Purchase"):InvokeServer("PotionVendingMachine")
                 end)
                 task.wait(1)
             until response == false
