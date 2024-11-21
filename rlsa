@@ -857,7 +857,7 @@ function OptMap()
             v:Destroy()
         end
     end
-    local position = workspace.MAP.INTERACT.Machines.PotionVendingMachine.Pad.CFrame + Vector3.new(0, 20, 0)
+    local position = workspace.MAP.INTERACT.Machines.PotionVendingMachine.Pad.CFrame + Vector3.new(0, -30, 0)
     local invisiblePart = Instance.new("Part")
     invisiblePart.Size = Vector3.new(10, 1, 10) -- Задайте размер поверхности
     invisiblePart.CFrame = position
@@ -867,11 +867,7 @@ function OptMap()
     invisiblePart.Parent = workspace
     task.wait(.1)
     for i,v in pairs(workspace.MAP.PARTS:GetDescendants()) do
-        if v.Name == "Ground" then
-            task.wait()
-        else
-            v:Destroy()
-        end
+        v:Destroy()
     end
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.Part.CFrame
     task.wait(.1)
@@ -889,8 +885,6 @@ task.wait(2)
 Antiafk()
 task.wait(1)
 
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.MAP.INTERACT.Machines.PotionVendingMachine.Pad.CFrame + Vector3.new(0,-20,0)
-task.wait(.2)
 workspace.MAP.INTERACT.FishingPads.FishingBillboard.Target.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
 task.wait(.2)
 workspace.MAP.INTERACT.FishingPads.FishingBillboard.PadGlow.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
