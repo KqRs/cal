@@ -194,8 +194,7 @@ task.wait()
 
 game:GetService("ReplicatedStorage").Library.Client.Network["Fireworks Animation"]:Destroy()
 task.wait()
-game:GetService("ReplicatedStorage").Library.Client.Network["Reward Item Animation"]:Destroy()
-task.wait()
+
 
 
 
@@ -384,18 +383,21 @@ Bonus()
 task.wait(.2)
 
 local function Machines()
-    spawn(function()
+    task.spawn(function()
         while true do
+            local maxRetries = 10
+            local retries = 0
             repeat
+                retries += 1
                 pcall(function()
                     response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("VendingMachines_Purchase"):InvokeServer("PotionVendingMachine")
                 end)
                 task.wait(1)
-            until response == false
+            until response == false or retries >= maxRetries            
             task.wait(120)
         end
     end)
-    spawn(function()
+    task.spawn(function()
         while true do
             for i = 1,6 do
                 repeat
@@ -408,7 +410,7 @@ local function Machines()
             task.wait(120)
         end
     end)
-    spawn(function()
+    task.spawn(function()
         while true do
             for i = 1,6 do
                 repeat
@@ -422,7 +424,7 @@ local function Machines()
             task.wait(120)
         end
     end)
-    spawn(function()
+    task.spawn(function()
         while true do
             for i = 1,6 do
                 repeat
