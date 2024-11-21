@@ -41,7 +41,7 @@ local function Opt()
     task.wait()
     game:GetService("Players").LocalPlayer.PlayerScripts.RbxCharacterSounds:Destroy()
     task.wait()
-    game:GetService("Players").LocalPlayer.PlayerScripts.PlayerModule:Destroy()
+    --game:GetService("Players").LocalPlayer.PlayerScripts.PlayerModule:Destroy()
     task.wait()
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Consumables:Destroy()
     task.wait()
@@ -302,7 +302,7 @@ end
 spawn(function()
     while true do
         farm()
-        task.wait(0.2)
+        task.wait(0.1)
     end
 end)
 
@@ -774,13 +774,6 @@ function OptMap()
     workspace.MAP.TradingPlazaPortal:Destroy()
     task.wait(.1)
     workspace.MAP.CrystalChestRoom:Destroy()
-    for _, v in pairs(workspace.MAP.PARTS:GetChildren()) do
-        if v.Name == "Ground" then
-            wait()  -- Здесь можно выполнить нужные действия для объектов Ground и Part
-        else
-            v:Destroy()  -- Удаляем объект, если его имя не соответствует
-        end
-    end
     task.wait(.1)
     workspace.OUTER:Destroy()
     task.wait(.1)
@@ -788,12 +781,8 @@ function OptMap()
         if v.Name == "Bubbles" or v.Name == "Pulse" or v.Name ==  "Shiny" then
             v:Destroy()
         end
-        if v.Name == "Pad" then
-            v.CanCollide = true
-            v.Size = Vector3.new(250, 0.1, 100)
-            v.Transparency = 1
-        end
     end
+
     task.wait(.1)
     game:GetService("ReplicatedStorage").Library.Client.LeaderboardCmds:Destroy()
     task.wait(.1)
