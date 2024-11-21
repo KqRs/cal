@@ -23,8 +23,24 @@ local last = nil
 local response
 
 
-
-
+local function Antiafk()
+    game:GetService("ReplicatedStorage").Network["Idle Tracking: Stop Timer"]:InvokeServer()
+    task.wait(.2)
+    for i, v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
+        v:Disable()
+    end
+    spawn(function()
+        local VirtualInputManager = game:GetService("VirtualInputManager")
+        while task.wait() do
+            VirtualInputManager:SendKeyEvent(true, "Space", false, game)
+            task.wait(.2)
+            VirtualInputManager:SendKeyEvent(false, "Space", false, game)
+            task.wait(300)
+        end
+    end)
+    
+end
+Antiafk()
 
 local function Opt()
     task.wait()
@@ -41,7 +57,7 @@ local function Opt()
     task.wait()
     game:GetService("Players").LocalPlayer.PlayerScripts.RbxCharacterSounds:Destroy()
     task.wait()
-    game:GetService("Players").LocalPlayer.PlayerScripts.PlayerModule:Destroy()
+    --game:GetService("Players").LocalPlayer.PlayerScripts.PlayerModule:Destroy()
     task.wait()
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Consumables:Destroy()
     task.wait()
@@ -163,25 +179,11 @@ removeOtherPlayerModels()
 
 
 local function Antiafk()
+    game:GetService("ReplicatedStorage").Network["Idle Tracking: Stop Timer"]:InvokeServer()
+    task.wait(.2)
     for i, v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
         v:Disable()
     end
-
-    local vu = game:GetService("VirtualUser")
-    game:GetService("Players").LocalPlayer.Idled:Connect(function()
-       vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-       task.wait(1)
-       vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-    end)
-    local con = game:GetService("ReplicatedStorage").Network["Idle Tracking: Stop Timer"].OnClientEvent
-    for i,v in pairs(getconnections(con)) do
-        v:Disconnect()
-    end
-    local con2 = game:GetService("ReplicatedStorage").Network["Idle Tracking: Update Timer"].OnClientEvent
-    for i,v in pairs(getconnections(con2)) do
-        v:Disconnect()
-    end
-    
     spawn(function()
         local VirtualInputManager = game:GetService("VirtualInputManager")
         while task.wait() do
@@ -191,6 +193,7 @@ local function Antiafk()
             task.wait(300)
         end
     end)
+    
 end
 
 
@@ -921,6 +924,3 @@ workspace.MAP.INTERACT.FishingPads.FishingBillboard.Target.CFrame = game.Players
 task.wait(1)
 workspace.MAP.INTERACT.FishingPads.FishingBillboard.PadGlow.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
 Machines()
-
-task.wait(2)
-Antiafk()
