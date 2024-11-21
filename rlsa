@@ -855,24 +855,25 @@ function OptMap()
             v:Destroy()
         end
     end
-    game.Players.LocalPlayer.Character.Animate:Destroy()
-    task.wait(1)
-    game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-    task.wait(.5)
-    local position = workspace.MAP.INTERACT.Machines.PotionVendingMachine.Pad.CFrame + Vector3.new(0, -30, 0)
-    local invisiblePart = Instance.new("Part")
-    invisiblePart.Size = Vector3.new(10, 1, 10) -- Задайте размер поверхности
-    invisiblePart.CFrame = position
-    invisiblePart.Anchored = true
-    invisiblePart.CanCollide = true -- Поверхность можно использовать для стояния
-    invisiblePart.Transparency = 1 -- Делает поверхность невидимой
-    invisiblePart.Parent = workspace
     task.wait(.5)
     for i,v in pairs(workspace.MAP.PARTS:GetDescendants()) do
-        v:Destroy()
+        if v.Name == "Ground" then
+            task.wait()
+        else
+            v:Destroy()
+        end
     end
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.Part.CFrame + Vector3.new(0, 8, 0)
-    task.wait(.1)
+    local cframeTarget = CFrame.new(
+    109.341766, 3.22482586, -124.015785, -- Позиция (X, Y, Z)
+    -0.460553765, 3.00356184e-08, 0.887631834, -- Поворотная матрица (первый ряд)
+    -4.68755168e-08, 1, -5.81596034e-08,       -- Поворотная матрица (второй ряд)
+    -0.887631834, -6.83938239e-08, -0.460553765 -- Поворотная матрица (третий ряд)
+)
+
+-- Устанавливаем CFrame для HumanoidRootPart
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = cframeTarget
+
+    task.wait(1)
     for i,v in pairs(workspace:GetDescendants()) do
         if v:IsA("Part") then
             v.Transparency = 1
@@ -885,9 +886,6 @@ OptMap()
 
 task.wait(2)
 Antiafk()
-task.wait(1)
-task.wait(.5)
-game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
 task.wait(1)
 workspace.MAP.INTERACT.FishingPads.FishingBillboard.Target.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
 task.wait(1)
