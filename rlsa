@@ -161,17 +161,21 @@ end)
 
 removeOtherPlayerModels()
 
+
 local function Antiafk()
+    for i, v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
+        v:Disable()
+    end
+    
     spawn(function()
         local VirtualInputManager = game:GetService("VirtualInputManager")
-        while true do
+        while task.wait() do
             VirtualInputManager:SendKeyEvent(true, "Space", false, game)
             task.wait(.2)
             VirtualInputManager:SendKeyEvent(false, "Space", false, game)
             task.wait(300)
         end
     end)
-
 end
 
 
