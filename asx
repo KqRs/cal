@@ -230,80 +230,78 @@ task.spawn(function()
 end)
 
 -- Функция получения ближайшего объекта с приоритетом
-local function getClosestWithPriority()
-    if not breakablesFrontend or not breakablesFrontend.getClosestBreakable() then
-        return nil
-    end
+-- Функция получения ближайшего объекта с приоритетом
+local activeObjects = {} -- Локальная таблица для объектов
+local lastProcessed = {} -- Таблица для отслеживания обработанных объектов
 
-    breakablesFrontend.getClosestBreakable() -- Обновляем upvalue
-    local breakables = getupvalue(breakablesFrontend.getClosestBreakable, 3)
-
-    local chest, other = nil, nil
-    for _, obj in pairs(breakables) do
-        local idLower = string.lower(obj.id)
-        if chest == nil and string.find(idLower, "chest") then
-            chest = {id = obj.id, uid = obj.uid}
-        elseif not chest then
-            other = {id = obj.id, uid = obj.uid}
+-- Функция обновления таблицы объектов
+local function updateActiveObjects()
+    activeObjects = {}
+    for _, obj in ipairs(workspace.__THINGS.Breakables:GetChildren()) do
+        if obj:IsA("Model") and obj:GetAttribute("BreakableID") and obj:GetAttribute("BreakableUID") then
+            table.insert(activeObjects, {
+                id = obj:GetAttribute("BreakableID"),
+                uid = obj:GetAttribute("BreakableUID"),
+                instance = obj
+            })
         end
     end
 
-    return chest or other
+    -- Сортируем: первыми идут сундуки
+    table.sort(activeObjects, function(a, b)
+        local isAChest = string.find(string.lower(a.id), "chest")
+        local isBChest = string.find(string.lower(b.id), "chest")
+        if isAChest and not isBChest then
+            return true
+        elseif not isAChest and isBChest then
+            return false
+        else
+            return a.id < b.id -- Дополнительная сортировка по имени
+        end
+    end)
 end
 
--- Функция обработки объекта
-local lastUid = nil
-local function processObject()
-    local closest = getClosestWithPriority()
-    if not closest or closest.uid == lastUid then
-        return
-    end
+-- Функция обработки объектов из таблицы
+local function processObjects()
+    for _, obj in ipairs(activeObjects) do
+        if not lastProcessed[obj.uid] then
+            local args = {}
+            for _, petName in ipairs(updatedPets) do
+                args[petName] = tonumber(obj.uid)
+            end
 
-    lastUid = closest.uid
+            -- Отправляем питомцев на объект
+            game:GetService("ReplicatedStorage")
+                :WaitForChild("Network")
+                :WaitForChild("Breakables_JoinPetBulk")
+                :FireServer(args)
 
-    -- Подготовка аргументов для сервера
-    local args = {}
-    for _, petName in ipairs(updatedPets) do
-        args[petName] = tonumber(closest.uid)
-    end
+            -- Помечаем объект как обработанный
+            lastProcessed[obj.uid] = true
 
-    -- Отправка на сервер
-    game:GetService("ReplicatedStorage")
-        :WaitForChild("Network")
-        :WaitForChild("Breakables_JoinPetBulk")
-        :FireServer(args)
-
-    -- Ожидание удаления объекта
-    while true do
-        task.wait(0.1)
-        if not breakablesFrontend or not breakablesFrontend.getClosestBreakable() then
-            break
-        end
-
-        breakablesFrontend.getClosestBreakable() -- Обновляем upvalue
-        local breakables = getupvalue(breakablesFrontend.getClosestBreakable, 3)
-
-        local exists = false
-        for _, obj in pairs(breakables) do
-            if obj.uid == lastUid then
-                exists = true
-                break
+            -- Ждем исчезновения объекта
+            while true do
+                task.wait(0.1)
+                if not obj.instance or not obj.instance:GetAttribute("BreakableUID") then
+                    break -- Объект больше не существует
+                end
             end
         end
-
-        if not exists then
-            break -- Объект больше не существует
-        end
     end
+
+    -- Очищаем обработанные данные
+    lastProcessed = {}
 end
 
--- Основной цикл фарма
+-- Основной цикл
 task.spawn(function()
     while true do
-        processObject()
-        task.wait(0.1) -- Добавляем небольшую паузу для снижения нагрузки
+        updateActiveObjects() -- Обновляем таблицу объектов
+        processObjects() -- Обрабатываем объекты
+        task.wait(1) -- Пауза перед следующим обновлением
     end
 end)
+
 
 
 
