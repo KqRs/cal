@@ -76,13 +76,6 @@ local function Opt()
     task.wait()
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Machines:Destroy()
     task.wait()
-    --[[for i,v in pairs(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Machines:GetChildren()) do
-        if v.Name == "Vending Machines" then
-            task.wait()
-        else
-            v:Destroy() 
-        end
-    end]]
     task.wait()
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Opening:Destroy()
     task.wait()
@@ -179,23 +172,6 @@ end)
 removeOtherPlayerModels()
 
 
-local function Antiafk()
-    game:GetService("ReplicatedStorage").Network["Idle Tracking: Stop Timer"]:InvokeServer()
-    task.wait(.2)
-    for i, v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
-        v:Disable()
-    end
-    spawn(function()
-        local VirtualInputManager = game:GetService("VirtualInputManager")
-        while task.wait() do
-            VirtualInputManager:SendKeyEvent(true, "Space", false, game)
-            task.wait(.2)
-            VirtualInputManager:SendKeyEvent(false, "Space", false, game)
-            task.wait(300)
-        end
-    end)
-    
-end
 
 
 
@@ -216,16 +192,6 @@ task.wait()
 breakablesFrontend.startBillboardTask = function(...)
 end
 task.wait()
-
-
-
-
-game:GetService("ReplicatedStorage").Library.Client.Network["Fireworks Animation"]:Destroy()
-task.wait()
-
-
-
-
 
 
 task.wait(.5)
@@ -810,30 +776,6 @@ function OptMap()
     game:GetService("ReplicatedStorage").Library.Client.LeaderboardCmds:Destroy()
     task.wait(.1)
     --game:GetService("ReplicatedStorage").Library.Client.HoverboardCmds:Destroy()
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Network.Hoverboard_Equipped:Destroy()
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Network.Hoverboard_RequestEquip:Destroy()
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Network.Hoverboard_RequestUnequip:Destroy()
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Network.Hoverboard_Unequipped:Destroy()
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Network.Hoverboard_ChangeSelection:Destroy()
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Network["Leaderboards: Broadcast Global"]:Destroy()
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Network["Leaderboards: Broadcast Local"]:Destroy()
-    task.wait(.1)
-    --game:GetService("ReplicatedStorage").Network.Leveling_RebirthAnimation:Destroy()
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Network.LikeGoal_Updated:Destroy()
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Network.Likes_Update:Destroy()
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Network.PlaySound:Destroy()
-    task.wait(.1)
-    game:GetService("ReplicatedStorage").Network["World Fireworks"]:Destroy()
     task.wait(.1)
     workspace.MAP.INTERACT.Machines.EggPodiumMachine.Model:Destroy()
     task.wait(.1)
