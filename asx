@@ -59,7 +59,7 @@ local function Opt()
     task.wait()
     game:GetService("Players").LocalPlayer.PlayerScripts.RbxCharacterSounds:Destroy()
     task.wait()
-    --game:GetService("Players").LocalPlayer.PlayerScripts.PlayerModule:Destroy()
+    game:GetService("Players").LocalPlayer.PlayerScripts.PlayerModule:Destroy()
     task.wait()
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Consumables:Destroy()
     task.wait()
@@ -210,100 +210,101 @@ task.wait(.5)
 
 
 
-local function getpet()
-    -- Кэшируем список питомцев
-    local curpet = {}
-    for i, v in pairs(save) do
-        table.insert(curpet, i)
+-- Кэшируем список питомцев и обновляем раз в минуту
+local updatedPets = {}
+local function updatePets()
+    updatedPets = {}
+    for petName in pairs(save) do
+        table.insert(updatedPets, petName)
     end
-    return curpet
 end
 
--- Обновление списка питомцев
-local updatedPets = getpet()
-spawn(function()
+-- Начальный вызов обновления питомцев
+updatePets()
+
+task.spawn(function()
     while true do
-        updatedPets = getpet()
-        task.wait(60)
+        updatePets()
+        task.wait(60) -- Обновляем список раз в минуту
     end
 end)
 
-
-
+-- Функция получения ближайшего объекта с приоритетом
 local function getClosestWithPriority()
-    -- Обновляем данные в upvalue вызовом функции
-    if breakablesFrontend and breakablesFrontend.getClosestBreakable() then
-        breakablesFrontend.getClosestBreakable()
-        local val = getupvalue(breakablesFrontend.getClosestBreakable, 3)
-
-        -- Фильтруем объекты по ключевому слову "chest"
-        local chest, other = nil, nil
-        for _, obj in pairs(val) do
-            if string.find(string.lower(obj.id), "chest") then
-                chest = {id = obj.id, uid = _}
-            elseif not chest then
-                other = {id = obj.id, uid = _}
-            end
-        end
-
-        -- Сначала возвращаем сундук, затем другие объекты
-        return chest or other
+    if not breakablesFrontend or not breakablesFrontend.getClosestBreakable() then
+        return nil
     end
+
+    breakablesFrontend.getClosestBreakable() -- Обновляем upvalue
+    local breakables = getupvalue(breakablesFrontend.getClosestBreakable, 3)
+
+    local chest, other = nil, nil
+    for _, obj in pairs(breakables) do
+        local idLower = string.lower(obj.id)
+        if chest == nil and string.find(idLower, "chest") then
+            chest = {id = obj.id, uid = obj.uid}
+        elseif not chest then
+            other = {id = obj.id, uid = obj.uid}
+        end
+    end
+
+    return chest or other
 end
 
-local function farm()
-    local current = getClosestWithPriority()
-
-    if current and current.uid ~= nil then
-        -- Обрабатываем только если объект новый
-        if last ~= current.uid then
-            local uid = current.uid
-            local args = {}
-            local pets = updatedPets -- Список питомцев, обновляется отдельно
-
-            if pets and #pets > 0 then
-                for _, petName in ipairs(pets) do
-                    args[petName] = tonumber(uid)
-                end
-
-                -- Отправляем данные на сервер
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
-                --print("Отправлено на объект:", uid, current.id)
-                last = uid
-            end
-
-            -- Ждем, пока объект исчезнет из upvalue
-            while true do
-                task.wait(0.1)
-                if breakablesFrontend and breakablesFrontend.getClosestBreakable() then
-                    breakablesFrontend.getClosestBreakable()
-                    local val = getupvalue(breakablesFrontend.getClosestBreakable, 3)
-
-                    local stillExists = false
-                    for _, obj in pairs(val) do
-                        if obj.uid == uid then
-                            stillExists = true
-                            break
-                        end
-                    end
-
-                    if not stillExists then
-                        --print("Объект исчез:", uid)
-                        break
-                    end
-                end
-            end
-        end
-    else
-        task.wait()
+-- Функция обработки объекта
+local lastUid = nil
+local function processObject()
+    local closest = getClosestWithPriority()
+    if not closest or closest.uid == lastUid then
+        return
     end
-end
-spawn(function()
+
+    lastUid = closest.uid
+
+    -- Подготовка аргументов для сервера
+    local args = {}
+    for _, petName in ipairs(updatedPets) do
+        args[petName] = tonumber(closest.uid)
+    end
+
+    -- Отправка на сервер
+    game:GetService("ReplicatedStorage")
+        :WaitForChild("Network")
+        :WaitForChild("Breakables_JoinPetBulk")
+        :FireServer(args)
+
+    -- Ожидание удаления объекта
     while true do
-        farm()
         task.wait(0.1)
+        if not breakablesFrontend or not breakablesFrontend.getClosestBreakable() then
+            break
+        end
+
+        breakablesFrontend.getClosestBreakable() -- Обновляем upvalue
+        local breakables = getupvalue(breakablesFrontend.getClosestBreakable, 3)
+
+        local exists = false
+        for _, obj in pairs(breakables) do
+            if obj.uid == lastUid then
+                exists = true
+                break
+            end
+        end
+
+        if not exists then
+            break -- Объект больше не существует
+        end
+    end
+end
+
+-- Основной цикл фарма
+task.spawn(function()
+    while true do
+        processObject()
+        task.wait(0.1) -- Добавляем небольшую паузу для снижения нагрузки
     end
 end)
+
 
 
 
@@ -348,7 +349,7 @@ local function ClaimDig()
                     task.wait(1)
                 end
             else
-                task.wait(10)
+                task.wait(30)
             end
         end
     end)
@@ -360,7 +361,7 @@ local function CkaimGift()
         if scriptEnv and typeof(scriptEnv.claim) == "function" then
             while true do
                 if next(scriptEnv2) == nil then
-                    task.wait(10)
+                    task.wait(30)
                 else
                     for i in pairs(scriptEnv2) do
                         scriptEnv.claim(i)
@@ -391,20 +392,6 @@ Bonus()
 task.wait(.2)
 
 local function Machines()
-    task.spawn(function()
-        while true do
-            local maxRetries = 10
-            local retries = 0
-            repeat
-                retries += 1
-                pcall(function()
-                    response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("VendingMachines_Purchase"):InvokeServer("PotionVendingMachine")
-                end)
-                task.wait(1)
-            until response == false or retries >= maxRetries            
-            task.wait(120)
-        end
-    end)
     task.spawn(function()
         while true do
             for i = 1,6 do
@@ -822,13 +809,20 @@ function OptMap()
             v:Destroy()
         end
     end
+    game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
     task.wait(.5)
     for i,v in pairs(workspace.MAP.PARTS:GetDescendants()) do
-        if v.Name == "Ground" then
-            v:Destroy()
+        v:Destroy()
+
+    end
+    task.wait(.5)
+    for i,v in pairs(game:GetService("ReplicatedStorage").__DIRECTORY.Breakables:GetDescendants()) do
+        if v:IsA("MeshPart") then
+            v.MeshId = ""
+            v.TextureID = ""
         end
     end
-    task.wait(.1)
+    task.wait(.5)
     for i, v in pairs(workspace.MAP.INTERACT.FishingPads:GetDescendants()) do
         if v.Name == "Bubbles" or v.Name == "Pulse" or v.Name ==  "Shiny" then
             v:Destroy()
@@ -852,6 +846,9 @@ end
 OptMap()
 
 task.wait(1)
-task.wait(1)
+
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.MAP.INTERACT.FishingPads.FishingBillboard.PadGlow.CFrame
+game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
 Machines()
+
+
