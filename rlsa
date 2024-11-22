@@ -199,7 +199,6 @@ task.wait(.5)
 -- breakotpimization boost fps ;)
 
 
-
 local function getpet()
     -- Кэшируем список питомцев
     local curpet = {}
@@ -219,7 +218,6 @@ spawn(function()
 end)
 
 
-
 local function getClosestWithPriority()
     -- Обновляем данные в upvalue вызовом функции
     if breakablesFrontend and breakablesFrontend.getClosestBreakable() then
@@ -230,13 +228,12 @@ local function getClosestWithPriority()
         local chest, other = nil, nil
         for _, obj in pairs(val) do
             if string.find(string.lower(obj.id), "chest") then
-                chest = {id = obj.id, uid = _}
+                chest = {id = obj.id, uid = obj.uid}
             elseif not chest then
-                other = {id = obj.id, uid = _}
+                other = {id = obj.id, uid = obj.uid}
             end
         end
 
-        -- Сначала возвращаем сундук, затем другие объекты
         return chest or other
     end
 end
