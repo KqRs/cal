@@ -209,7 +209,6 @@ task.wait(.5)
 -- breakotpimization boost fps ;)
 
 
-
 -- Кэшируем список питомцев и обновляем раз в минуту
 local updatedPets = {}
 local function updatePets()
@@ -229,10 +228,9 @@ task.spawn(function()
     end
 end)
 
--- Функция получения ближайшего объекта с приоритетом
--- Функция получения ближайшего объекта с приоритетом
+
 local activeObjects = {} -- Локальная таблица для объектов
-local lastProcessed = {} -- Таблица для отслеживания обработанных объектов
+
 
 -- Функция обновления таблицы объектов
 local function updateActiveObjects()
@@ -264,33 +262,26 @@ end
 -- Функция обработки объектов из таблицы
 local function processObjects()
     for _, obj in ipairs(activeObjects) do
-        if not lastProcessed[obj.uid] then
-            local args = {}
-            for _, petName in ipairs(updatedPets) do
-                args[petName] = tonumber(obj.uid)
-            end
+        local args = {}
+        for _, petName in ipairs(updatedPets) do
+            args[petName] = tonumber(obj.uid)
+        end
 
-            -- Отправляем питомцев на объект
-            game:GetService("ReplicatedStorage")
-                :WaitForChild("Network")
-                :WaitForChild("Breakables_JoinPetBulk")
-                :FireServer(args)
+        -- Отправляем питомцев на объект
+        game:GetService("ReplicatedStorage")
+            :WaitForChild("Network")
+            :WaitForChild("Breakables_JoinPetBulk")
+            :FireServer(args)
 
-            -- Помечаем объект как обработанный
-            lastProcessed[obj.uid] = true
-
-            -- Ждем исчезновения объекта
-            while true do
-                task.wait(0.1)
-                if not obj.instance or not obj.instance:GetAttribute("BreakableUID") then
-                    break -- Объект больше не существует
-                end
+        -- Ждем исчезновения объекта
+        while true do
+            task.wait(0.2)
+            local breakable = workspace.__THINGS.Breakables:FindFirstChild(tostring(obj.uid))
+            if not breakable then
+                break -- Объект больше не существует
             end
         end
     end
-
-    -- Очищаем обработанные данные
-    lastProcessed = {}
 end
 
 -- Основной цикл
