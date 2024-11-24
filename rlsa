@@ -795,6 +795,15 @@ function OptMap()
     task.wait(.1)
     workspace.MAP.INTERACT.JuicerMachine.Model:Destroy()
     task.wait(.1)
+    workspace.MAP.INTERACT.Machines.JellyPotionCraftingMachine.Machine:Destroy()
+    task.wait(.1)
+    for i,v in pairs(workspace.MAP.INTERACT.RetentionDice:GetChildren()) do
+        if v:IsA("Model") then
+            v:Destroy()
+        elseif v.Name == "lowpolyDice" or v.Name == "animtedDice" then
+            v:Destroy()
+        end
+    end
     workspace.MAP.INTERACT["Update Countdown"]:Destroy()
     task.wait(.1)
     for i,v in pairs(workspace.MAP.INTERACT.GlobalLeaderboard:GetChildren()) do
@@ -874,3 +883,9 @@ for i,v in pairs(game:GetService("ReplicatedStorage").Assets.Models.Fishing:GetD
 end
 task.wait(1)
 game:GetService("ReplicatedStorage").__BLUNDER:Destroy()
+
+for i,v in pairs(workspace:GetDescendants()) do
+    if v:IsA("SurfaceGui") or v:IsA("BillboardGui") then
+        v.Enabled = false
+    end
+end
