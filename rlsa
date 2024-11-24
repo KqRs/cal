@@ -261,7 +261,7 @@ local function farm()
 
             -- Ждем, пока объект исчезнет из upvalue
             while true do
-                task.wait(0.1)
+                task.wait(1)
                 if breakablesFrontend and breakablesFrontend.getClosestBreakable() then
                     breakablesFrontend.getClosestBreakable()
                     local val = getupvalue(breakablesFrontend.getClosestBreakable, 3)
@@ -288,7 +288,7 @@ end
 spawn(function()
     while true do
         farm()
-        task.wait(0.1)
+        task.wait(1)
     end
 end)
 
