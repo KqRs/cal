@@ -795,11 +795,7 @@ function OptMap()
     task.wait(.1)
     workspace.MAP.INTERACT.JuicerMachine.Model:Destroy()
     task.wait(.1)
-    local asd = workspace.MAP.INTERACT.Machines.JellyPotionCraftingMachine.Machine
-    if asd then 
-        asd:Destroy()
-    end
-    task.wait(.1)
+
     for i,v in pairs(workspace.MAP.INTERACT.RetentionDice:GetChildren()) do
         if v:IsA("Model") then
             v:Destroy()
