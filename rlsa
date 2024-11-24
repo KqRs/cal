@@ -196,7 +196,6 @@ task.wait()
 
 task.wait(.5)
 
--- breakotpimization boost fps ;)
 
 
 local function getpet()
@@ -218,79 +217,85 @@ spawn(function()
 end)
 
 
-local function getClosestWithPriority()
-    -- Обновляем данные в upvalue вызовом функции
-    if breakablesFrontend and breakablesFrontend.getClosestBreakable() then
-        breakablesFrontend.getClosestBreakable()
-        local val = getupvalue(breakablesFrontend.getClosestBreakable, 3)
+local function getSortedBreakables()
+    local breakables = workspace.__THINGS.Breakables:GetChildren()
+    local sortedBreakables = {}
 
-        -- Фильтруем объекты по ключевому слову "chest"
-        local chest, other = nil, nil
-        for _, obj in pairs(val) do
-            if string.find(string.lower(obj.id), "chest") then
-                chest = {id = obj.id, uid = obj.uid}
-            elseif not chest then
-                other = {id = obj.id, uid = obj.uid}
+    -- Разделяем объекты на сундуки и остальные
+    local chests = {}
+    local others = {}
+    for _, obj in ipairs(breakables) do
+        if obj:IsA("Model") then
+            local id = obj:GetAttribute("BreakableID")
+            local uid = obj.Name
+
+            if id and string.find(string.lower(id), "chest") then
+                table.insert(chests, {id = id, uid = uid})
+            else
+                table.insert(others, {id = id, uid = uid})
             end
         end
-
-        return chest or other
     end
+
+    -- Объединяем сундуки и остальные объекты
+    for _, chest in ipairs(chests) do
+        table.insert(sortedBreakables, chest)
+    end
+    for _, other in ipairs(others) do
+        table.insert(sortedBreakables, other)
+    end
+
+    return sortedBreakables
 end
 
 local function farm()
-    local current = getClosestWithPriority()
+    -- Получаем отсортированные объекты
+    local breakables = getSortedBreakables()
 
-    if current and current.uid ~= nil then
-        -- Обрабатываем только если объект новый
-        if last ~= current.uid then
-            local uid = current.uid
-            local args = {}
-            local pets = updatedPets -- Список питомцев, обновляется отдельно
+    for _, current in ipairs(breakables) do
+        if current and current.uid then
+            -- Проверяем, новый ли это объект
+            if last ~= current.uid then
+                local uid = current.uid
+                local args = {}
+                local pets = updatedPets -- Список питомцев, обновляется отдельно
 
-            if pets and #pets > 0 then
-                for _, petName in ipairs(pets) do
-                    args[petName] = tonumber(uid)
-                end
-
-                -- Отправляем данные на сервер
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
-                --print("Отправлено на объект:", uid, current.id)
-                last = uid
-            end
-
-            -- Ждем, пока объект исчезнет из upvalue
-            while true do
-                task.wait(1)
-                if breakablesFrontend and breakablesFrontend.getClosestBreakable() then
-                    breakablesFrontend.getClosestBreakable()
-                    local val = getupvalue(breakablesFrontend.getClosestBreakable, 3)
-
-                    local stillExists = false
-                    for _, obj in pairs(val) do
-                        if obj.uid == uid then
-                            stillExists = true
-                            break
-                        end
+                if pets and #pets > 0 then
+                    for _, petName in ipairs(pets) do
+                        args[petName] = tonumber(uid)
                     end
 
-                    if not stillExists then
+                    -- Отправляем данные на сервер
+                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Breakables_JoinPetBulk"):FireServer(args)
+                    --print("Отправлено на объект:", uid, current.id)
+                    last = uid
+                end
+
+                -- Ждем, пока объект исчезнет
+                while true do
+                    task.wait(1)
+                    local breakableExists = workspace.__THINGS.Breakables:FindFirstChild(uid)
+
+                    if not breakableExists then
                         --print("Объект исчез:", uid)
                         break
                     end
                 end
             end
         end
-    else
-        task.wait()
     end
+
+    -- Ждем перед следующим циклом
+    task.wait(.2)
 end
+
 spawn(function()
     while true do
         farm()
-        task.wait(1)
+        task.wait()
     end
 end)
+
 
 
 
@@ -335,7 +340,7 @@ local function ClaimDig()
                     task.wait(1)
                 end
             else
-                task.wait(10)
+                task.wait(60)
             end
         end
     end)
@@ -347,7 +352,7 @@ local function CkaimGift()
         if scriptEnv and typeof(scriptEnv.claim) == "function" then
             while true do
                 if next(scriptEnv2) == nil then
-                    task.wait(10)
+                    task.wait(60)
                 else
                     for i in pairs(scriptEnv2) do
                         scriptEnv.claim(i)
