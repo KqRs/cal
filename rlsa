@@ -289,12 +289,7 @@ local function farm()
     task.wait(.2)
 end
 
-spawn(function()
-    while true do
-        farm()
-        task.wait()
-    end
-end)
+
 
 
 
@@ -315,7 +310,7 @@ local function autoroll()
         end
     end)
 end
-
+autoroll()
 task.wait(.2)
 
 local function dayn()
