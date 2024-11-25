@@ -543,6 +543,120 @@ end
 
 AutoFruit()
 
+task.wait(1)
+
+local function GetRainbow()
+    for _, item in pairs(save2.Inventory.Fruit) do
+        if item.id == "Rainbow" and item.sh == nil then
+            return item._am
+        end
+    end
+    return 0
+end
+
+-- Крафт "Rainbow"
+local function Rb()
+    local rainbow = GetRainbow()
+    local neededRainbow = 100 - rainbow
+    if neededRainbow <= 0 then
+        return
+    end
+
+    -- Подсчет общего количества требуемых фруктов
+    local totalFruitsNeeded = neededRainbow * 25
+    local usedFruits = {}
+
+    for _, item in pairs(save2.Inventory.Fruit) do
+        if (item.id == "Apple" and item.sh == nil) or
+           (item.id == "Pineapple" and item.sh == nil) or
+           (item.id == "Banana" and item.sh == nil) or
+           (item.id == "Watermelon" and item.sh == nil) then
+           
+            local useAmount = math.min(item._am, totalFruitsNeeded)
+            totalFruitsNeeded = totalFruitsNeeded - useAmount
+            usedFruits[item.id] = useAmount
+            
+            if totalFruitsNeeded <= 0 then
+                break
+            end
+        end
+    end
+
+
+    -- Отправляем аргументы на сервер
+    local args = {
+        [1] = usedFruits,
+        [2] = false
+    }
+
+    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("UpgradeFruitsMachine_Activate"):InvokeServer(unpack(args))
+end
+
+
+spawn(function()
+    while true do
+        Rb()
+        task.wait(120)
+    end
+end)
+
+task.wait(1)
+
+local function GetRainbow2()
+    for _, item in pairs(save2.Inventory.Fruit) do
+        if item.id == "Rainbow" and item.sh == nil then
+            return item._am
+        end
+    end
+    return 0
+end
+
+-- Крафт "Rainbow"
+local function Rb2()
+    local rainbow = GetRainbow2()
+    local neededRainbow = 20 - rainbow
+    if neededRainbow <= 0 then
+        return
+    end
+
+    -- Подсчет общего количества требуемых фруктов
+    local totalFruitsNeeded = neededRainbow * 15
+    local usedFruits = {}
+
+    for _, item in pairs(save2.Inventory.Fruit) do
+        if (item.id == "Apple" and item.sh == true) or
+           (item.id == "Pineapple" and item.sh == true) or
+           (item.id == "Banana" and item.sh == true) or
+           (item.id == "Watermelon" and item.sh == true) then
+           
+            local useAmount = math.min(item._am, totalFruitsNeeded)
+            totalFruitsNeeded = totalFruitsNeeded - useAmount
+            usedFruits[item.id] = useAmount
+            
+            if totalFruitsNeeded <= 0 then
+                break
+            end
+        end
+    end
+
+
+
+    -- Отправляем аргументы на сервер
+    local args = {
+        [1] = usedFruits,
+        [2] = true
+    }
+
+    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("UpgradeFruitsMachine_Activate"):InvokeServer(unpack(args))
+end
+
+
+spawn(function()
+    while true do
+        Rb2()
+        task.wait(120)
+    end
+end)
 
 task.wait(1)
 local recipes = {
@@ -556,21 +670,21 @@ local recipes = {
     ["Coins Potion2"] = { { id = "Coins Potion", tn = 1, amount = 3 } , maxAmount = 999},
     ["Coins Potion3"] = { { id = "Coins Potion", tn = 2, amount = 4 } , maxAmount = 999},
     ["Coins Potion4"] = { { id = "Coins Potion", tn = 3, amount = 5 } , maxAmount = 999},
-    ["Coins Potion5"] = { { id = "Coins Potion", tn = 4, amount = 5 }, { id = "Banana", amount = 12 } , maxAmount = 999},
-    ["Coins Potion6"] = { { id = "Coins Potion", tn = 5, amount = 5 }, { id = "Banana", amount = 30 } , maxAmount = 999},
-    ["Coins Potion7"] = { { id = "Coins Potion", tn = 6, amount = 5 }, { id = "Banana", sh = true, amount = 5 } , maxAmount = 9999},
+    ["Coins Potion5"] = { { id = "Coins Potion", tn = 4, amount = 5 }, { id = "Banana", amount = 12 } , maxAmount = 10},
+    ["Coins Potion6"] = { { id = "Coins Potion", tn = 5, amount = 5 }, { id = "Banana", amount = 30 } , maxAmount = 10},
+    ["Coins Potion7"] = { { id = "Coins Potion", tn = 6, amount = 5 }, { id = "Banana", sh = true, amount = 5 } , maxAmount = 10},
 
     --["Breakables Potion1"] = { { id = "Lucky Potion", tn = 2, amount = 3 }, { id = "Watermelon", amount = 4 } , maxAmount = 5},
     ["Breakables Potion2"] = { { id = "Breakables Potion", tn = 1, amount = 3 } , maxAmount = 999},
     ["Breakables Potion3"] = { { id = "Breakables Potion", tn = 2, amount = 5 } , maxAmount = 9999},
 
     --["Faster Rolls Potion1"] = { { id = "Lucky Potion", tn = 3, amount = 3 }, { id = "Watermelon", amount = 12 } , maxAmount = 5},
-    ["Faster Rolls Potion2"] = { { id = "Faster Rolls Potion", tn = 1, amount = 5 }, { id = "Watermelon", amount = 30 } , maxAmount = 9999},
+    ["Faster Rolls Potion2"] = { { id = "Faster Rolls Potion", tn = 1, amount = 5 }, { id = "Watermelon", amount = 30 } , maxAmount = 10},
 
     --["Items Potion1"] = { { id = "Lucky Potion", tn = 3, amount = 1 }, { id = "Coins Potion", tn = 3, amount = 1 } , maxAmount = 5},
     ["Items Potion2"] = { { id = "Items Potion", tn = 1, amount = 3 } , maxAmount = 999},
     ["Items Potion3"] = { { id = "Items Potion", tn = 2, amount = 4 } , maxAmount = 999},
-    ["Items Potion4"] = { { id = "Items Potion", tn = 3, amount = 5 }, { id = "Pineapple", amount = 20 } , maxAmount = 9999},
+    ["Items Potion4"] = { { id = "Items Potion", tn = 3, amount = 5 }, { id = "Pineapple", amount = 20 } , maxAmount = 10},
 
     --["Walkspeed Potion1"] = { { id = "Apple", amount = 4 }, { id = "Banana", amount = 4 } , maxAmount = 5},
     --["Walkspeed Potion2"] = { { id = "Walkspeed Potion", tn = 1, amount = 3 } , maxAmount = 5},
