@@ -604,7 +604,7 @@ task.wait(1)
 
 local function GetRainbow2()
     for _, item in pairs(save2.Inventory.Fruit) do
-        if item.id == "Rainbow" and item.sh == nil then
+        if item.id == "Rainbow" and item.sh == true then
             return item._am
         end
     end
