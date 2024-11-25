@@ -115,12 +115,14 @@ local function Opt()
     for i,v in pairs(game:GetService("ReplicatedStorage").Assets.Billboards:GetChildren()) do
         v.Enabled = false
     end
+    task.wait()
     for i,v in pairs(game:GetService("ReplicatedStorage").Assets.Particles:GetDescendants()) do
         if v:IsA("ParticleEmitter") then
             v.Texture = ""
         end
     end
-
+    task.wait()
+    game:GetService("ReplicatedStorage").Library.Client.GUIFX.Confetti.ParticleEmitter.Texture = ""
 
 
 end
