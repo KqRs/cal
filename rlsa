@@ -659,6 +659,83 @@ spawn(function()
 end)
 
 task.wait(1)
+
+local upper, lower = nil, nil
+
+local function GetCount()
+    if save2.Inventory.Misc then
+        for _, item in pairs(save2.Inventory.Misc) do
+            if item.id == "Crystal Key Upper Half" then
+                upper = item._am or 1
+            end
+            if item.id == "Crystal Key Lower Half" then
+                lower = item._am or 1
+            end
+            if upper and lower then
+                return math.min(upper, lower)
+            end
+        end
+    end
+
+    return
+end
+
+
+spawn(function()
+    while true do
+        local am = GetCount()
+        if am then
+            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("LootKey_Combine"):InvokeServer(am)
+        end
+        task.wait(500)
+    end
+end)
+task.wait(1)
+
+local function Chest()
+    if save2.Inventory.Lootbox and save2.Inventory.Lootbox ~= nil then
+        for uid, item in pairs(save2.Inventory.Lootbox) do
+            if item.id == "Rare Treasure Chest" or item.id == "Basic Treasure Chest" or item.id == "Epic Treasure Chest" or item.id == "Legendary Treasure Chest" then
+                for i = 1, item._am or 1 do
+                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Lootbox: Open"):InvokeServer(uid,1)
+                    task.wait(.2)
+                end 
+            end
+        end
+    end
+end
+
+spawn(function()
+    while true do
+        Chest()
+        task.wait(60)
+    end
+end)
+
+task.wait(1)
+
+local function Bait()
+    if save2.Inventory.Consumable then
+        for uid, item in pairs(save2.Inventory.Consumable) do
+            if item.id == "Fishing Bait" and (item.tn == 1 or item.tn == 2 or item.tn == 3 or item.tn == 4) then
+                for i = 1, item._am or 1 do
+                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Consumables_Consume"):InvokeServer(uid,1)
+                    task.wait(.2)
+                end 
+            end
+        end
+    end
+end
+
+spawn(function()
+    while true do
+        Bait()
+        task.wait(60)
+    end
+end)
+
+
+task.wait(1)
 local recipes = {
     ["Lucky Potion2"] = { { id = "Lucky Potion", tn = 1, amount = 3 } , maxAmount = 999},
     ["Lucky Potion3"] = { { id = "Lucky Potion", tn = 2, amount = 4 } , maxAmount = 999},
