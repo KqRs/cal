@@ -550,7 +550,7 @@ task.wait(1)
 local function GetRainbow()
     for _, item in pairs(save2.Inventory.Fruit) do
         if item.id == "Rainbow" and item.sh == nil then
-            return item._am
+            return item._am or 1 -- Значение по умолчанию для _am
         end
     end
     return 0
@@ -566,39 +566,66 @@ local function Rb()
 
     -- Подсчет общего количества требуемых фруктов
     local totalFruitsNeeded = neededRainbow * 25
-    local usedFruits = {}
+    local fruitList = {}
+    local totalAvailable = 0
 
     for uid, item in pairs(save2.Inventory.Fruit) do
         if (item.id == "Apple" and item.sh == nil) or
            (item.id == "Pineapple" and item.sh == nil) or
            (item.id == "Banana" and item.sh == nil) or
            (item.id == "Watermelon" and item.sh == nil) then
-           
-            local useAmount = math.min(item._am, totalFruitsNeeded)
-            totalFruitsNeeded = totalFruitsNeeded - useAmount
-            usedFruits[uid] = useAmount
-            
-            if totalFruitsNeeded <= 0 then
-                break
-            end
+
+            -- Если _am отсутствует, а фруктов ровно 1, задаем _am = 1
+            local itemAmount = item._am or 1
+            fruitList[uid] = itemAmount
+            totalAvailable = totalAvailable + itemAmount
         end
     end
 
+    -- Проверяем, хватает ли фруктов для хотя бы одного "Rainbow"
+    if totalAvailable < 25 then
+        return -- Недостаточно фруктов для крафта
+    end
 
-    -- Отправляем аргументы на сервер
-    local args = {
-        [1] = usedFruits,
-        [2] = false
-    }
+    -- Крафтим "Rainbow" по частям
+    while totalFruitsNeeded > 0 and totalAvailable >= 25 do
+        local usedFruits = {}
+        local fruitsUsedThisCycle = 0
 
-    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("UpgradeFruitsMachine_Activate"):InvokeServer(unpack(args))
+        for uid, amount in pairs(fruitList) do
+            if amount > 0 then
+                local useAmount = math.min(amount, 25 - fruitsUsedThisCycle)
+                fruitsUsedThisCycle = fruitsUsedThisCycle + useAmount
+                fruitList[uid] = fruitList[uid] - useAmount
+                usedFruits[uid] = useAmount
+
+                if fruitsUsedThisCycle >= 25 then
+                    break
+                end
+            end
+        end
+
+        -- Отправляем запрос на сервер для крафта одного "Rainbow"
+        if next(usedFruits) then
+            local args = {
+                [1] = usedFruits,
+                [2] = false
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("UpgradeFruitsMachine_Activate"):InvokeServer(unpack(args))
+        end
+
+        -- Обновляем счетчики
+        totalFruitsNeeded = totalFruitsNeeded - 25
+        totalAvailable = totalAvailable - fruitsUsedThisCycle
+    end
 end
+
 
 
 spawn(function()
     while true do
         Rb()
-        task.wait(120)
+        task.wait(30)
     end
 end)
 
@@ -607,7 +634,7 @@ task.wait(1)
 local function GetRainbow2()
     for _, item in pairs(save2.Inventory.Fruit) do
         if item.id == "Rainbow" and item.sh == true then
-            return item._am
+            return item._am or 1
         end
     end
     return 0
@@ -627,8 +654,8 @@ local function Rb2()
 
     for uid, item in pairs(save2.Inventory.Fruit) do
         if item.id == "Rainbow" and item.sh == nil then
-           
-            local useAmount = math.min(item._am, totalFruitsNeeded)
+            local itemAmount = item._am or 1
+            local useAmount = math.min(itemAmount, totalFruitsNeeded)
             totalFruitsNeeded = totalFruitsNeeded - useAmount
             usedFruits[uid] = useAmount
             
@@ -652,7 +679,7 @@ end
 spawn(function()
     while true do
         Rb2()
-        task.wait(120)
+        task.wait(30)
     end
 end)
 
