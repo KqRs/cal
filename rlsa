@@ -568,7 +568,7 @@ local function Rb()
     local totalFruitsNeeded = neededRainbow * 25
     local usedFruits = {}
 
-    for _, item in pairs(save2.Inventory.Fruit) do
+    for uid, item in pairs(save2.Inventory.Fruit) do
         if (item.id == "Apple" and item.sh == nil) or
            (item.id == "Pineapple" and item.sh == nil) or
            (item.id == "Banana" and item.sh == nil) or
@@ -576,7 +576,7 @@ local function Rb()
            
             local useAmount = math.min(item._am, totalFruitsNeeded)
             totalFruitsNeeded = totalFruitsNeeded - useAmount
-            usedFruits[item.id] = useAmount
+            usedFruits[uid] = useAmount
             
             if totalFruitsNeeded <= 0 then
                 break
@@ -625,7 +625,7 @@ local function Rb2()
     local totalFruitsNeeded = neededRainbow * 15
     local usedFruits = {}
 
-    for _, item in pairs(save2.Inventory.Fruit) do
+    for uid, item in pairs(save2.Inventory.Fruit) do
         if (item.id == "Apple" and item.sh == true) or
            (item.id == "Pineapple" and item.sh == true) or
            (item.id == "Banana" and item.sh == true) or
@@ -633,7 +633,7 @@ local function Rb2()
            
             local useAmount = math.min(item._am, totalFruitsNeeded)
             totalFruitsNeeded = totalFruitsNeeded - useAmount
-            usedFruits[item.id] = useAmount
+            usedFruits[uid] = useAmount
             
             if totalFruitsNeeded <= 0 then
                 break
