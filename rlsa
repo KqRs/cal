@@ -559,7 +559,7 @@ end
 -- Крафт "Rainbow"
 local function Rb()
     local rainbow = GetRainbow()
-    local neededRainbow = 100 - rainbow
+    local neededRainbow = 200 - rainbow
     if neededRainbow <= 0 then
         return
     end
@@ -626,10 +626,7 @@ local function Rb2()
     local usedFruits = {}
 
     for uid, item in pairs(save2.Inventory.Fruit) do
-        if (item.id == "Apple" and item.sh == true) or
-           (item.id == "Pineapple" and item.sh == true) or
-           (item.id == "Banana" and item.sh == true) or
-           (item.id == "Watermelon" and item.sh == true) then
+        if item.id == "Rainbow" and item.sh == nil then
            
             local useAmount = math.min(item._am, totalFruitsNeeded)
             totalFruitsNeeded = totalFruitsNeeded - useAmount
@@ -651,7 +648,6 @@ local function Rb2()
 
     game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("UpgradeFruitsMachine_Activate"):InvokeServer(unpack(args))
 end
-
 
 spawn(function()
     while true do
@@ -695,7 +691,7 @@ end)
 task.wait(1)
 
 local function Chest()
-    if save2.Inventory.Lootbox and save2.Inventory.Lootbox ~= nil then
+    if save2.Inventory.Lootbox then
         for uid, item in pairs(save2.Inventory.Lootbox) do
             if item.id == "Rare Treasure Chest" or item.id == "Basic Treasure Chest" or item.id == "Epic Treasure Chest" or item.id == "Legendary Treasure Chest" then
                 for i = 1, item._am or 1 do
