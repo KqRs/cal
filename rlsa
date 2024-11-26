@@ -122,8 +122,7 @@ local function Opt()
         end
     end
     task.wait()
-    game.Players.LocalPlayer.Character.HumanoidRootPart.OrbCollect.Texture = ""
-    game:GetService("ReplicatedStorage").Library.Client.GUIFX.Confetti.ParticleEmitter.Texture = ""
+    
 
 
 end
@@ -1117,3 +1116,6 @@ for i,v in pairs(workspace:GetDescendants()) do
         v.Enabled = false
     end
 end
+
+game.Players.LocalPlayer.Character.HumanoidRootPart.OrbCollect.Texture = ""
+game:GetService("ReplicatedStorage").Library.Client.GUIFX.Confetti.ParticleEmitter.Texture = ""
