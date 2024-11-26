@@ -335,7 +335,6 @@ local function ClaimDig()
                     end
                 end
             else
-                warn("Network пуст или не является таблицей. Ждем следующей проверки.")
                 task.wait(60)
             end
         end
