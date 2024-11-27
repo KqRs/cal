@@ -510,7 +510,6 @@ local ConfigFruit = {
     "Apple",
     "Pineapple",
     "Orange",
-    "Rainbow",
     "Banana"
 }
 
@@ -729,13 +728,11 @@ task.wait(1)
 local function Chest()
     if save2.Inventory and save2.Inventory.Lootbox then
         for uid, item in pairs(save2.Inventory.Lootbox) do
-            if type(uid) == "string" and type(item) == "table" and item.id then
-                if item.id == "Rare Treasure Chest" or item.id == "Basic Treasure Chest" or 
-                   item.id == "Epic Treasure Chest" or item.id == "Legendary Treasure Chest" then
-                    for i = 1, (item._am or 1) do
-                        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Lootbox: Open"):InvokeServer(uid, 1)
-                        task.wait(0.2)
-                    end
+            if item.id == "Rare Treasure Chest" or item.id == "Basic Treasure Chest" or 
+                item.id == "Epic Treasure Chest" or item.id == "Legendary Treasure Chest" then
+                for i = 1, (item._am or 1) do
+                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Lootbox: Open"):InvokeServer(uid, 1)
+                    task.wait(0.2)
                 end
             end
         end
