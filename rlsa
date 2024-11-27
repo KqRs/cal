@@ -366,18 +366,7 @@ end
 CkaimGift()
 task.wait(.2)
 
-local function Bonus()
-    spawn(function()
-        task.wait(20)
-        game:GetService("ReplicatedStorage").Network:WaitForChild("Breakables_SuperBonus"):Destroy()
-        task.wait(1)
-        game:GetService("ReplicatedStorage").Network:WaitForChild("Breakables_Bonus"):Destroy()
-    end)
-end
-Bonus()
 
-
-task.wait(.2)
 
 local function Machines()
     task.spawn(function()
