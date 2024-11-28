@@ -280,6 +280,7 @@ task.spawn(function()
     while true do
         updateActiveObjects() -- Обновляем таблицу объектов
         processObjects() -- Обрабатываем объекты
+        task.wait(.5)
     end
 end)
 
