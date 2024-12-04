@@ -341,7 +341,7 @@ local function dayn()
 end
 
 local function ClaimDig()
-    if digenv1.Target and next(digenv2) then
+    if digenv1.Target then
         for i in pairs(digenv2) do
             local daynValue = dayn()
             if i and daynValue then
