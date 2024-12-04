@@ -23,6 +23,14 @@ local last = nil
 local response
 
 
+local turkenv1 = getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Event["Turkey Chase"])
+local turkenv2 = getupvalue(getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Event["Turkey Chase"]).claim,1)
+local digenv1 = require(game:GetService("ReplicatedStorage"):WaitForChild("Library"):WaitForChild("Client"):WaitForChild("DiggingCmds"))
+local digenv2 = getupvalue(digenv1.Target, 1)
+local flygiftenv1 = getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Flying Gifts"])
+local flygiftenv2 = getupvalue(getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Flying Gifts"]).create,4)
+
+
 local function Antiafk()
     game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Idle Tracking: Stop Timer"):FireServer()
 
@@ -328,66 +336,69 @@ autoroll()
 task.wait(.2)
 
 local function dayn()
-    if type(save) == "table" then
-        local firstKey = next(save)
-        return firstKey
-    end
-    return nil
+    local firstKey = next(save)
+    return firstKey
 end
 
 local function ClaimDig()
-    spawn(function()
-        while true do
-            local diggingCmds = require(game:GetService("ReplicatedStorage"):WaitForChild("Library"):WaitForChild("Client"):WaitForChild("DiggingCmds"))
-            local network = diggingCmds and getupvalue(diggingCmds.Target, 1)
-            
-            -- Проверяем, что network — это таблица
-            if type(network) == "table" and next(network) then
-                for i, v in pairs(network) do
-                    local daynValue = dayn()
-                    if i and daynValue then
-                        -- Отправляем запросы
-                        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Digging_Target"):InvokeServer(i, daynValue)
-                        task.wait(1)
-                        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Digging_Claim"):InvokeServer(i)
-                        task.wait(1)
-                    else
-                        warn("Некорректные данные: i или daynValue не определены")
-                    end
-                end
+    if digenv1.Target and next(digenv2) then
+        for i in pairs(digenv2) do
+            local daynValue = dayn()
+            if i and daynValue then
+                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Digging_Target"):InvokeServer(i, daynValue)
+                task.wait(1)
+                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Digging_Claim"):InvokeServer(i)
+                task.wait(1)
             else
-                task.wait(60)
+                warn("Некорректные данные: i или daynValue не определены")
             end
         end
-    end)
+    end
 end
 
-ClaimDig()
+spawn(function()
+    while true do
+        ClaimDig()
+        task.wait(60)
+    end
+end)
+
 
 task.wait(.2)
-local function CkaimGift()
-    spawn(function()
-        if scriptEnv and typeof(scriptEnv.claim) == "function" then
-            while true do
-                if next(scriptEnv2) == nil then
-                    task.wait(60)
-                else
-                    for i in pairs(scriptEnv2) do
-                        scriptEnv.claim(i)
-                        task.wait(1)
-                    end
-                end
-            end
-        else
-            warn("Функция claim не найдена или недоступна!")
+local function ClaimGift()
+    if flygiftenv1.create and next(flygiftenv2) then
+        for i in pairs(flygiftenv2) do
+            flygiftenv1.claim(i)
+            task.wait(1)
         end
-    end)
+    end
 end
 
-CkaimGift()
+spawn(function()
+    while true do
+        ClaimGift()
+        task.wait(60)
+    end
+end)
 task.wait(.2)
 
+local function turkeyphase()
+    if turkenv1.claim and next(turkenv2) then
+        for i,v in pairs(turkenv2) do
+            turkenv1.claim(i)
+        end
+    end
+end
 
+
+spawn(function()
+    while true do
+        turkeyphase()
+        task.wait(30)
+    end
+end)
+
+task.wait(.2)
 
 local function Machines()
     task.spawn(function()
