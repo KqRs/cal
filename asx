@@ -385,6 +385,21 @@ task.wait(.2)
 local function Machines()
     task.spawn(function()
         while true do
+            for i = 1,6 do
+                repeat
+                    pcall(function()
+                        response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("CustomMerchants_Purchase"):InvokeServer("IceFishingMerchant",i)
+                    end)
+                    task.wait(1)
+                until response == false
+            end
+            task.wait(120)
+        end
+    end)
+
+    
+    task.spawn(function()
+        while true do
             local maxRetries = 10
             local retries = 0
             repeat
@@ -949,7 +964,7 @@ local function craftAllPotions()
 
 end
 
-
+craftAllPotions()
 task.wait(1)
 
 function OptMap()
@@ -1089,9 +1104,9 @@ end
 OptMap()
 
 task.wait(1)
-workspace.MAP.INTERACT.FishingPads.FishingBillboard.Target.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+workspace.MAP.INTERACT.FishingPads.Ice.Target.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
 task.wait(1)
-workspace.MAP.INTERACT.FishingPads.FishingBillboard.PadGlow.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+workspace.MAP.INTERACT.FishingPads.Ice.PadGlow.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
 Machines()
 
 for i,v in pairs(game:GetService("Players").LocalPlayer.PlayerGui:GetChildren()) do
