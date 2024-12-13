@@ -18,10 +18,6 @@ local breakablesFrontend = getsenv(player.PlayerScripts.Scripts.Game["Breakables
 local petmenager = getsenv(player.PlayerScripts.Scripts.Game.Pets["Pet Replication Manager"])
 local orb = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
 local response
-
-
-local turkenv1 = getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Event["Turkey Chase"])
-local turkenv2 = getupvalue(getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Event["Turkey Chase"]).claim,1)
 local digenv1 = require(game:GetService("ReplicatedStorage"):WaitForChild("Library"):WaitForChild("Client"):WaitForChild("DiggingCmds"))
 local digenv2 = getupvalue(digenv1.Target, 1)
 local flygiftenv1 = getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Flying Gifts"])
@@ -379,23 +375,6 @@ spawn(function()
 end)
 task.wait(.2)
 
-local function turkeyphase()
-    if turkenv1.claim and next(turkenv2) then
-        for i,v in pairs(turkenv2) do
-            turkenv1.claim(i)
-        end
-    end
-end
-
-
-spawn(function()
-    while true do
-        turkeyphase()
-        task.wait(30)
-    end
-end)
-
-task.wait(.2)
 
 local function Machines()
     task.spawn(function()
