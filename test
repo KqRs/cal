@@ -9,6 +9,7 @@ until game.PlaceId ~= nil
 repeat
     task.wait(1)
 until game:GetService("Players").LocalPlayer and game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
+game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Events.Christmas2024["Polar Express"].Enabled = false
 game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.__THINGS.Instances.HolidayEvent.Teleports.Enter.CFrame
 task.wait(120)
 game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(2113.74512, 16.5288868, -20861.9199)
