@@ -11,7 +11,10 @@ repeat
 
 until game:GetService("Players").LocalPlayer and game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
 if game.PlaceId == 17503543197 then
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Events.Christmas2024["Christmas Sleigh"].Parent = game:GetService("Lighting")
     task.wait(120)
+    game:GetService("Lighting")["Christmas Sleigh"].Parent = game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game
+    task.wait(1)
     game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(2615.27588, 16.2414665, -20874.6172)
     task.wait(10)
     loadstring(game:HttpGet("https://raw.githubusercontent.com/KqRs/Secretss/refs/heads/main/something",true))()
