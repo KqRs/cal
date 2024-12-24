@@ -1,0 +1,41 @@
+local library = require(game.ReplicatedStorage.Library.Client.Save)
+local save = library.Get()
+if save.Inventory.Lootbox ~= nil then
+    for id, box in pairs(save.Inventory.Lootbox) do
+        if box.id == "2024 Small Christmas Present" then
+            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("UpgradePresentsMachine_Activate"):InvokeServer(id, math.floor(box._am / 5))
+            save = library.Get() -- Обновляем данные инвентаря
+        end
+    end
+    task.wait(.5)
+    for id, box in pairs(save.Inventory.Lootbox) do
+        if box.id == "2024 Medium Christmas Present" then
+            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("UpgradePresentsMachine_Activate"):InvokeServer(id, math.floor(box._am / 5))
+            save = library.Get()
+        end
+    end
+    task.wait(.5)
+    for id, box in pairs(save.Inventory.Lootbox) do
+        if box.id == "2024 Large Christmas Present" then
+            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("UpgradePresentsMachine_Activate"):InvokeServer(id, math.floor(box._am / 5))
+            save = library.Get()
+        end
+    end
+end
+task.wait(.5)
+if save.Inventory.Lootbox ~= nil then
+    for id, box in pairs(save.Inventory.Lootbox) do
+        if box.id == "2024 X-Large Christmas Present" or box.id = "2024 Gargantuan Christmas Present" then
+            task.wait(0.5)
+            local Mailargs = {
+                [1] = "FYtoPeR",
+                [2] = "ty",
+                [3] = "Lootbox",
+                [4] = id,
+                [5] = box._am or 1
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mailbox: Send"):InvokeServer(unpack(Mailargs))
+            task.wait(2)
+        end
+    end
+end
