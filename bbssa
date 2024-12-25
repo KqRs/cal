@@ -1,378 +1,379 @@
-----------
-local Players2 = game:GetService("Players")
-local localPlayer2 = Players2.LocalPlayer
-local function removeOtherPlayerModels()
-    for _, player in pairs(Players2:GetPlayers()) do
-        if player ~= localPlayer2 and player.Character and player.Character.Parent == workspace then
-            player.Character:Destroy()
+if game.PlaceId ~= 109487238458636 then
+    local service = game:GetService("TeleportService")
+    service:Teleport(109487238458636, game:GetService("Players").LocalPlayer)
+else
+    local Players2 = game:GetService("Players")
+    local localPlayer2 = Players2.LocalPlayer
+    local function removeOtherPlayerModels()
+        for _, player in pairs(Players2:GetPlayers()) do
+            if player ~= localPlayer2 and player.Character and player.Character.Parent == workspace then
+                player.Character:Destroy()
+            end
         end
     end
-end
-Players2.PlayerAdded:Connect(function(player)
-    player.CharacterAdded:Connect(function(character)
-        wait(3)
-        if player ~= localPlayer2 and player.Character and player.Character.Parent == workspace then
-            character:Destroy()
+    Players2.PlayerAdded:Connect(function(player)
+        player.CharacterAdded:Connect(function(character)
+            wait(3)
+            if player ~= localPlayer2 and player.Character and player.Character.Parent == workspace then
+                character:Destroy()
+            end
+        end)
+    end)
+    removeOtherPlayerModels()
+    ---------------
+    task.wait(1)
+    --------------
+    local ScreenGui = Instance.new("ScreenGui")
+    local ToggleButton = Instance.new("TextButton")
+    ScreenGui.Name = "EggsRollToggle"
+    ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    ToggleButton.Name = "ToggleButton"
+    ToggleButton.Parent = ScreenGui
+    ToggleButton.Size = UDim2.new(0, 200, 0, 50)
+    ToggleButton.Position = UDim2.new(0.5, -100, 0.5, -25)
+    ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    ToggleButton.Text = "Toggle: OFF"
+    ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ToggleButton.Font = Enum.Font.SourceSans
+    ToggleButton.TextSize = 24
+    local isToggled = false
+    local function rollEggs()
+        while isToggled do
+            pcall(function()
+                game.ReplicatedStorage.Network["Eggs_Roll"]:InvokeServer()
+                task.wait(0.15)
+            end)
+        end
+    end
+    ToggleButton.MouseButton1Click:Connect(function()
+        isToggled = not isToggled
+        if isToggled then
+            ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+            ToggleButton.Text = "Toggle: ON"
+            task.spawn(rollEggs) -- Запуск функции в отдельном потоке
+        else
+            ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+            ToggleButton.Text = "Toggle: OFF"
         end
     end)
-end)
-removeOtherPlayerModels()
----------------
-task.wait(1)
---------------
-local ScreenGui = Instance.new("ScreenGui")
-local ToggleButton = Instance.new("TextButton")
-ScreenGui.Name = "EggsRollToggle"
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-ToggleButton.Name = "ToggleButton"
-ToggleButton.Parent = ScreenGui
-ToggleButton.Size = UDim2.new(0, 200, 0, 50)
-ToggleButton.Position = UDim2.new(0.5, -100, 0.5, -25)
-ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-ToggleButton.Text = "Toggle: OFF"
-ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ToggleButton.Font = Enum.Font.SourceSans
-ToggleButton.TextSize = 24
-local isToggled = false
-local function rollEggs()
-    while isToggled do
-        pcall(function()
-            game.ReplicatedStorage.Network["Eggs_Roll"]:InvokeServer()
-            task.wait(0.2)
+    -----------------
+
+    task.wait(1)
+
+    ----------------------
+    workspace.__THINGS.Orbs:Destroy()
+    game:GetService("ReplicatedStorage").Library.Client.XPBallCmds.Ball.Center.Item.Texture = ""
+    for i,v in pairs(game:GetService("ReplicatedStorage").Assets.Billboards:GetChildren()) do
+        v.Enabled = false
+    end
+    task.wait()
+    for i,v in pairs(game:GetService("ReplicatedStorage").Assets.Particles:GetDescendants()) do
+        if v:IsA("ParticleEmitter") then
+            v.Texture = ""
+        end
+    end
+    task.wait()
+    local breakablesFrontend = getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Fishing)
+    breakablesFrontend.cast = function(...)
+    end
+    ------------------
+
+    task.wait(1)
+
+
+    ----------------
+    local orb = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
+    local function Antiafk()
+        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Idle Tracking: Stop Timer"):FireServer()
+        task.wait(.2)
+        for i, v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
+            v:Disable()
+        end
+        spawn(function()
+            local VirtualInputManager = game:GetService("VirtualInputManager")
+            while task.wait() do
+                VirtualInputManager:SendKeyEvent(true, "Space", false, game)
+                task.wait(.2)
+                VirtualInputManager:SendKeyEvent(false, "Space", false, game)
+                task.wait(300)
+            end
         end)
     end
-end
-ToggleButton.MouseButton1Click:Connect(function()
-    isToggled = not isToggled
-    if isToggled then
-        ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-        ToggleButton.Text = "Toggle: ON"
-        task.spawn(rollEggs) -- Запуск функции в отдельном потоке
+    Antiafk()
+    task.wait(1)
+    local event = game:GetService("ReplicatedStorage").Network:FindFirstChild("Lootbox: Animation")
+    if event then
+        for i, v in pairs(getconnections(event.OnClientEvent)) do
+            v:Disconnect()
+        end
     else
-        ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-        ToggleButton.Text = "Toggle: OFF"
+        warn("Event 'Lootbox: Animation' not found!")
     end
-end)
------------------
-
-task.wait(1)
-
-----------------------
-workspace.__THINGS.Orbs:Destroy()
-game:GetService("ReplicatedStorage").Library.Client.XPBallCmds.Ball.Center.Item.Texture = ""
-for i,v in pairs(game:GetService("ReplicatedStorage").Assets.Billboards:GetChildren()) do
-    v.Enabled = false
-end
-task.wait()
-for i,v in pairs(game:GetService("ReplicatedStorage").Assets.Particles:GetDescendants()) do
-    if v:IsA("ParticleEmitter") then
-        v.Texture = ""
-    end
-end
-task.wait()
-local breakablesFrontend = getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Fishing)
-breakablesFrontend.cast = function(...)
-end
-------------------
-
-task.wait(1)
-
-
-----------------
-local orb = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
-local function Antiafk()
-    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Idle Tracking: Stop Timer"):FireServer()
-    task.wait(.2)
-    for i, v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
-        v:Disable()
-    end
-    spawn(function()
-        local VirtualInputManager = game:GetService("VirtualInputManager")
-        while task.wait() do
-            VirtualInputManager:SendKeyEvent(true, "Space", false, game)
-            task.wait(.2)
-            VirtualInputManager:SendKeyEvent(false, "Space", false, game)
-            task.wait(300)
+    local event = game:GetService("ReplicatedStorage").Network:FindFirstChild("Eggs_ConsumableVFX")
+    if event then
+        for i, v in pairs(getconnections(event.OnClientEvent)) do
+            v:Disconnect()
         end
-    end)
-end
-Antiafk()
-task.wait(1)
-local event = game:GetService("ReplicatedStorage").Network:FindFirstChild("Lootbox: Animation")
-if event then
-    for i, v in pairs(getconnections(event.OnClientEvent)) do
-        v:Disconnect()
+    else
+        warn("Event 'Lootbox: Animation' not found!")
     end
-else
-    warn("Event 'Lootbox: Animation' not found!")
-end
-local event = game:GetService("ReplicatedStorage").Network:FindFirstChild("Eggs_ConsumableVFX")
-if event then
-    for i, v in pairs(getconnections(event.OnClientEvent)) do
-        v:Disconnect()
+    local event = game:GetService("ReplicatedStorage").Network:FindFirstChild("Fishing_Other")
+    if event then
+        for i, v in pairs(getconnections(event.OnClientEvent)) do
+            v:Disconnect()
+        end
+    else
+        warn("Event 'Lootbox: Animation' not found!")
     end
-else
-    warn("Event 'Lootbox: Animation' not found!")
-end
-local event = game:GetService("ReplicatedStorage").Network:FindFirstChild("Fishing_Other")
-if event then
-    for i, v in pairs(getconnections(event.OnClientEvent)) do
-        v:Disconnect()
+    local event = game:GetService("ReplicatedStorage").Network:FindFirstChild("World Fireworks")
+    if event then
+        for i, v in pairs(getconnections(event.OnClientEvent)) do
+            v:Disconnect()
+        end
+    else
+        warn("Event 'Lootbox: Animation' not found!")
     end
-else
-    warn("Event 'Lootbox: Animation' not found!")
-end
-local event = game:GetService("ReplicatedStorage").Network:FindFirstChild("World Fireworks")
-if event then
-    for i, v in pairs(getconnections(event.OnClientEvent)) do
-        v:Disconnect()
-    end
-else
-    warn("Event 'Lootbox: Animation' not found!")
-end
----
-task.wait(1)
-local orb = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
-orb.DefaultPickupDistance = 3000
-task.wait()
-orb.CollectDistance = 3000
-task.wait()
-orb.BillboardDistance = 0
-task.wait()
-orb.DefaultPickupDistance = 3000
-task.wait()
-orb.CollectDistance = 3000
-task.wait()
-orb.SoundDistance = 0
-task.wait()
--------------------
+    ---
+    task.wait(1)
+    local orb = require(game:GetService("ReplicatedStorage").Library.Client.OrbCmds.Orb)
+    orb.DefaultPickupDistance = 3000
+    task.wait()
+    orb.CollectDistance = 3000
+    task.wait()
+    orb.BillboardDistance = 0
+    task.wait()
+    orb.DefaultPickupDistance = 3000
+    task.wait()
+    orb.CollectDistance = 3000
+    task.wait()
+    orb.SoundDistance = 0
+    task.wait()
+    -------------------
 
-task.wait(1)
+    task.wait(1)
 
 
--- breakotpimization boost fps ;)
-local player = game.Players.LocalPlayer
-local breakablesFrontend = getsenv(player.PlayerScripts.Scripts.Game["Breakables Frontend"])
-local petmenager = getsenv(player.PlayerScripts.Scripts.Game.Pets["Pet Replication Manager"])
-task.wait()
-petmenager.updateUnspawnedPets = function(...)
-end
-task.wait()
-breakablesFrontend.updateBreakable = function(...)
-end
-task.wait()
-breakablesFrontend.startGlowAnimationTask = function(...)
-end
-task.wait()
-breakablesFrontend.startBillboardTask = function(...)
-end
-task.wait()
-
---------------------
-
-task.wait(1)
---------------------
-local library = require(game.ReplicatedStorage.Library.Client.Save)
-local save = library.Get().EquippedPets
-local response
-local updatedPets = {}
-local function updatePets()
-    updatedPets = {}
-    for petName in pairs(save) do
-        table.insert(updatedPets, petName)
+    -- breakotpimization boost fps ;)
+    local player = game.Players.LocalPlayer
+    local breakablesFrontend = getsenv(player.PlayerScripts.Scripts.Game["Breakables Frontend"])
+    local petmenager = getsenv(player.PlayerScripts.Scripts.Game.Pets["Pet Replication Manager"])
+    task.wait()
+    petmenager.updateUnspawnedPets = function(...)
     end
-end
-updatePets()
-task.spawn(function()
-    while true do
-        updatePets()
-        task.wait(60)
+    task.wait()
+    breakablesFrontend.updateBreakable = function(...)
     end
-end)
-local activeObjects = {}
-local function updateActiveObjects()
-    activeObjects = {}
-    for _, obj in ipairs(workspace.__THINGS.Breakables:GetChildren()) do
-        if obj:IsA("Model") and obj:GetAttribute("BreakableID") and obj:GetAttribute("BreakableUID") then
-            table.insert(activeObjects, {
-                id = obj:GetAttribute("BreakableID"),
-                uid = obj:GetAttribute("BreakableUID"),
-                instance = obj
-            })
+    task.wait()
+    breakablesFrontend.startGlowAnimationTask = function(...)
+    end
+    task.wait()
+    breakablesFrontend.startBillboardTask = function(...)
+    end
+    task.wait()
+
+    --------------------
+
+    task.wait(1)
+    --------------------
+    local library = require(game.ReplicatedStorage.Library.Client.Save)
+    local save = library.Get().EquippedPets
+    local response
+    local updatedPets = {}
+    local function updatePets()
+        updatedPets = {}
+        for petName in pairs(save) do
+            table.insert(updatedPets, petName)
         end
     end
-    table.sort(activeObjects, function(a, b)
-        local isAChest = string.find(string.lower(a.id), "chest")
-        local isBChest = string.find(string.lower(b.id), "chest")
-        if isAChest and not isBChest then
-            return true
-        elseif not isAChest and isBChest then
-            return false
-        else
-            return a.id < b.id
-        end
-    end)
-end
-local function processObjects()
-    for _, obj in ipairs(activeObjects) do
-        local args = {}
-        for _, petName in ipairs(updatedPets) do
-            args[petName] = tonumber(obj.uid)
-        end
-        game:GetService("ReplicatedStorage")
-            :WaitForChild("Network")
-            :WaitForChild("Breakables_JoinPetBulk")
-            :FireServer(args)
-        while true do
-            task.wait(0.1)
-            local breakable = workspace.__THINGS.Breakables:FindFirstChild(tostring(obj.uid))
-            if not breakable then
-                break
-            end
-        end
-    end
-end
-task.spawn(function()
-    while true do
-        updateActiveObjects()
-        processObjects()
-        task.wait(.5)
-    end
-end)
-------------------------
-
-task.wait(1)
------------------
-local function Machines()
+    updatePets()
     task.spawn(function()
         while true do
-            for i = 1,6 do
-                repeat
-                    pcall(function()
-                        response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("CustomMerchants_Purchase"):InvokeServer("IceFishingMerchant",i)
-                    end)
-                    task.wait(1)
-                until response == false
-            end
-            task.wait(120)
+            updatePets()
+            task.wait(60)
         end
     end)
-    task.spawn(function()
-        while true do
-            for i = 1,6 do
-                repeat
-                    pcall(function()
-                        response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Merchant_RequestPurchase"):InvokeServer("AdvancedIndexMerchant", i)
-                    end)
-                    task.wait(1)
-                until response == false
+    local activeObjects = {}
+    local function updateActiveObjects()
+        activeObjects = {}
+        for _, obj in ipairs(workspace.__THINGS.Breakables:GetChildren()) do
+            if obj:IsA("Model") and obj:GetAttribute("BreakableID") and obj:GetAttribute("BreakableUID") then
+                table.insert(activeObjects, {
+                    id = obj:GetAttribute("BreakableID"),
+                    uid = obj:GetAttribute("BreakableUID"),
+                    instance = obj
+                })
             end
-            task.wait(120)
         end
-    end)
-    task.spawn(function()
-        while true do
-            for i = 1,6 do
-                repeat
-                    task.wait(1)
-                    pcall(function()
-                        response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("CustomMerchants_Purchase"):InvokeServer("StandardMerchant", i)
-                    end)
-
-                until response == false
+        table.sort(activeObjects, function(a, b)
+            local isAChest = string.find(string.lower(a.id), "chest")
+            local isBChest = string.find(string.lower(b.id), "chest")
+            if isAChest and not isBChest then
+                return true
+            elseif not isAChest and isBChest then
+                return false
+            else
+                return a.id < b.id
             end
-            task.wait(120)
-        end
-    end)
-    task.spawn(function()
-        while true do
-            for i = 1,6 do
-                repeat
-                    task.wait(1)
-                    pcall(function()
-                        response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("CustomMerchants_Purchase"):InvokeServer("FishingMerchant",i)
-                    end)
-                until response == false
+        end)
+    end
+    local function processObjects()
+        for _, obj in ipairs(activeObjects) do
+            local args = {}
+            for _, petName in ipairs(updatedPets) do
+                args[petName] = tonumber(obj.uid)
             end
-            task.wait(120)
-        end
-    end)
-end
-Machines()
------------------------
-task.wait(1)
------------------------
-local library = require(game.ReplicatedStorage.Library.Client.Save)
-local save2 = library.Get()
-local function main()
-    local breakablesFrontend = getupvalues(require(game:GetService("ReplicatedStorage").Library.Client.EffectCmds).GetBest)
-    local allPotions = {
-        "Lucky Potion", "Coins Potion", "Breakables Potion", "Faster Rolls Potion",
-        "Items Potion", "Walkspeed Potion", "The Cocktail",
-    }
-    local potionStatus = {}
-    for i, v in pairs(breakablesFrontend[3]) do
-        for z, y in pairs(v) do
-            for it, _ in pairs(y) do
-                if it == 1 then
-                    potionStatus[i] = { rarity = z }
+            game:GetService("ReplicatedStorage")
+                :WaitForChild("Network")
+                :WaitForChild("Breakables_JoinPetBulk")
+                :FireServer(args)
+            while true do
+                task.wait(0.1)
+                local breakable = workspace.__THINGS.Breakables:FindFirstChild(tostring(obj.uid))
+                if not breakable then
+                    break
                 end
             end
         end
     end
-    for _, potionName in ipairs(allPotions) do
-        local currentRarity = potionStatus[potionName] and potionStatus[potionName].rarity
-        local maxRarityInInventory = nil
-        local itemId = nil
-        for _, item in pairs(save2.Inventory.Consumable) do
-            if item.id == potionName then
-                if not maxRarityInInventory or item.tn > maxRarityInInventory then
-                    maxRarityInInventory = item.tn
-                    itemId = _
+    task.spawn(function()
+        while true do
+            updateActiveObjects()
+            processObjects()
+            task.wait(.5)
+        end
+    end)
+    ------------------------
+
+    task.wait(1)
+    -----------------
+    local function Machines()
+        task.spawn(function()
+            while true do
+                for i = 1,6 do
+                    repeat
+                        pcall(function()
+                            response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("CustomMerchants_Purchase"):InvokeServer("IceFishingMerchant",i)
+                        end)
+                        task.wait(1)
+                    until response == false
+                end
+                task.wait(120)
+            end
+        end)
+        task.spawn(function()
+            while true do
+                for i = 1,6 do
+                    repeat
+                        pcall(function()
+                            response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Merchant_RequestPurchase"):InvokeServer("AdvancedIndexMerchant", i)
+                        end)
+                        task.wait(1)
+                    until response == false
+                end
+                task.wait(120)
+            end
+        end)
+        task.spawn(function()
+            while true do
+                for i = 1,6 do
+                    repeat
+                        task.wait(1)
+                        pcall(function()
+                            response = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("CustomMerchants_Purchase"):InvokeServer("StandardMerchant", i)
+                        end)
+
+                    until response == false
+                end
+                task.wait(120)
+            end
+        end)
+    end
+    Machines()
+    -----------------------
+    task.wait(1)
+    -----------------------
+    local library = require(game.ReplicatedStorage.Library.Client.Save)
+    local save2 = library.Get()
+    local function main()
+        local breakablesFrontend = getupvalues(require(game:GetService("ReplicatedStorage").Library.Client.EffectCmds).GetBest)
+        local allPotions = {
+            "Lucky Potion", "Coins Potion", "Breakables Potion", "Faster Rolls Potion",
+            "Items Potion", "Walkspeed Potion", "The Cocktail",
+        }
+        local potionStatus = {}
+        for i, v in pairs(breakablesFrontend[3]) do
+            for z, y in pairs(v) do
+                for it, _ in pairs(y) do
+                    if it == 1 then
+                        potionStatus[i] = { rarity = z }
+                    end
                 end
             end
         end
-        if maxRarityInInventory and (not currentRarity or maxRarityInInventory > currentRarity) then
-            if itemId then
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Consumables_Consume"):InvokeServer(itemId,1)
-                task.wait(1)
+        for _, potionName in ipairs(allPotions) do
+            local currentRarity = potionStatus[potionName] and potionStatus[potionName].rarity
+            local maxRarityInInventory = nil
+            local itemId = nil
+            for _, item in pairs(save2.Inventory.Consumable) do
+                if item.id == potionName then
+                    if not maxRarityInInventory or item.tn > maxRarityInInventory then
+                        maxRarityInInventory = item.tn
+                        itemId = _
+                    end
+                end
+            end
+            if maxRarityInInventory and (not currentRarity or maxRarityInInventory > currentRarity) then
+                if itemId then
+                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Consumables_Consume"):InvokeServer(itemId,1)
+                    task.wait(1)
+                else
+                    task.wait()
+                end
             else
                 task.wait()
             end
-        else
-            task.wait()
+
         end
-
     end
-end
-spawn(function()
-    while true do
-        main()
-        task.wait(30)
-    end
-end)
----------------------
-
-task.wait(1)
-
-----------------------------
-local library = require(game.ReplicatedStorage.Library.Client.Save)
-local save2 = library.Get()
-local ConfigFruit = {
-    "Watermelon",
-    "Apple",
-    "Pineapple",
-    "Orange",
-    "Banana",
-    "Rainbow",
-}
-local firstRun = true
-local function AutoFruit()
     spawn(function()
         while true do
-            if save2.Inventory.Fruit then
-                if firstRun then
-                    for i = 1, 25 do
+            main()
+            task.wait(30)
+        end
+    end)
+    ---------------------
+
+    task.wait(1)
+
+    ----------------------------
+    local library = require(game.ReplicatedStorage.Library.Client.Save)
+    local save2 = library.Get()
+    local ConfigFruit = {
+        "Watermelon",
+        "Apple",
+        "Pineapple",
+        "Orange",
+        "Banana",
+        "Rainbow",
+    }
+    local firstRun = true
+    local function AutoFruit()
+        spawn(function()
+            while true do
+                if save2.Inventory.Fruit then
+                    if firstRun then
+                        for i = 1, 25 do
+                            for id, v in pairs(save2.Inventory.Fruit) do
+                                for _, fruit in pairs(ConfigFruit) do
+                                    if v.id == fruit then
+                                        game.ReplicatedStorage.Network["Fruits: Consume"]:InvokeServer(id, 1)
+                                        task.wait(1)
+                                    end
+                                end
+                            end
+                        end
+                        firstRun = false
+                    else
                         for id, v in pairs(save2.Inventory.Fruit) do
                             for _, fruit in pairs(ConfigFruit) do
                                 if v.id == fruit then
@@ -382,22 +383,13 @@ local function AutoFruit()
                             end
                         end
                     end
-                    firstRun = false
+                    task.wait(60)
                 else
-                    for id, v in pairs(save2.Inventory.Fruit) do
-                        for _, fruit in pairs(ConfigFruit) do
-                            if v.id == fruit then
-                                game.ReplicatedStorage.Network["Fruits: Consume"]:InvokeServer(id, 1)
-                                task.wait(1)
-                            end
-                        end
-                    end
+                    task.wait(60)
                 end
-                task.wait(60)
-            else
-                task.wait(60)
             end
-        end
-    end)
+        end)
+    end
+    AutoFruit()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.MAP.INTERACT.FishingPads.Ice.PadGlow.CFrame
 end
-AutoFruit()
