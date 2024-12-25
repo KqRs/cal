@@ -23,37 +23,12 @@ else
     ---------------
     task.wait(1)
     --------------
-    local ScreenGui = Instance.new("ScreenGui")
-    local ToggleButton = Instance.new("TextButton")
-    ScreenGui.Name = "EggsRollToggle"
-    ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-    ToggleButton.Name = "ToggleButton"
-    ToggleButton.Parent = ScreenGui
-    ToggleButton.Size = UDim2.new(0, 200, 0, 50)
-    ToggleButton.Position = UDim2.new(0.5, -100, 0.5, -25)
-    ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    ToggleButton.Text = "Toggle: OFF"
-    ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    ToggleButton.Font = Enum.Font.SourceSans
-    ToggleButton.TextSize = 24
-    local isToggled = false
-    local function rollEggs()
-        while isToggled do
+    spawn(function()
+        while true do
             pcall(function()
                 game.ReplicatedStorage.Network["Eggs_Roll"]:InvokeServer()
                 task.wait(0.15)
             end)
-        end
-    end
-    ToggleButton.MouseButton1Click:Connect(function()
-        isToggled = not isToggled
-        if isToggled then
-            ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-            ToggleButton.Text = "Toggle: ON"
-            task.spawn(rollEggs) -- Запуск функции в отдельном потоке
-        else
-            ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-            ToggleButton.Text = "Toggle: OFF"
         end
     end)
     -----------------
@@ -391,5 +366,5 @@ else
         end)
     end
     AutoFruit()
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.MAP.INTERACT.FishingPads.Ice.PadGlow.CFrame
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.WORKSHOP2024.INTERACT.FishingPads.Ice.Pad
 end
