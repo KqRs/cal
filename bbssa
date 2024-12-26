@@ -366,5 +366,5 @@ else
         end)
     end
     AutoFruit()
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.WORKSHOP2024.INTERACT.FishingPads.Ice.Pad
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.WORKSHOP2024.INTERACT.FishingPads.Ice.Pad.CFrame
 end
