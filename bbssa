@@ -48,7 +48,7 @@ local function rollEggs()
     while isToggled do
         local success, err = pcall(function()
             game.ReplicatedStorage.Network["Eggs_Roll"]:InvokeServer()
-            task.wait(0.2)
+            task.wait(0.1)
         end)
         if not success then
             warn("Error invoking Eggs_Roll: " .. tostring(err))
