@@ -38,20 +38,24 @@ ToggleButton.Name = "ToggleButton"
 ToggleButton.Parent = ScreenGui
 ToggleButton.Size = UDim2.new(0, 200, 0, 50)
 ToggleButton.Position = UDim2.new(0.5, -100, 0.5, -25)
-ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-ToggleButton.Text = "Toggle: OFF"
+ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+ToggleButton.Text = "Toggle: ON"
 ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 ToggleButton.Font = Enum.Font.SourceSans
 ToggleButton.TextSize = 24
 local isToggled = true
 local function rollEggs()
     while isToggled do
-        pcall(function()
+        local success, err = pcall(function()
             game.ReplicatedStorage.Network["Eggs_Roll"]:InvokeServer()
-            task.wait(0.1)
+            task.wait(0.2)
         end)
+        if not success then
+            warn("Error invoking Eggs_Roll: " .. tostring(err))
+        end
     end
 end
+task.spawn(rollEggs)
 ToggleButton.MouseButton1Click:Connect(function()
     isToggled = not isToggled
     if isToggled then
@@ -63,6 +67,7 @@ ToggleButton.MouseButton1Click:Connect(function()
         ToggleButton.Text = "Toggle: OFF"
     end
 end)
+
 -----------------
 
 task.wait(1)
