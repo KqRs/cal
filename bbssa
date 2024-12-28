@@ -323,7 +323,7 @@ local function Machines()
                     task.wait(1)
                 until response == false
             end
-            task.wait(120)
+            task.wait(60)
         end
     end)
     task.spawn(function()
@@ -363,7 +363,7 @@ local function Machines()
                     end)
                 until response == false
             end
-            task.wait(120)
+            task.wait(100)
         end
     end)
 end
