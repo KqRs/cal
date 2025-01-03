@@ -89,8 +89,8 @@ local breakablesFrontend = getsenv(game:GetService("Players").LocalPlayer.Player
 breakablesFrontend.cast = function(...)
 end
 
-game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Process Pending GUI"].Enable = false
-game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Purchase Pending GUI"].Enable = false
+game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Process Pending GUI"].Enabled = false
+game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Purchase Pending GUI"].Enabled = false
 ------------------
 
 task.wait(1)
