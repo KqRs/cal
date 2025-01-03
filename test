@@ -12,7 +12,7 @@ repeat
 until game:GetService("Players").LocalPlayer and game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
 if game.PlaceId == 17503543197 then
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Events.Christmas2024["Polar Express"].Enabled = false
-    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.__THINGS.Instances.HolidayEvent.Teleports.Enter.CFrame
+    --game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.__THINGS.Instances.HolidayEvent.Teleports.Enter.CFrame
     task.wait(120)
     game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(2615.27588, 16.2414665, -20874.6172)
     task.wait(10)
