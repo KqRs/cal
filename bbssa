@@ -88,6 +88,9 @@ task.wait()
 local breakablesFrontend = getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Fishing)
 breakablesFrontend.cast = function(...)
 end
+
+game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Process Pending GUI"].Enable = false
+game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Purchase Pending GUI"].Enable = false
 ------------------
 
 task.wait(1)
@@ -614,4 +617,38 @@ end
 
 task.spawn(function()
     farmProcess()
+end)
+
+
+local library = require(game.ReplicatedStorage.Library.Client.Save)
+local save2 = library.Get()
+
+local function usestuf()
+    for uid, item in pairs(save2.Inventory.Lootbox) do
+        if item.id == "Basic Mining Chest" or item.id == "Rare Mining Chest" or item.id == "Epic Mining Chest" or item.id == "Bundle O' Boosts" then
+            if item._am > 50 then
+                local amount = math.floor(item._am / 50)
+                for i = 1, amount do
+                    pcall(function()
+                        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Lootbox: Open"):InvokeServer(uid,50)
+                        task.wait(.5)
+                    end)
+                end
+            else
+                pcall(function()
+                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Lootbox: Open"):InvokeServer(uid,item._am)
+                end)
+            end
+        end
+    end
+    for uid, item in pairs(save2.Inventory.Consumable) do
+        if item.id == "Mining Damage Scroll" or item.id == "Mining Loot Scroll" or item.id == "Mining Speed Scroll" then
+            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Consumables_Consume"):InvokeServer(uid, (item._am or 1))
+            task.wait(1)
+        end
+    end
+end
+spawn(function()
+    usestuf()
+    task.wait(300)
 end)
