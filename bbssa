@@ -550,7 +550,7 @@ end
 local function getOreAmount(inventory, oreName)
     for _, item in pairs(inventory) do
         if item.id == oreName then
-            return item._am
+            return item._am or 1
         end
     end
     return 0
@@ -623,7 +623,7 @@ local function usestuf()
                 end
             else
                 pcall(function()
-                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Lootbox: Open"):InvokeServer(uid,item._am)
+                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Lootbox: Open"):InvokeServer(uid,(item._am or 1))
                 end)
             end
         end
