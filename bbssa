@@ -210,15 +210,31 @@ end)
 local activeObjects = {}
 local function updateActiveObjects()
     activeObjects = {}
+    local excludedIds = {
+        ["Obsidian Ore"] = true,
+        ["Runic Ore"] = true,
+        ["Bronze Ore"] = true,
+        ["Iron Ore"] = true,
+        ["Dirt Ore"] = true,
+        ["Stone Ore"] = true,
+        ["Gold Ore"] = true,
+        ["Emerald Ore"] = true,
+    }
+
     for _, obj in ipairs(workspace.__THINGS.Breakables:GetChildren()) do
         if obj:IsA("Model") and obj:GetAttribute("BreakableID") and obj:GetAttribute("BreakableUID") then
-            table.insert(activeObjects, {
-                id = obj:GetAttribute("BreakableID"),
-                uid = obj:GetAttribute("BreakableUID"),
-                instance = obj
-            })
+            local id = obj:GetAttribute("BreakableID")
+            if not excludedIds[id] then
+                table.insert(activeObjects, {
+                    id = id,
+                    uid = obj:GetAttribute("BreakableUID"),
+                    instance = obj
+                })
+            end
         end
     end
+
+    -- Сортируем объекты, чтобы первыми шли сундуки
     table.sort(activeObjects, function(a, b)
         local isAChest = string.find(string.lower(a.id), "chest")
         local isBChest = string.find(string.lower(b.id), "chest")
@@ -231,6 +247,7 @@ local function updateActiveObjects()
         end
     end)
 end
+
 local function processObjects()
     for _, obj in ipairs(activeObjects) do
         local args = {}
