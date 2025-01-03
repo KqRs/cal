@@ -511,10 +511,14 @@ if workspace.MAP.INTERACT.MiningPads then
     for _, value in pairs(workspace.MAP.INTERACT.MiningPads:GetChildren()) do
         local spotUID = value:GetAttribute("SpotUID")
         if spotUID then
-            oreindex[value.Name] = spotUID
+            if not oreindex[value.Name] then
+                oreindex[value.Name] = {}
+            end
+            table.insert(oreindex[value.Name], spotUID)
         end
     end
 end
+
 
 local pickaxeRequirements = {
     ["Wooden Pickaxe"] = {"Dirt Ore", "Stone Ore"},
@@ -529,11 +533,9 @@ local function canMineOre(pickaxe, oreName)
     end
 
     local ores = pickaxeRequirements[pickaxe]
-    if ores then
-        for _, ore in ipairs(ores) do
-            if ore == oreName then
-                return true
-            end
+    for _, ore in ipairs(ores) do
+        if ore == oreName then
+            return true
         end
     end
 
@@ -556,28 +558,21 @@ end
 
 local function farmOre(spotUID)
     local args = { [1] = spotUID }
-    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mining_Attack"):InvokeServer(unpack(args))
-    task.wait(0.2)
+    pcall(function()
+        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mining_Attack"):InvokeServer(unpack(args))
+        task.wait()
+    end)
 end
 
 local breakablesFrontend = require(game:GetService("ReplicatedStorage").Library.Util.MiningUtil)
 local bestPickaxe = breakablesFrontend.GetBestPickaxe()._id
 
 local function farmProcess()
-    local obsidianUID = oreindex["Obsidian Ore"]
-    local runicUID = oreindex["Runic Ore"]
-    local nonSpecialOres = {}
-
-    for oreName, spotUID in pairs(oreindex) do
-        if oreName ~= "Obsidian Ore" and oreName ~= "Runic Ore" and canMineOre(bestPickaxe, oreName) then
-            table.insert(nonSpecialOres, { name = oreName, uid = spotUID })
-        end
-    end
-
     local inventory = getInventoryData()
     local lastUpdate = os.clock()
 
     while true do
+        -- Обновляем данные инвентаря каждые 10 секунд
         if os.clock() - lastUpdate >= 10 then
             inventory = getInventoryData()
             lastUpdate = os.clock()
@@ -585,56 +580,31 @@ local function farmProcess()
 
         local allMaxed = true
 
-        for _, ore in ipairs(nonSpecialOres) do
-            local amount = getOreAmount(inventory, ore.name)
-            if amount < 1000 then
-                farmOre(ore.uid)
-                allMaxed = false
+        for oreName, spotUIDs in pairs(oreindex) do
+            if canMineOre(bestPickaxe, oreName) then
+                local amount = getOreAmount(inventory, oreName)
+                if amount < 1000 then
+                    for _, spotUID in ipairs(spotUIDs) do
+                        farmOre(spotUID)
+                    end
+                    allMaxed = false
+                end
             end
         end
 
+        -- Если все руды достигли максимума, делаем паузу перед следующей проверкой
         if allMaxed then
-            break
+            task.wait(1)
         end
-
-        task.wait(0.5)
-    end
-
-    while true do
-        if os.clock() - lastUpdate >= 10 then
-            inventory = getInventoryData()
-            lastUpdate = os.clock()
-        end
-
-        local underMin = false
-
-        for _, ore in ipairs(nonSpecialOres) do
-            local amount = getOreAmount(inventory, ore.name)
-            if amount < 100 then
-                underMin = true
-                break
-            end
-        end
-
-        if underMin then
-            break
-        end
-
-        if obsidianUID then
-            farmOre(obsidianUID)
-        end
-
-        if runicUID then
-            farmOre(runicUID)
-        end
-
-        task.wait(0.2)
     end
 end
 
+
+-- Запуск основного процесса
 task.spawn(function()
     farmProcess()
 end)
+
 
 
 local library = require(game.ReplicatedStorage.Library.Client.Save)
