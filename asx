@@ -66,6 +66,9 @@ getgenv().ItemToMail = {
     ["Instant Luck Potion"] = {tn = 4, amount = 150},
     ["God Potion"] = {tn = 1, amount = 1},
     ["Tech Gift"] = {amount = 250},
+    ["Titanic Charge Token"] = {amount = 100},
+    ["Huge Charge Token"] = {amount = 250},
+    ["Charge Token"] = {amount = 1000}
 }
 
 
