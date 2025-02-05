@@ -1,4 +1,4 @@
-getgenv().PeopleForMail = "2bjce3ao"
+getgenv().PeopleForMail = "yta1y8ho"
 getgenv().ItemToMail = {
     -- ["Item Name"] = {tn = required tier number (optional), amount = amount to send},
     ["Crystal Key Upper Half"] = {amount = 50},
