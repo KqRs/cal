@@ -21,6 +21,10 @@ getgenv().ItemToMail = {
     ["Blizzard Potion"] = {tn = 1, amount = 3000},
     ["Lightning Potion"] = {tn = 1, amount = 2000},
     ["Hype Egg"] = {amount = 1},
+    ["Valentines God Potion"] = {tn = 1, amount = 1},
+    ["Golden Boardgame Dice"] = {tn = 1, amount = 500},
+    ["Rainbow Boardgame Dice"] = {tn = 1, amount = 150},
+    ["Cupids Egg"] = {amount = 500},
 }
 
 
