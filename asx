@@ -28,6 +28,8 @@ getgenv().ItemToMail = {
     ["Cupids Egg"] = {amount = 50000},
     ["Diamonds"] = {amount = 20000000},
     ["Valentines Present"] = {amount = 50},
+    ["Heartbreak Egg"] = {amount = 5000},
+    ["Heartbreak Present"] = {amount = 10},
 }
 
 
