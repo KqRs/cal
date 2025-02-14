@@ -1,36 +1,37 @@
 getgenv().PeopleForMail = "fishQrs2"
 getgenv().ItemToMail = {
-    -- ["Item Name"] = {tn = required tier number (optional), amount = amount to send},
-
+    --regular
     ["Crystal Key Upper Half"] = {amount = 1000},
-    ["Crystal Key Lower Half"] = {amount = 1000},
+    ["Crystal Key Lower Half"] = {amount = 10},
     ["Legendary Mining Chest"] = {amount = 5000},
     ["Celestial Mining Chest"] = {amount = 500},
     ["Runic Mining Chest"] = {amount = 250},
     ["Legendary Enchant Safe"] = {amount = 10},
     ["Celestial Enchant Safe"] = {amount = 1},
     ["Exclusive Enchant Safe"] = {amount = 1},
-    --["Magma Egg"] = {amount = 1000},
     ["Abyssal Treasure Chest"] = {amount = 200},
     ["Corrupted Huge Bait"] = {tn = 1, amount = 1000},
+    
+
+    --consumable
     ["Instant Luck Potion"] = {tn = 4, amount = 2000},
     ["God Potion"] = {tn = 1, amount = 1},
-    --["Tech Gift"] = {amount = 250},
-    --["Titanic Charge Token"] = {amount = 100},
-    --["Huge Charge Token"] = {amount = 250},
-    --["Charge Token"] = {amount = 1000},
+    ["Heartbreak God Potion"] = {tn = 1, amount = 5},
+    ["Valentines God Potion"] = {tn = 1, amount = 5},
     ["Blizzard Potion"] = {tn = 1, amount = 3000},
     ["Lightning Potion"] = {tn = 1, amount = 2000},
+
+    --gift/egg
     ["Hype Egg"] = {amount = 1},
-    ["Valentines God Potion"] = {tn = 1, amount = 10},
-    --["Golden Boardgame Dice"] = {tn = 1, amount = 500},
-    --["Rainbow Boardgame Dice"] = {tn = 1, amount = 150},
-    ["Cupids Egg"] = {amount = 50000},
-    ["Diamonds"] = {amount = 20000000},
-    ["Valentines Present"] = {amount = 50},
+    ["Cupids Egg"] = {amount = 50},
     ["Heartbreak Egg"] = {amount = 5000},
+    ["Valentines Present"] = {amount = 1},
     ["Heartbreak Present"] = {amount = 10},
     ["Valentines Spinny Wheel Ticket"] = {amount = 5},
+
+    --other
+    ["Diamonds"] = {amount = 20000000},
+
 }
 
 
