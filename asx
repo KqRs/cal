@@ -2,7 +2,7 @@ getgenv().timewaitformail = 5
 getgenv().PeopleForMail = "fishQrs2"
 getgenv().ItemToMail = {
     --regular
-    ["Crystal Key Upper Half"] = {amount = 1000},
+    ["Crystal Key Upper Half"] = {amount = 1500},
     ["Crystal Key Lower Half"] = {amount = 10},
     ["Legendary Mining Chest"] = {amount = 5000},
     ["Celestial Mining Chest"] = {amount = 500},
@@ -10,8 +10,8 @@ getgenv().ItemToMail = {
     ["Legendary Enchant Safe"] = {amount = 10},
     ["Celestial Enchant Safe"] = {amount = 1},
     ["Exclusive Enchant Safe"] = {amount = 1},
-    ["Abyssal Treasure Chest"] = {amount = 200},
-    ["Corrupted Huge Bait"] = {tn = 1, amount = 1000},
+    ["Abyssal Treasure Chest"] = {amount = 250},
+    ["Corrupted Huge Bait"] = {tn = 1, amount = 2000},
     
 
     --consumable
@@ -25,9 +25,9 @@ getgenv().ItemToMail = {
     --gift/egg
     ["Hype Egg"] = {amount = 1},
     ["Cupids Egg"] = {amount = 50},
-    ["Heartbreak Egg"] = {amount = 5000},
-    ["Valentines Present"] = {amount = 1},
-    ["Heartbreak Present"] = {amount = 10},
+    ["Heartbreak Egg"] = {amount = 100000},
+    ["Valentines Present"] = {amount = 100},
+    ["Heartbreak Present"] = {amount = 100},
     ["Valentines Spinny Wheel Ticket"] = {amount = 5},
 
     --other
