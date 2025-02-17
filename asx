@@ -2,8 +2,8 @@ getgenv().timewaitformail = 5
 getgenv().PeopleForMail = "fishQrs2"
 getgenv().ItemToMail = {
     --regular
-    ["Crystal Key Upper Half"] = {amount = 1500},
-    ["Crystal Key Lower Half"] = {amount = 10},
+    ["Crystal Key Upper Half"] = {amount = 5},
+    ["Crystal Key Lower Half"] = {amount = 1500},
     ["Legendary Mining Chest"] = {amount = 5000},
     ["Celestial Mining Chest"] = {amount = 500},
     ["Runic Mining Chest"] = {amount = 250},
