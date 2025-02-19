@@ -18,8 +18,8 @@ getgenv().ItemToMail = {
     ["God Potion"] = {tn = 1, amount = 1},
     ["Heartbreak God Potion"] = {tn = 1, amount = 1},
     ["Valentines God Potion"] = {tn = 1, amount = 1},
-    --["Blizzard Potion"] = {tn = 1, amount = 30},
-    --["Lightning Potion"] = {tn = 1, amount = 20},
+    ["Blizzard Potion"] = {tn = 1, amount = 30},
+    ["Lightning Potion"] = {tn = 1, amount = 20},
 
     --gift/egg
     ["Tech Gift"] = {amount = 1},
