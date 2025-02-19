@@ -1,8 +1,8 @@
 getgenv().PeopleForMail = "CaplerXasan32"
 getgenv().ItemToMail = {
     --regular
-    ["Crystal Key Upper Half"] = {amount = 50},
-    ["Crystal Key Lower Half"] = {amount = 1},
+    ["Crystal Key Upper Half"] = {amount = 1},
+    ["Crystal Key Lower Half"] = {amount = 50},
     ["Legendary Mining Chest"] = {amount = 500},
     ["Celestial Mining Chest"] = {amount = 100},
     ["Runic Mining Chest"] = {amount = 25},
