@@ -12,6 +12,8 @@ getgenv().ItemToMail = {
     ["Exclusive Enchant Safe"] = {amount = 1},
     ["Abyssal Treasure Chest"] = {amount = 250},
     ["Corrupted Huge Bait"] = {tn = 1, amount = 2000},
+    ["Legendary Thieving Chest"] = {amount = 20},
+    ["Exotic Thieving Chest"] = {amount = 10},
     
 
     --consumable
@@ -29,6 +31,10 @@ getgenv().ItemToMail = {
     ["Valentines Present"] = {amount = 100},
     ["Heartbreak Present"] = {amount = 100},
     ["Valentines Spinny Wheel Ticket"] = {amount = 5},
+    ["1x Thieving Egg"] = {amount = 1000},
+    ["10x Thieving Egg"] = {amount = 500},
+    ["100x Thieving Egg"] = {amount = 50},
+    ["10,000x Thieving Egg"] = {amount = 10},
 
     --other
     ["Diamonds"] = {amount = 20000000},
