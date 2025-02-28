@@ -13,6 +13,7 @@ getgenv().ItemToMail = {
     ["Corrupted Huge Bait"] = {tn = 1, amount = 200},
     ["Legendary Thieving Chest"] = {amount = 10},
     ["Exotic Thieving Chest"] = {amount = 1},
+    ["Vault Key"] = {amount = 1},
     
 
     --consumable
