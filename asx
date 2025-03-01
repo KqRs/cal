@@ -27,7 +27,7 @@ getgenv().ItemToMail = {
     ["10,000x Thieving Egg"] = {amount = 10},
     ["Hacker Egg"] = {amount = 1000},
 
-    ["Emerald"] = {amount = 1},
+    --["Emerald"] = {amount = 1},
     ["Diamond"] = {amount = 1},
 
     --other
