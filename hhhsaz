@@ -30,7 +30,7 @@ getgenv().ItemToMail = {
     ["Hacker Egg"] = {amount = 50},
 
     --Lockpick
-    ["Emerald"] = {amount = 1},
+    --["Emerald"] = {amount = 1},
     ["Diamond"] = {amount = 1},
 
     --other
