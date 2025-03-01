@@ -13,24 +13,21 @@ getgenv().ItemToMail = {
     ["Corrupted Huge Bait"] = {tn = 1, amount = 2000},
     ["Legendary Thieving Chest"] = {amount = 20},
     ["Exotic Thieving Chest"] = {amount = 10},
-    
+    ["Vault Key"] = {amount = 50},
 
     --consumable
     ["Instant Luck Potion"] = {tn = 4, amount = 2000},
     ["God Potion"] = {tn = 1, amount = 1},
-    ["Heartbreak God Potion"] = {tn = 1, amount = 5},
-    ["Valentines God Potion"] = {tn = 1, amount = 5},
     ["Blizzard Potion"] = {tn = 1, amount = 3000},
     ["Lightning Potion"] = {tn = 1, amount = 2000},
 
     --gift/egg
     ["Hype Egg"] = {amount = 1},
-    ["Cupids Egg"] = {amount = 50},
-    ["Heartbreak Egg"] = {amount = 100000},
-    ["Valentines Present"] = {amount = 100},
-    ["Heartbreak Present"] = {amount = 100},
-    ["Valentines Spinny Wheel Ticket"] = {amount = 5},
     ["10,000x Thieving Egg"] = {amount = 10},
+    ["Hacker Egg"] = {amount = 100},
+
+    ["Emerald"] = {amount = 1},
+    ["Diamond"] = {amount = 1},
 
     --other
     ["Diamonds"] = {amount = 20000000},
