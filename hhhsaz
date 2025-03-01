@@ -1,4 +1,6 @@
 script_key = "hcipDEezVQSbHZvFfnOiKOCPMlOJJCLz";
+getgenv().Webhook_URL = "https://discord.com/api/webhooks/1331205765729357856/7oaGvrTufci-mJltswI2MaO4jYOEqp36CNUNBqUkgunfYinUdCXMr1hptoqiuc5PKYl8"
+getgenv().DiscordId = "651452406974119966"
 getgenv().PeopleForMail = "quizzicaljackal2038"
 getgenv().ItemToMail = {
     --regular
