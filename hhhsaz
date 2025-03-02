@@ -1,5 +1,5 @@
 script_key = "hcipDEezVQSbHZvFfnOiKOCPMlOJJCLz";
-getgenv().PeopleForMail = "quizzicaljackal2038"
+getgenv().PeopleForMail = "Thisc8061"
 getgenv().ItemToMail = {
     --regular
     ["Crystal Key Upper Half"] = {amount = 1},
