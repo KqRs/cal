@@ -1,4 +1,4 @@
-script_key = "hcipDEezVQSbHZvFfnOiKOCPMlOJJCLz";
+script_key = "aMATCglrJCbQTSSWUKhFPPypCgzPmzna";
 getgenv().PeopleForMail = "Blastg1967"
 getgenv().ItemToMail = {
     --regular
