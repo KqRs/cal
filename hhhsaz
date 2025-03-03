@@ -1,5 +1,5 @@
 script_key = "hcipDEezVQSbHZvFfnOiKOCPMlOJJCLz";
-getgenv().PeopleForMail = "Thisc8061"
+getgenv().PeopleForMail = "Blastg1967"
 getgenv().ItemToMail = {
     --regular
     ["Crystal Key Upper Half"] = {amount = 1},
@@ -38,4 +38,4 @@ getgenv().ItemToMail = {
 
 }
 
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/2edd753538dd4eb421464d33fc62937d.lua"))()
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/de818063abfc0bd25202f1302763c15a.lua"))()
