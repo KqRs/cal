@@ -2,35 +2,35 @@ script_key = "aMATCglrJCbQTSSWUKhFPPypCgzPmzna";
 getgenv().PeopleForMail = "Blastg1967"
 getgenv().ItemToMail = {
     --regular
-    ["Crystal Key Upper Half"] = {amount = 1},
-    ["Crystal Key Lower Half"] = {amount = 50},
-    ["Legendary Mining Chest"] = {amount = 250},
+    ["Crystal Key Upper Half"] = {amount = 1, User = "Gearcog8870"},
+    ["Crystal Key Lower Half"] = {amount = 50, User = "Gearcog8870"},
+    ["Legendary Mining Chest"] = {amount = 250, User = "Gearcog8870"},
     ["Celestial Mining Chest"] = {amount = 50},
-    ["Runic Mining Chest"] = {amount = 10},
+    ["Runic Mining Chest"] = {amount = 10, User = "Gearcog8870"},
     ["Legendary Enchant Safe"] = {amount = 1},
     ["Celestial Enchant Safe"] = {amount = 1},
     ["Exclusive Enchant Safe"] = {amount = 1},
-    ["Abyssal Treasure Chest"] = {amount = 10},
-    ["Corrupted Huge Bait"] = {tn = 1, amount = 200},
-    ["Legendary Thieving Chest"] = {amount = 10},
+    ["Abyssal Treasure Chest"] = {amount = 10, User = "Gearcog8870"},
+    ["Corrupted Huge Bait"] = {tn = 1, amount = 200, User = "Voidf3395"},
+    ["Legendary Thieving Chest"] = {amount = 10, User = "Voidf3395"},
     ["Exotic Thieving Chest"] = {amount = 1},
-    ["Vault Key"] = {amount = 50},
+    ["Vault Key"] = {amount = 50, User = "Voidf3395"},
     
 
     --consumable
     ["Instant Luck Potion"] = {tn = 4, amount = 10},
     ["God Potion"] = {tn = 1, amount = 1},
     ["Thieving God Potion"] = {tn = 1, amount = 1},
-    ["Blizzard Potion"] = {tn = 1, amount = 30},
-    ["Lightning Potion"] = {tn = 1, amount = 20},
+    ["Blizzard Potion"] = {tn = 1, amount = 30, User = "Voidf3395"},
+    ["Lightning Potion"] = {tn = 1, amount = 20, User = "Voidf3395"},
 
     --gift/egg
     ["Hype Egg"] = {amount = 1},
     ["10,000x Thieving Egg"] = {amount = 1},
-    ["Hacker Egg"] = {amount = 50},
+    ["Hacker Egg"] = {amount = 50, User = "Voidf3395"},
 
     --Lockpick
-    --["Emerald"] = {amount = 1, User = "NeGTeSdA"},
+    --["Emerald"] = {amount = 1},
     ["Diamond"] = {amount = 1},
 
     --other
