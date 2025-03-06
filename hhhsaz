@@ -2,10 +2,10 @@ script_key = "hcipDEezVQSbHZvFfnOiKOCPMlOJJCLz";
 getgenv().PeopleForMail = "Sparktwi1785"
 getgenv().ItemToMail = {
     --regular
-    ["Crystal Key Upper Half"] = {amount = 1, User = "Doslenn8504"},
+    ["Crystal Key Upper Half"] = {amount = 1},
     ["Crystal Key Lower Half"] = {amount = 50, User = "Doslenn8504"},
     ["Legendary Mining Chest"] = {amount = 250, User = "Doslenn8504"},
-    ["Celestial Mining Chest"] = {amount = 50},
+    ["Celestial Mining Chest"] = {amount = 50, User = "Doslenn8504"},
     ["Runic Mining Chest"] = {amount = 10, User = "Doslenn8504"},
     ["Legendary Enchant Safe"] = {amount = 1},
     ["Celestial Enchant Safe"] = {amount = 1},
