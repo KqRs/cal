@@ -24,6 +24,7 @@ getgenv().ItemToMail = {
     ["Thieving God Potion"] = {tn = 1, amount = 1},
     ["Blizzard Potion"] = {tn = 1, amount = 30, User = "Leezban3901"},
     ["Lightning Potion"] = {tn = 1, amount = 20, User = "Leezban3901"},
+    ["Kraken Tentacle"] = {tn = 1, amount = 20},
 
     --gift/egg
     ["Hype Egg"] = {amount = 1},
@@ -31,8 +32,11 @@ getgenv().ItemToMail = {
     ["Hacker Egg"] = {amount = 50, User = "Leezban3901"},
 
     --Lockpick
-    --["Emerald"] = {amount = 1},
     ["Diamond"] = {amount = 1},
+
+    --Rode
+    ["Deep Sea Fishing Rod"] = {amount = 1},
+    ["Kraken Fishing Rod"] = {amount = 1},
 
     --other
     ["Diamonds"] = {amount = 50000},
