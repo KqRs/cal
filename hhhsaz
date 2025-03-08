@@ -1,6 +1,6 @@
 script_key = "hcipDEezVQSbHZvFfnOiKOCPMlOJJCLz";
 getgenv().CompleteVault = true
-getgenv().PeopleForMail = "Sparktwi1785"
+getgenv().PeopleForMail = "Dekkfli7286"
 getgenv().ItemToMail = {
     --regular
     ["Crystal Key Upper Half"] = {amount = 1},
@@ -25,6 +25,7 @@ getgenv().ItemToMail = {
     ["Blizzard Potion"] = {tn = 1, amount = 30, User = "Leezban3901"},
     ["Lightning Potion"] = {tn = 1, amount = 20, User = "Leezban3901"},
     ["Kraken Tentacle"] = {tn = 1, amount = 20},
+    ["Bucket O' Chum"] = {tn = 1, amount = 1},
 
     --gift/egg
     ["Hype Egg"] = {amount = 1},
