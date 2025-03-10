@@ -1,6 +1,6 @@
 script_key = "hcipDEezVQSbHZvFfnOiKOCPMlOJJCLz";
 getgenv().CompleteVault = true
-getgenv().PeopleForMail = "Dekkfli7286"
+getgenv().PeopleForMail = "Frosshad0258"
 getgenv().ItemToMail = {
     --regular
     ["Crystal Key Upper Half"] = {amount = 1},
