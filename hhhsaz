@@ -1,4 +1,4 @@
-script_key = "hcipDEezVQSbHZvFfnOiKOCPMlOJJCLz";
+script_key = "SdUVkKxBsPcXBmpgDVEfBVIccZKiSaoN";
 getgenv().CompleteVault = true
 getgenv().PeopleForMail = "Frosshad0258"
 getgenv().ItemToMail = {
