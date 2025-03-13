@@ -3,28 +3,26 @@ getgenv().CompleteVault = true
 getgenv().PeopleForMail = "Frosshad0258"
 getgenv().ItemToMail = {
     --regular
-    ["Crystal Key Upper Half"] = {amount = 1},
+    ["Crystal Key Upper Half"] = {amount = 10},
     ["Crystal Key Lower Half"] = {amount = 50, User = "Brikbl0328"},
     ["Legendary Mining Chest"] = {amount = 250, User = "Brikbl0328"},
     ["Celestial Mining Chest"] = {amount = 50, User = "Brikbl0328"},
     ["Runic Mining Chest"] = {amount = 10, User = "Brikbl0328"},
-    ["Legendary Enchant Safe"] = {amount = 1},
+    ["Legendary Enchant Safe"] = {amount = 5},
     ["Celestial Enchant Safe"] = {amount = 1},
     ["Exclusive Enchant Safe"] = {amount = 1},
     ["Abyssal Treasure Chest"] = {amount = 10, User = "Brikbl0328"},
     ["Corrupted Huge Bait"] = {tn = 1, amount = 200, User = "Leezban3901"},
     ["Legendary Thieving Chest"] = {amount = 10, User = "Leezban3901"},
-    ["Exotic Thieving Chest"] = {amount = 1},
-    ["Vault Key"] = {amount = 50, User = "Leezban3901"},
+    ["Exotic Thieving Chest"] = {amount = 5},
     
 
     --consumable
     ["Instant Luck Potion"] = {tn = 4, amount = 10},
     ["God Potion"] = {tn = 1, amount = 1},
-    ["Thieving God Potion"] = {tn = 1, amount = 1},
+    ["Thieving God Potion"] = {tn = 1, amount = 5},
     ["Blizzard Potion"] = {tn = 1, amount = 30, User = "Leezban3901"},
     ["Lightning Potion"] = {tn = 1, amount = 20, User = "Leezban3901"},
-    ["Kraken Tentacle"] = {tn = 1, amount = 20},
     ["Bucket O' Chum"] = {tn = 1, amount = 1},
 
     --gift/egg
