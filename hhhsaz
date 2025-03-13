@@ -12,8 +12,8 @@ getgenv().ItemToMail = {
     ["Celestial Enchant Safe"] = {amount = 1},
     ["Exclusive Enchant Safe"] = {amount = 1},
     ["Abyssal Treasure Chest"] = {amount = 10, User = "Brikbl0328"},
-    ["Corrupted Huge Bait"] = {tn = 1, amount = 200, User = "Leezban3901"},
-    ["Legendary Thieving Chest"] = {amount = 10, User = "Leezban3901"},
+    ["Corrupted Huge Bait"] = {tn = 1, amount = 200, User = "Zapfr4689"},
+    ["Legendary Thieving Chest"] = {amount = 10, User = "Zapfr4689"},
     ["Exotic Thieving Chest"] = {amount = 5},
     
 
@@ -21,14 +21,14 @@ getgenv().ItemToMail = {
     ["Instant Luck Potion"] = {tn = 4, amount = 10},
     ["God Potion"] = {tn = 1, amount = 1},
     ["Thieving God Potion"] = {tn = 1, amount = 5},
-    ["Blizzard Potion"] = {tn = 1, amount = 30, User = "Leezban3901"},
-    ["Lightning Potion"] = {tn = 1, amount = 20, User = "Leezban3901"},
+    ["Blizzard Potion"] = {tn = 1, amount = 30, User = "Zapfr4689"},
+    ["Lightning Potion"] = {tn = 1, amount = 20, User = "Zapfr4689"},
     ["Bucket O' Chum"] = {tn = 1, amount = 1},
 
     --gift/egg
     ["Hype Egg"] = {amount = 1},
     ["10,000x Thieving Egg"] = {amount = 1},
-    ["Hacker Egg"] = {amount = 50, User = "Leezban3901"},
+    ["Hacker Egg"] = {amount = 50, User = "Zapfr4689"},
 
     --Lockpick
     ["Diamond"] = {amount = 1},
