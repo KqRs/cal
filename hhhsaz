@@ -1,19 +1,18 @@
-script_key = "SdUVkKxBsPcXBmpgDVEfBVIccZKiSaoN";
+getgenv().PeopleForMail = "Witkd2273"
 getgenv().CompleteVault = true
-getgenv().PeopleForMail = "Gears5507"
 getgenv().ItemToMail = {
     --regular
     ["Crystal Key Upper Half"] = {amount = 10},
-    ["Crystal Key Lower Half"] = {amount = 50, User = "Brikbl0328"},
-    ["Legendary Mining Chest"] = {amount = 250, User = "Brikbl0328"},
-    ["Celestial Mining Chest"] = {amount = 50, User = "Brikbl0328"},
-    ["Runic Mining Chest"] = {amount = 10, User = "Brikbl0328"},
+    ["Crystal Key Lower Half"] = {amount = 50},
+    ["Legendary Mining Chest"] = {amount = 250},
+    ["Celestial Mining Chest"] = {amount = 50},
+    ["Runic Mining Chest"] = {amount = 10},
     ["Legendary Enchant Safe"] = {amount = 5},
     ["Celestial Enchant Safe"] = {amount = 1},
     ["Exclusive Enchant Safe"] = {amount = 1},
-    ["Abyssal Treasure Chest"] = {amount = 10, User = "Brikbl0328"},
-    ["Corrupted Huge Bait"] = {tn = 1, amount = 200, User = "Zapfr4689"},
-    ["Legendary Thieving Chest"] = {amount = 10, User = "Zapfr4689"},
+    ["Abyssal Treasure Chest"] = {amount = 10},
+    ["Corrupted Huge Bait"] = {tn = 1, amount = 200},
+    ["Legendary Thieving Chest"] = {amount = 10},
     ["Exotic Thieving Chest"] = {amount = 5},
     
 
@@ -21,14 +20,14 @@ getgenv().ItemToMail = {
     ["Instant Luck Potion"] = {tn = 4, amount = 10},
     ["God Potion"] = {tn = 1, amount = 1},
     ["Thieving God Potion"] = {tn = 1, amount = 5},
-    ["Blizzard Potion"] = {tn = 1, amount = 30, User = "Zapfr4689"},
-    ["Lightning Potion"] = {tn = 1, amount = 20, User = "Zapfr4689"},
+    ["Blizzard Potion"] = {tn = 1, amount = 30},
+    ["Lightning Potion"] = {tn = 1, amount = 20},
     ["Bucket O' Chum"] = {tn = 1, amount = 1},
 
     --gift/egg
     ["Hype Egg"] = {amount = 1},
     ["10,000x Thieving Egg"] = {amount = 1},
-    ["Hacker Egg"] = {amount = 50, User = "Zapfr4689"},
+    ["Hacker Egg"] = {amount = 50},
 
     --Lockpick
     ["Diamond"] = {amount = 1},
@@ -41,5 +40,3 @@ getgenv().ItemToMail = {
     ["Diamonds"] = {amount = 50000},
 
 }
-
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/2edd753538dd4eb421464d33fc62937d.lua"))()
