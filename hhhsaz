@@ -1,4 +1,5 @@
 getgenv().PeopleForMail = "Witkd2273"
+getgenv().farmOnlyComet = true
 getgenv().CompleteVault = true
 getgenv().ItemToMail = {
     --regular
@@ -20,14 +21,14 @@ getgenv().ItemToMail = {
     ["Instant Luck Potion"] = {tn = 4, amount = 10},
     ["God Potion"] = {tn = 1, amount = 1},
     ["Thieving God Potion"] = {tn = 1, amount = 5},
-    ["Blizzard Potion"] = {tn = 1, amount = 30},
-    ["Lightning Potion"] = {tn = 1, amount = 20},
     ["Bucket O' Chum"] = {tn = 1, amount = 1},
+    ["Galaxy Potion"] = {tn = 1, amount = 1},
 
     --gift/egg
     ["Hype Egg"] = {amount = 1},
     ["10,000x Thieving Egg"] = {amount = 1},
     ["Hacker Egg"] = {amount = 50},
+    ["Lunar Gift"] = {amount = 1},
 
     --Lockpick
     ["Diamond"] = {amount = 1},
