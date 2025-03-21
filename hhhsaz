@@ -22,7 +22,6 @@ getgenv().ItemToMail = {
     ["God Potion"] = {tn = 1, amount = 1},
     ["Thieving God Potion"] = {tn = 1, amount = 5},
     ["Bucket O' Chum"] = {tn = 1, amount = 1},
-    ["Galaxy Potion"] = {tn = 1, amount = 1},
 
     --gift/egg
     ["Hype Egg"] = {amount = 1},
