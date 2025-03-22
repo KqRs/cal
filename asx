@@ -1,34 +1,34 @@
 getgenv().timewaitformail = 5
 getgenv().ItemToMail = {
     --regular
-    ["Crystal Key Upper Half"] = {amount = 5},
-    ["Crystal Key Lower Half"] = {amount = 1500},
-    ["Legendary Mining Chest"] = {amount = 5000},
-    ["Celestial Mining Chest"] = {amount = 500},
-    ["Runic Mining Chest"] = {amount = 250},
-    ["Legendary Enchant Safe"] = {amount = 10},
+    ["Crystal Key Upper Half"] = {amount = 10000},
+    ["Crystal Key Lower Half"] = {amount = 50000},
+    ["Celestial Mining Chest"] = {amount = 5000},
+    ["Runic Mining Chest"] = {amount = 1000},
+    ["Legendary Enchant Safe"] = {amount = 500},
     ["Celestial Enchant Safe"] = {amount = 1},
     ["Exclusive Enchant Safe"] = {amount = 1},
-    ["Abyssal Treasure Chest"] = {amount = 250},
-    ["Corrupted Huge Bait"] = {tn = 1, amount = 2000},
-    ["Legendary Thieving Chest"] = {amount = 20},
-    ["Exotic Thieving Chest"] = {amount = 10},
-    ["Vault Key"] = {amount = 2500},
+    ["Legendary Thieving Chest"] = {amount = 4000},
+    ["Exotic Thieving Chest"] = {amount = 2000},
+    
 
     --consumable
-    ["Instant Luck Potion"] = {tn = 4, amount = 2000},
-    ["God Potion"] = {tn = 1, amount = 1},
-    ["Thieving God Potion"] = {tn = 1, amount = 5},
-    ["Blizzard Potion"] = {tn = 1, amount = 3000},
-    ["Lightning Potion"] = {tn = 1, amount = 2000},
+    ["Instant Luck Potion"] = {tn = 4, amount = 1000},
+    ["God Potion"] = {tn = 1, amount = 20},
+    ["Thieving God Potion"] = {tn = 1, amount = 20},
+    ["Bucket O' Chum"] = {tn = 1, amount = 5},
 
     --gift/egg
     ["Hype Egg"] = {amount = 1},
-    ["10,000x Thieving Egg"] = {amount = 10},
-    ["Hacker Egg"] = {amount = 1000},
+    ["10,000x Thieving Egg"] = {amount = 100},
+    ["Lunar Gift"] = {amount = 3000},
 
-    --["Emerald"] = {amount = 1},
+    --Lockpick
     ["Diamond"] = {amount = 1},
+
+    --Rode
+    ["Deep Sea Fishing Rod"] = {amount = 1},
+    ["Kraken Fishing Rod"] = {amount = 1},
 
     --other
     ["Diamonds"] = {amount = 20000000},
