@@ -35,6 +35,8 @@ getgenv().ItemToMail = {
     --Rode
     ["Deep Sea Fishing Rod"] = {amount = 1},
     ["Kraken Fishing Rod"] = {amount = 1},
+    ["Comet Pickaxe"] = {amount = 1},
+    ["Solar Pickaxe"] = {amount = 1},
 
     --other
     ["Diamonds"] = {amount = 50000},
