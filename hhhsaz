@@ -1,8 +1,7 @@
 getgenv().PeopleForMail = "Witkd2273"
-getgenv().farmOnlyComet = true
 getgenv().CompleteVault = true
 getgenv().ItemToMail = {
-    --regular
+    --//regular
     ["Crystal Key Upper Half"] = {amount = 10},
     ["Crystal Key Lower Half"] = {amount = 50},
     ["Legendary Mining Chest"] = {amount = 250},
@@ -11,34 +10,34 @@ getgenv().ItemToMail = {
     ["Legendary Enchant Safe"] = {amount = 5},
     ["Celestial Enchant Safe"] = {amount = 1},
     ["Exclusive Enchant Safe"] = {amount = 1},
-    ["Abyssal Treasure Chest"] = {amount = 10},
-    ["Corrupted Huge Bait"] = {tn = 1, amount = 200},
     ["Legendary Thieving Chest"] = {amount = 10},
     ["Exotic Thieving Chest"] = {amount = 5},
     
 
-    --consumable
+    --//consumable
     ["Instant Luck Potion"] = {tn = 4, amount = 10},
     ["God Potion"] = {tn = 1, amount = 1},
     ["Thieving God Potion"] = {tn = 1, amount = 5},
     ["Bucket O' Chum"] = {tn = 1, amount = 1},
 
-    --gift/egg
+    --//gift/egg
     ["Hype Egg"] = {amount = 1},
     ["10,000x Thieving Egg"] = {amount = 1},
-    ["Hacker Egg"] = {amount = 50},
-    ["Lunar Gift"] = {amount = 1},
 
-    --Lockpick
+
+    --//Lockpick
     ["Diamond"] = {amount = 1},
 
     --Rode
     ["Deep Sea Fishing Rod"] = {amount = 1},
     ["Kraken Fishing Rod"] = {amount = 1},
-    ["Comet Pickaxe"] = {amount = 1},
-    ["Solar Pickaxe"] = {amount = 1},
 
-    --other
+    --//event
+    ["Rainbow Token"] = {amount = 1},
+    ["Huge Rainbow Token"] = {amount = 1},
+    ["Titanic Rainbow Token"] = {amount = 1},
+
+    --//other
     ["Diamonds"] = {amount = 50000},
 
 }
