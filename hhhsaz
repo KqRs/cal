@@ -12,6 +12,7 @@ getgenv().ItemToMail = {
     ["Exclusive Enchant Safe"] = {amount = 1},
     ["Legendary Thieving Chest"] = {amount = 10},
     ["Exotic Thieving Chest"] = {amount = 5},
+    ["Ancient Key"] = {amount = 1},
     
 
     --//consumable
@@ -19,10 +20,13 @@ getgenv().ItemToMail = {
     ["God Potion"] = {tn = 1, amount = 1},
     ["Thieving God Potion"] = {tn = 1, amount = 5},
     ["Bucket O' Chum"] = {tn = 1, amount = 1},
+    ["Sphinx God Potion"] = {tn = 1, amount = 1},
 
     --//gift/egg
     ["Hype Egg"] = {amount = 1},
     ["10,000x Thieving Egg"] = {amount = 1},
+    ["Sphinx Egg"] = {amount = 50},
+    ["Sphinx Gift"] = {amount = 1},
 
 
     --//Lockpick
@@ -33,7 +37,7 @@ getgenv().ItemToMail = {
     ["Kraken Fishing Rod"] = {amount = 1},
 
     --//event
-    ["Rainbow Token"] = {amount = 1},
+    ["Rainbow Token"] = {amount = 5},
     ["Huge Rainbow Token"] = {amount = 1},
     ["Titanic Rainbow Token"] = {amount = 1},
 
