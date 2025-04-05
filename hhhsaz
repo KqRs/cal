@@ -1,5 +1,5 @@
 getgenv().PeopleForMail = "Witkd2273"
-getgenv().CompleteVault = true
+getgenv().CompleteInstance = true
 getgenv().ItemToMail = {
     --//regular
     ["Crystal Key Upper Half"] = {amount = 10},
@@ -10,9 +10,8 @@ getgenv().ItemToMail = {
     ["Legendary Enchant Safe"] = {amount = 5},
     ["Celestial Enchant Safe"] = {amount = 1},
     ["Exclusive Enchant Safe"] = {amount = 1},
-    ["Legendary Thieving Chest"] = {amount = 10},
     ["Exotic Thieving Chest"] = {amount = 5},
-    ["Ancient Key"] = {amount = 1},
+
     
 
     --//consumable
@@ -23,6 +22,7 @@ getgenv().ItemToMail = {
     ["Sphinx God Potion"] = {tn = 1, amount = 1},
 
     --//gift/egg
+    ["Huge Egg"] = {amount = 1},
     ["Hype Egg"] = {amount = 1},
     ["10,000x Thieving Egg"] = {amount = 1},
     ["Sphinx Egg"] = {amount = 50},
